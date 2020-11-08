@@ -1,17 +1,107 @@
-\chapter{データベース機能の性能評価}
+\chapter{各データベース機能の性能評価}
 
-開発において、システムの各機能がProductionの際に十分であるかどうか見積もりをしておく必要がある。今回は以下の機能についての詳細の研究、性能評価を行った。
+開発した機能が生産時に十分であるかどうか見積もりは今後の開発を効率よく進めていく上で重要である。
+生産時のデータの数や量を想定してその際のシステム性能を見積もることで、今の実装で十分かどうか、改善が必要な場合どのように改善すればいいかを知ることができる。
+以下の機能に関して処理時間評価を行った。
 
-\section{アプリケーションにおける結果数に対する表示時間}
+\begin{itemize}
+  \item ローカルデータベースにおける読み出し試験結果の検索機能
+  \item 中央データベースとローカルデータベースのデータ同期機能
+\end{itemize}
 
-\section{ローカルデータベースにおける検索システムの性能評価}
+それぞれの詳細について以下で説明する。
+
+\section{ローカルデータベースにおける読み出し試験結果検索システムの性能評価}
+工夫点等。秋の学会で扱った内容。
+
+\section{中央データベースとローカルデータベースのデータ同期機能に関する調査}
+ローカルデータベースと中央データベースのデータ同期ツール処理時間に関しての測定を行った。詳細を以下に示す。
+\subsection{データ同期ツールに使用するAPI}
+
+
+\subsection{サーバーの設置場所による処理時間の違い}
+4章で述べたように、中央データベースはチェコに設置されている。
+そのため試験結果のアップロードに関して、各組み立て機関から接続しデータ送信する処理時間は、機関の場所に大きく依存すると考えられる。
+世界的にデータ同期ツールが不自由なく動くことに向けた開発、改善に役立てることを目的として、データを送信する処理時間を、以下の3つの場所に置かれているサーバーを用いて測定した。
+
+\begin{itemize}
+  \item 日本、高エネルギー加速器研究所(KEK) 
+  \item アメリカ、バークレー研究所(LBL)
+  \item スイス、欧州原子核研究機構(CERN)
+\end{itemize}
+
+各サーバーの性能を表\ref{server_spec}に示す。また各サーバーが置かれている場所の位置関係を図?に示す。
+
+\begin{table}[tbp]
+\caption[サーバーの性能一覧]{サーバーの性能一覧}
+\label{server_spec}
+\scalebox{0.9}{
+  \begin{tabular}{|l|llll|l|l|} \hline
+    設置機関 & CPU & & & & Memory & Disk \\
+     & Type & Core & Thread & Clock speed[GHz]& [kB] & [GB] \\ \hline 
+    KEK & Intel(R) Core(TM) i7-6700 & 4 & 8 & 3.4 & 15,981,000 & 197\\
+    LBL & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32,628,000 & 233\\
+    CERN & Intel Core Processor (Broadwell, IBRS) & 1 & 10 & 2.2 & 29,978,888 & 80\\ \hline
+  \end{tabular}
+}
+\end{table}
+
+これらのサーバーは実際に生産の際に使用するものと同程度の性能を持ち、サーバーが置かれている環境も生産時と同じであるとしている。
+回線の混雑具合などによる処理時間の低下は、本測定では考慮に入れていない。
+
+\subsubsection{登録モジュール情報の取得にかかる時間}
+ある登録されたモジュール情報の取得にかかる時間を測定した。
+各サーバーでの処理時間についてまとめたものを表\ref{getting_1module}に示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[モジュール情報の取得にかかる時間]{モジュール情報の取得にかかる時間}
+\label{getting_1module}
+  \begin{tabular}{|ll|} \hline
+    サーバー & 処理時間 \\ \hline
+    KEK & 0.49 $\pm$ 0.02 \\ 
+    LBL & 0.37 $\pm$ 0.02 \\ 
+    CERN & 0.30 $\pm$ 0.04 \\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
+
+\subsubsection{1Byteのデータファイル送信にかかる時間}
+ある試験結果ページに、Attachmentとして1Byteのデータファイルを送信する時間を測定した。
+各サーバーでの処理時間についてまとめたものを表\ref{sendpd_1byte}に示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[1Byteのデータファイル送信にかかる処理時間]{1Byteのデータファイル送信にかかる処理時間}
+\label{sendpd_1byte}
+  \begin{tabular}{|ll|} \hline
+    サーバー & 処理時間 \\ \hline
+    KEK & 0.54 $\pm$ 0.04 \\ 
+    LBL & 0.34 $\pm$ 0.03 \\ 
+    CERN & 0.39 $\pm$ 0.02 \\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
+
+\subsubsection{データファイル送信処理時間の容量依存性}
+ある試験結果ページに、Attachmentとしてデータファイルを送信する時間をいくつかのファイルサイズにおいて測定した。
+ファイルサイズと処理時間の関係を図\ref{datasize_vs_time}に示す。上述した1Byteでの測定点も含んでいる。
+\begin{figure}[bpt]\centering
+\includegraphics[width=9cm,angle=270]{datasize_vs_time.pdf}
+\caption[送信するファイルサイズと処理時間の関係]{送信するファイルサイズと処理時間の関係}
+\label{datasize_vs_time}
+\end{figure}
+
+\subsection{モジュールIDのダウンロード機能確認と処理時間測定}
+\subsubsection{アルゴリズム}
+\subsubsection{機能確認}
+KEKのモジュール登録とダウンロード機能の確認。
+\subsubsection{処理時間測定}
 工夫点
+\subsection{読み出し試験結果のアップロード機能確認と処理時間測定}
+\subsubsection{アルゴリズム}
+\subsubsection{機能確認}
+\subsubsection{処理時間測定}
 
-\section{PD Interfaceにおける研究}
-\subsection{場所による違い}
-\subsection{download機能の性能評価}
-工夫点
-時間
-\subsection{upload機能の性能評価}
 工夫点
 
