@@ -126,8 +126,49 @@
 \end{figure}
 
 \subsubsection{結果選択とピクセル解析}
+読み出し結果を選択し、ピクセル解析を行なった。結果選択の様子を図\ref{select_scans}、解析結果を表\ref{pixel_analysis_result}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[scan結果選択の様子]{scan結果選択の様子}
+\label{select_scans}
+\end{figure}
+
+\begin{table}[tbp]
+\begin{center}
+\caption[ピクセル解析結果]{ピクセル解析結果}
+\label{pixel_analysis_result}
+  \begin{tabular}{|ll|} \hline
+    1 & 2 \\ \hline
+    result 1 & result 2 \\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
 
 \subsubsection{試験結果アップロード}
+選択した結果を中央データベースにアップロードし、各ファイルが正しくアップロードされていることを確認した。
+各ファイルの存在を確認した結果を表\ref{scan_upload_pd}に示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[scan fileの存在確認]{scan fileの存在確認}
+\label{pixel_analysis_result}
+  \begin{tabular}{|ll|} \hline
+    1 & 2 \\ \hline
+    result 1 & result 2 \\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
 
 \subsubsection{今後の開発方針}
+
+生産の本番に向けて、中央データベースにあげるデータを再検討する必要がある。
+現在のシステムでは5つの試験に対して結果ファイルだけをあげるものとなっている。
+情報としては不十分であり、以下のような項目を検討しアップロード情報として付け加えることが必要であり、今後の課題となっている。
+
+\begin{itemize}
+  \item DCSの情報
+  \item 適切な読み出し試験項目
+  \item ピクセル解析の結果
+\end{itemize}
 
