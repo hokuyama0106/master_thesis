@@ -1,9 +1,74 @@
-\chapter{読み出し試験に用いるソフトウェアと学内実験室におけるデモンストレーション}
+\chapter{品質試験項目:読み出し試験に用いるソフトウェアと学内実験室におけるデモンストレーション}
 
 \section{読み出し試験に用いるソフトウェアの概要}
 
 \section{読み出し試験結果解析ツールの開発}
 
 \section{学内実験室におけるデモンストレーション}
-学内のRD53Aで読み出しを行って、機能がしっかりと動いている様子をかく。陣内先生にコメント受けたもの。
+学内実験室で開発しているソフトウェアを用いて読み出し試験を行い、実際の生産時における流れのデモンストレーションを局所的に行なった。
+その詳細について以下に示す。
+
+\subsection{デモンストレーションの流れ}
+
+今回のデモンストレーションで確認した機能を以下に示す。
+\begin{itemize}
+  \item 中央データベースとローカルデータベースのデータ同期機能(モジュールIDのダウンロード、試験結果のアップロード)
+  \item 読み出し試験に使う各種機能(設定ファイル生成、温度モニター、試験結果アップロードと閲覧)
+  \item 結果選択とピクセル解析機能
+\end{itemize}
+
+またデモンストレーションにおける流れの概要を図\ref{demo_flow}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[デモンストレーションの流れ]{デモンストレーションの流れ}
+\label{demo_flow}
+\end{figure}
+
+\subsection{読み出し試験セットアップ}
+読み出し試験に用いるハードウェアのセットアップを表\ref{readout_setup_table}、概要を図\ref{readout_setup_overview}、各ハードウェアの写真を\ref{readout_setup_picture}に示す。
+各装置の詳細については付録Bに示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[各ハードウェアの性能]{各ハードウェアの性能}
+\label{readout_setup_table}
+  \begin{tabular}{|ll|} \hline
+    1 & 2 \\ \hline
+    result 1 & result 2 \\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[ハードウェアセットアップの概要]{ハードウェアセットアップの概要}
+\label{readout_setup_overview}
+\end{figure}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[各ハードウェアの写真]{各ハードウェアの写真}
+\label{readout_setup_picture}
+\end{figure}
+
+\subsection{機能確認}
+\subsubsection{モジュールIDのダウンロード}
+
+
+\subsubsection{読み出し試験}
+
+・設定ファイル作成
+
+・温度モニター
+
+詳細は付録Bに書くよ。
+
+・試験内容
+
+・試験結果アップロードと閲覧
+
+\subsubsection{結果選択とピクセル解析}
+
+\subsubsection{試験結果アップロード}
 
