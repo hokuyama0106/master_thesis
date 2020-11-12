@@ -13,7 +13,7 @@
 今回のデモンストレーションで確認した機能を以下に示す。
 \begin{itemize}
   \item 中央データベースとローカルデータベースのデータ同期機能(モジュールIDのダウンロード、試験結果のアップロード)
-  \item 読み出し試験に使う各種機能(設定ファイル生成、温度モニター、試験結果アップロードと閲覧)
+  \item 読み出し試験に使う各種機能(設定ファイル生成、温度、電圧、電流モニタリング、試験結果閲覧)
   \item 結果選択とピクセル解析機能
 \end{itemize}
 
@@ -52,23 +52,82 @@
 \label{readout_setup_picture}
 \end{figure}
 
+\subsection{読み出し試験内容}
+読み出し試験を通して、モジュールに与える電圧値、電流値、チップ横についているNTCから読み取れる温度を記録した。
+以下の流れに沿って読み出しを行なった。
+
 \subsection{機能確認}
 \subsubsection{モジュールIDのダウンロード}
+登録したモジュールのIDを機能を使ってダウンロードし、ウェブアプリケーションで確認した。
+確認した画面を図\ref{download_SCC}に示す。
 
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面}
+\label{download_SCC}
+\end{figure}
 
 \subsubsection{読み出し試験}
+以下の流れで読み出し試験を行なった。読み出し試験はサーバーのシェルを用いて行う。
 
-・設定ファイル作成
+・設定ファイル生成
 
-・温度モニター
+ダウンロードしたモジュールのIDを用いて、読み出しに用いる設定ファイルを生成した。
+イメージを図\ref{config_retriever}、実際に生成したファイルを確認した画面を図\ref{create_config}に示す。
 
-詳細は付録Bに書くよ。
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[設定ファイル生成のイメージ]{設定ファイル生成のイメージ}
+\label{config_retriever}
+\end{figure}
 
-・試験内容
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[生成ファイル確認画面]{生成ファイル確認画面}
+\label{create_config}
+\end{figure}
 
-・試験結果アップロードと閲覧
+・試験実施とアップロード
+
+上述した流れに沿って読み出し試験を実施した。試験結果は各試験の終わりに自動的にアップロードされるようなシステムとなっている。
+
+・電圧値、電流値、温度のモニタリング
+
+記録した値をGrafanaを使ってモニタリングをした。その様子を図\ref{monitoring_dcs}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[DCSのモニタリング]{DCSのモニタリング}
+\label{monitoring_dcs}
+\end{figure}
+
+・試験結果の閲覧
+
+ウェブアプリケーションを用いて、試験結果を閲覧した。その様子を図\ref{view_scan_result}、\ref{view_dcs}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[試験結果の閲覧]{試験結果の閲覧}
+\label{view_scan_result}
+\end{figure}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[各測定値の閲覧]{各測定値の閲覧}
+\label{view_dcs}
+\end{figure}
+
+各scanの結果を\ref{scan_result}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[各scan結果]{各scan結果}
+\label{scan_result}
+\end{figure}
 
 \subsubsection{結果選択とピクセル解析}
 
 \subsubsection{試験結果アップロード}
+
+\subsubsection{今後の開発方針}
 
