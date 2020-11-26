@@ -16,7 +16,7 @@
   \item スイス、欧州原子核研究機構(CERN)
 \end{itemize}
 
-各サーバーの性能を表\ref{server_spec}に示す。また各サーバーが置かれている場所の位置関係を図\ref{server_position}に示す。
+各サーバーの性能を表\ref{server_spec}に示す。また各サーバーが置かれている場所の位置関係を図\ref{server_geometry}に示す。
 
 \begin{table}[tbp]
 \caption[サーバーの性能一覧]{サーバーの性能一覧}
@@ -34,9 +34,9 @@
 
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
+\includegraphics[width=10cm]{server_geometry}
 \caption[各サーバの位置関係]{各サーバの位置関係}
-\label{server_position}
+\label{server_geometry}
 \end{figure}
 
 これらのサーバーは実際に生産の際に使用するものと同程度の性能を持ち、サーバーが置かれている環境も生産時と同じであるとしている。
@@ -82,7 +82,7 @@
   \caption[モジュール情報の取得にかかる時間]{モジュール情報の取得にかかる時間}
   \label{getting_1module}
     \begin{tabular}{|ll|} \hline
-      サーバー & 処理時間 \\ \hline
+      サーバー & 処理時間[秒] \\ \hline
       KEK & 0.49 $\pm$ 0.02 \\ 
       LBL & 0.37 $\pm$ 0.02 \\ 
       CERN & 0.30 $\pm$ 0.04 \\ \hline 
@@ -95,7 +95,7 @@
   \caption[1Byteのデータファイル添付にかかる処理時間]{1Byteのデータファイル添付にかかる処理時間}
   \label{sendpd_1byte}
     \begin{tabular}{|ll|} \hline
-      サーバー & 処理時間 \\ \hline
+      サーバー & 処理時間[秒] \\ \hline
       KEK & 0.54 $\pm$ 0.04 \\ 
       LBL & 0.34 $\pm$ 0.03 \\ 
       CERN & 0.39 $\pm$ 0.02 \\ \hline 
@@ -105,7 +105,7 @@
 \end{table}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=9cm,angle=270]{datasize_vs_time.pdf}
+\includegraphics[width=7cm,angle=270]{datasize_vs_time.pdf}
 \caption[添付するファイルサイズと処理時間の関係]{添付するファイルサイズと処理時間の関係}
 \label{datasize_vs_time}
 \end{figure}

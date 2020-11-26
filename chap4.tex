@@ -21,16 +21,59 @@
 また運転前の状態における検出器の性能、運転前後での検出機性能比較を行うことができる。
 HL-LHCでは1章で述べたように、運転時における放射線量が大きいものとなるため、運転前後での放射線損傷の影響の研究を行うことができ、検出機の寿命の推定や放射線損傷に関しての対策に役に立てることができる。
 
-なんかそれらしいデータかこんな解析に役立てたいみたいなのを考え中です。
+それらしいデータかこんな解析に役立てたいみたいなのを考え中です。
 
 \subsection{モジュール情報構造および構成部品との関係の実装}
-中央データベースにモジュールを登録するためには、1章で述べたようにQuadやTripletといったモジュールの種類、FE chipの種類などのモジュール付属情報、モジュールを構成する部品といったのモジュールの情報構造を決定し、データベース上に定義しておく必要がある。この情報構造をデータベースに実装し、登録できる仕組みを整えた。
-詳細な構造については図\ref{pd_module_structure}に示す。
+中央データベースにモジュールを登録するためには、1章で述べたようにモジュールの種類、モジュールを構成する部品といった情報構造を決定し、データベース上に定義しておく必要がある。この情報構造をデータベースに実装し、登録できる仕組みを整えた。
+詳細な種類と構造については表\ref{pd_module_structure}に示す。
+またある種類に関する例を図\ref{example_module_structure}に示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[中央データベースにおけるモジュールの種類と構造]{中央データベースにおけるモジュールの種類と構造}
+\label{pd_module_structure}
+  \begin{tabular}{|ll|} \hline
+    種類 & 構成する部品(数) \\ \hline
+    Triplet L0 stave module   &  Single bare module(3) \\
+                              &  Triplet stave PCB(1) \\\hline
+    Triplet L0 Ring0 module   &  Single bare module(3) \\
+                              &  Triplet R0 PCB(1) \\\hline
+    Triplet L0 Ring0.5 module &  Single bare module(3) \\
+                              &  Triplet R0.5 PCB(1) \\\hline
+    L1 quad module            &  Quad bare module(1) \\
+                              &  Quad PCB(1) \\\hline
+    Outer system quad moudle  &  Quad bare module(1) \\
+                              &  Quad PCB(1) \\\hline
+    Outer system quad moudle  &  Dual bare module(1) \\
+                              &  Dual PCB(1) \\\hline
+    Digital triplet L0 stave module   &  Digital single bare module(3) \\
+                                      &  Triplet stave PCB(1) \\\hline
+    Digital triplet L0 Ring0 module   &  Digital single bare module(3) \\
+                                      &  Triplet R0 PCB(1) \\\hline
+    Digital triplet L0 Ring0.5 module &  Digital single bare module(3) \\
+                                      &  Triplet R0.5 PCB(1) \\\hline
+    Digital quad module       &  Digital quad bare module(1) \\
+                              &  Quad PCB(1) \\\hline
+    Digital L1 quad moudle    &  Digital quad bare module(1) \\
+                              &  Quad PCB(1) \\\hline
+    Dummy triplet L0 stave module   &  Dummy single bare module(3) \\
+                                    &  Triplet stave PCB(1) \\\hline
+    Dummy triplet L0 Ring0 module   &  Dummy single bare module(3) \\
+                                    &  Triplet R0 PCB(1) \\\hline
+    Dummy triplet L0 Ring0.5 module &  Dummy single bare module(3) \\
+                                    &  Triplet R0.5 PCB(1) \\\hline
+    Dummy quad module       &  Dummy quad bare module(1) \\
+                            &  Quad PCB(1) \\\hline
+    Dummy L1 quad moudle    &  Dummyl quad bare module(1) \\
+                            &  Quad PCB(1) \\ \hline
+  \end{tabular}
+\end{center}
+\end{table}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[中央データベース内でのモジュールの構造]{中央データベース内でのモジュールの構造}
-\label{pd_module_structure}
+\includegraphics[width=7cm]{example_module_structure}
+\caption[モジュール構造の一例]{モジュール構造の一例}
+\label{example_module_structure}
 \end{figure}
 
 \subsection{組み立て工程および品質試験の情報形式の実装}
@@ -38,21 +81,70 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
 
 詳細な構造を図\ref{pd_stage_structure}に示す。
 
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[中央データベース内での組み立て工程とテスト項目]{中央データベース内での組み立て工程とテスト項目}
+\begin{table}[tbp]
+\begin{center}
+\caption[中央データベースにおける組み立て工程と付随するテスト項目]{中央データベースにおける組み立て工程と付随するテスト項目}
 \label{pd_stage_structure}
-\end{figure}
+  \begin{tabular}{|ll|} \hline
+    組み立て項目 & 付随する組み立て情報及び品質試験項目 \\ \hline
+    1. Bare to PCB assembly & Visual Inspection \\ 
+                            & Metrology \\
+                            & Mass measurement \\
+                            & Glue information \\\hline
+    2. Wirebonding          & Visual Inspection \\ 
+                            & Wirebond information \\
+                            & (Wirebond pull test)\\
+                            & First power up\\
+                            & Sensor IV\\
+                            & SLDO VI\\
+                            & Chip configuration\\
+                            & Pixel failure test\\\hline
+
+    3. Wirebond Protection  & Visual Inspection \\ 
+                            & Potting information \\
+                            & Sensor IV \\
+                            & Chip configuration\\
+                            & Readout for basic electrical \\\hline
+
+    4. Parylene Coating     & Visual Inspection \\ 
+                            & Palylene information \\
+                            & Mass measurement \\
+                            & Sensor IV \\
+                            & Chip configuration\\
+                            & Readout for basic electrical \\
+                            & Bump bond quality \\\hline
+
+    5. Thermal Cycling      & Visual Inspection \\ 
+                            & Thermal cycling info \\
+                            & Sensor IV \\
+                            & Chip configuration\\
+                            & Readout for basic electrical \\\hline
+
+    6. Burn-in              & Visual Inspection \\ 
+                            & Metrology \\
+                            & Mass Measurement \\
+                            & First power up\\
+                            & Sensor IV\\
+                            & SLDO VI\\
+                            & Chip configuration\\
+                            & Pixel failure test\\\hline
+
+    7. Reception            & \\\hline 
+  \end{tabular}
+\end{center}
+\end{table}
+
+\newpage
 
 \section{ローカルデータベース}
 \subsection{ローカルデータベースの概要と意義}
 中央データベースでは、前述したようにモジュールの情報のみならず新型内部飛跡検出器に関わるすべての情報を管理する。データベースの機能としては汎用的に使えるようなものになっている。
 モジュールの組み立て及びその品質試験に関しては3章で述べたように工程が複数に渡り、行う品質試験の数も多い。1つの生産現場で多いところでは数千個のモジュールを作ることになるため、データ管理が簡単にかつ円滑に進むようになっているのが好ましい。
 このような理由から、生産現場での生産性、利便性に特化し、円滑な生産をサポートすることを目的としたデータベースシステム(ローカルデータベース)を開発している。
-システムの概要図を図\ref{localdb_ovewview}に示す。オープンソースのサービスであるMongoDBを各生産現場で使い、開発したウェブアプリケーションを併用することでデータ管理や中央データベースとのデータ同期を行うシステムとなっている。
+システムの概要図を図\ref{localdb_overview}に示す。オープンソースのサービスであるMongoDBを各生産現場で使い、開発したウェブアプリケーションを併用することでデータ管理や中央データベースとのデータ同期を行うシステムとなっている。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
+\includegraphics[width=15cm]{localdb_overview}
 \caption[ローカルデータベースシステムの概要]{ローカルデータベースシステムの概要}
 \label{localdb_overview}
 \end{figure}
@@ -80,12 +172,42 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
   \item 私が参加者の前で実際に機能を実践し、システムや使い方に対して議論を行うセッション(2月7日)
 \end{itemize}
 
-それぞれのセッションの様子を図?に示す。
+それぞれのセッションの様子を図\ref{Tutorial_picture}に示す。
 数多くの議論を行い、有益なフィードバックを得ることができた。
+
+\begin{figure}[bpt]
+  \begin{center}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=10mm]{figure}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=10mm]{figure}
+  \end{minipage}
+  \caption[ハンズオンとハンズオフ]{ハンズオンとハンズオフ}
+  \label{Tutorial_picture}
+  \end{center}
+\end{figure}
 
 これを経て現在ローカルデータベースは世界10箇所にて導入され、試験運用が開始している。
 また将来的には全組み立て機関で使うことが決定しており、それに向けたシステム開発、サポートが必要となっている状況である。
-ローカルデータベースについて、試験運用を行っている機関と導入予定機関の概要を図?に示す。
+ローカルデータベースについて、試験運用を行っている機関を表\ref{localdb_world_site}、世界地図を\ref{localdb_world_map}に示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[ローカルデータベース運用期間]{ローカルデータベース運用期間}
+\label{localdb_world_site}
+  \begin{tabular}{|ll|} \hline
+    1 & 2 \\ \hline
+    result 1 & result 2 \\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{localdb_world_map}
+\caption[ローカルデータベース地図]{ローカルデータベース地図}
+\label{localdb_world_map}
+\end{figure}
 
 \subsection{MongoDBとその内部構造}
 MongoDBの内部構造について簡単に図\ref{mongodb_schema}に示す。
@@ -100,7 +222,7 @@ MongoDBの内部構造について簡単に図\ref{mongodb_schema}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=1cm]{figure}
-\caption[MongoDBの構造]{MongoDBの構造}
+\caption[品質試験周りにおける]{品質試験周りにおける構造}
 \label{localdb_mongodb_structure}
 \end{figure}
 
