@@ -158,12 +158,81 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
   \item 試験者の情報や試験時間など、テスト結果以外の必要な情報を正確に管理できる。
 \end{itemize}
 
-\subsection{開発状況と今後の方針}
-現在、以下のような機能を実装している。
+\subsection{MongoDBと内部構造}
+MongoDBとはNoSQLに分類されるデータベースである。
+MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}に示す。
+一般的なSQLDBのようにテーブル形式ではなく、JSON形式で情報を格納する。
+情報を保持している一枚のシートを「ドキュメント」と呼び、「コレクション」と呼ばれる枠に複数のドキュメントが格納されている。
+各ドキュメントはIDを持っていて、異なるコレクションにおけるドキュメント間の紐付けはこのIDを用いて行う。
 
-今後は他の試験についても機能を拡張していきたい。
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{mongodb_schema}
+\caption[MongoDBの構造の例]{MongoDBの構造の例}
+\label{mongodb_schema}
+\end{figure}
 
-\subsection{チュートリアルと普及状況}
+ローカルデータベースシステムにおいて、MongoDBを使用する主な利点を以下に示す。
+
+\begin{itemize}
+  \item 各コレクションに格納するドキュメントの構造が動的であるため、開発を柔軟に行うことができる。
+  \item JSON形式のため情報取得の際に変換処理が不要で、ウェブアプリケーションとの親和性が高い。
+  \item 全ての処理をメモリ上で実行するため、高速な読み書きが可能。
+\end{itemize}
+
+モジュール及び品質試験に用いる主なコレクションと内部情報を表\ref{localdb_structure}に示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[品質試験に用いる主なコレクション]{品質試験に用いる主なコレクション}
+\label{localdb_structure}
+  \begin{tabular}{|lll|} \hline
+    データベース名 & コレクション名 & 情報 \\ \hline
+    localdb      & component & モジュール情報、FEチップ情報 \\ 
+                 & childParentRelation & FEチップとモジュールの関係性 \\ 
+                 & QC.module.status & 各モジュールに対する組み立て工程及び選択された試験結果 \\ 
+                 & QC.result & 品質試験結果 \\ 
+                 & testRun & 読み出し試験結果 \\ 
+                 & user & 読み出し試験実施者 \\
+                 & institute & 読み出し試験実施場所 \\
+                 & componentTestRun & componentとtestRunの関係性 \\ \hline
+                 & comments & コメント情報 \\ \hline
+    localdbtools & QC.status & 組み立て工程及び試験項目\\
+                 & viewer.user & 登録ユーザの情報 \\
+                 & viewer.query & 読み出し結果キーワード、検索機能実行時に使用 \\ 
+                 & viewer.tag.docs & モジュール及び試験結果に付けるタグ情報 \\ \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+\subsection{データ同期ツール}
+モジュールや品質試験の結果のデータ共有のために、中央データベースとローカルデータベースの間でデータ同期が行われる必要がある。
+これを行うツールをPythonを用いて開発した。現在は以下のような機能を実装している。
+\begin{itemize}
+  \item モジュールIDのダウンロード
+  \item 読み出し試験結果のアップロード
+\end{itemize}
+実装した開発項目について、詳細については以下で述べる。
+読み出し試験以外に実施する品質試験結果のダウンロード、アップロードの機能や、組み立て工程情報の取得等の機能が今後の開発課題として上げられる。
+
+\subsection{ウェブアプリケーション}
+各組み立て機関において、試験者が品質試験結果を閲覧、管理するツールとして、ウェブアプリケーションを開発した。
+試験結果を迅速に分かりやすく見るシステムを作り、円滑な生産の補助や異常結果の早期発見を目的としている。
+ウェブアプリケーションでは、現在以下の機能を使用することができる。ある品質試験の結果ページを図\ref{viewer_result}に示す。
+
+\begin{itemize}
+  \item 登録モジュール情報及び品質試験結果の閲覧機能
+  \item ローカルデータベースにおけるユーザ管理機能
+  \item 上述したデータ同期処理実行機能
+\end{itemize}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{viewer_result}
+\caption[品質試験結果の例]{品質試験結果の例}
+\label{viewer_result}
+\end{figure}
+
+\newpage
+\section{チュートリアルと普及状況}
 ローカルデータベースの機能の普及を目的として、2020年2月にCERN研究所にてシステムのチュートリアルを行った。
 このチュートリアルは以下のような2つのセッションに分けて行った。
 
@@ -174,14 +243,15 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
 
 それぞれのセッションの様子を図\ref{Tutorial_picture}に示す。
 数多くの議論を行い、有益なフィードバックを得ることができた。
+また品質試験の流れにおいて、一連の機能確認をすることができた。
 
 \begin{figure}[bpt]
   \begin{center}
   \begin{minipage}{0.4\hsize}
-    \includegraphics[width=10mm]{figure}
+    \includegraphics[width=6cm]{hands_on}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
-    \includegraphics[width=10mm]{figure}
+    \includegraphics[width=6cm]{hands_off}
   \end{minipage}
   \caption[ハンズオンとハンズオフ]{ハンズオンとハンズオフ}
   \label{Tutorial_picture}
@@ -190,48 +260,176 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
 
 これを経て現在ローカルデータベースは世界10箇所にて導入され、試験運用が開始している。
 また将来的には全組み立て機関で使うことが決定しており、それに向けたシステム開発、サポートが必要となっている状況である。
-ローカルデータベースについて、試験運用を行っている機関を表\ref{localdb_world_site}、世界地図を\ref{localdb_world_map}に示す。
+ローカルデータベースについて、導入及び試験運用を行っている機関を以下に示す。また世界地図を\ref{localdb_world_map}に示す。
 
-\begin{table}[tbp]
-\begin{center}
-\caption[ローカルデータベース運用期間]{ローカルデータベース運用期間}
-\label{localdb_world_site}
-  \begin{tabular}{|ll|} \hline
-    1 & 2 \\ \hline
-    result 1 & result 2 \\ \hline 
-  \end{tabular}
-\end{center}
-\end{table}
+\begin{itemize}
+  \item 高エネルギー加速器研究機構(KEK), 日本
+  \item 欧州原子核研究機構(CERN), スイス
+  \item University of Liverpool, イギリス
+  \item University of Oxford, イギリス
+  \item University of Glasgow, イギリス
+  \item Paris-Saclay University, フランス
+  \item パリ第6大学, フランス
+  \item フランス国立科学研究センター, フランス
+  \item University of Grenoble, フランス
+  \item University of Gottingen, ドイツ
+  \item University of Siegen, ドイツ
+  \item University of Genoa, イタリア
+  \item University of Salento, イタリア
+  \item University of Milan, イタリア
+  \item University of Udine, イタリア
+  \item Univerity of Trento, イタリア
+  \item University of Oklahoma, アメリカ
+  \item Argonne National Laboratory, アメリカ
+  \item Lawrence Berkeley National Laboratory(LBL), アメリカ
+\end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{localdb_world_map}
+\includegraphics[width=14cm]{localdb_world_map}
 \caption[ローカルデータベース地図]{ローカルデータベース地図}
 \label{localdb_world_map}
 \end{figure}
 
-\subsection{MongoDBとその内部構造}
-MongoDBの内部構造について簡単に図\ref{mongodb_schema}に示す。
+\newpage
+
+\section{実装した機能}
+私は、このシステムの中に以下のような機能を実装した。詳細について以下に述べる。
+\begin{itemize}
+  \item ユーザ管理機能
+  \item 品質試験結果の登録と組み立て工程の管理機能
+  \item 読み出し試験結果検索機能
+  \item 中央データベースとのデータ同期ツール
+\end{itemize}
+
+\subsection{ユーザ管理機能及び各種機能}
+
+異常があった際に確認することを目的として、誰が試験を行ったかを記録することが必要である。
+また、モジュールの登録や中央データベースとのデータ同期など、データベースの機能使用を制限することも必要である。
+これらを目的として、試験者及びデータベース使用者情報の管理システムを開発、実装した。
+この詳細について以下に述べる。
+
+\subsubsection{機能概要}
+データベース権限の段階として、管理者、権限付きユーザ、一般ユーザの3段階を設けた。
+各ユーザが使うことのできる機能を表\ref{user_functions_summary}に示す。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[ユーザ権限一覧]{ユーザ権限一覧}
+\label{user_functions_summary}
+  \begin{tabular}{|lll|} \hline
+    ユーザ       & 付加される権限                               & 使用できる機能 \\ \hline
+    管理者       & ユーザ管理権限                     & 権限付きユーザ登録機能\\ 
+                 & データベース読み書き権限           & \\ 
+                 & ウェブアプリケーションログイン権限 & \\ \hline
+    権限付ユーザ & ユーザ管理権限                     & 試験結果のアップロード\\ 
+                 & データベース読み書き権限           & 中央データベースとのデータ同期機能\\ 
+                 & ウェブアプリケーションログイン権限 & その他ウェブアプリケーションの機能(コメント、タグ)\\ \hline
+    一般ユーザ   &                                    & モジュール情報及び試験結果の閲覧　\\ \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+権限付きユーザの機能としてモジュール及び試験結果にコメント、タグをつける機能を実装した。使用したときの様子を図\ref{webapp_comment}、\ref{webapp_tag}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[MongoDBの構造]{MongoDBの構造}
-\label{mongodb_schema}
+\includegraphics[width=12cm]{viewer_comment}
+\caption[コメント機能]{コメント機能}
+\label{webapp_comment}
 \end{figure}
-
-モジュール及び品質試験に関する構造として、図\ref{localdb_mongodb_structure}にまとめた。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[品質試験周りにおける]{品質試験周りにおける構造}
-\label{localdb_mongodb_structure}
+\includegraphics[width=12cm]{viewer_tag}
+\caption[タグ機能]{タグ機能}
+\label{webapp_tag}
 \end{figure}
 
+\subsubsection{機能の仕組み}
+管理者登録はアプリケーション起動前にシェルスクリプトを用いて行う。また、権限付きユーザはアプリケーション起動後、内部の機能を用いて動く仕組みとした。
+ユーザ登録の際に以下の2つの処理が行われるように実装した。
+
+\begin{enumerate}
+  \item mongoDBに対する読み書き権限の付与
+  \item ウェブアプリケーションで用いるユーザ情報の保持
+\end{enumerate}
+
+1の処理を行う理由は、登録ユーザが関連ソフトウェアを用いて試験結果をmongoDBにアップロードできるようにするためである。
+
+2の処理は、ウェブアプリケーション内でのログイン判断、ユーザの情報保持に使う。
+試験結果アップロードの際にもこの情報を用いて、試験者の記録が行われる。
+この情報は表\ref{localdb_structure}のviewer.userに保存される。実際に保存されるドキュメントの例を図\ref{user_ex}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=12cm]{user_ex}
+\caption[ユーザドキュメント例]{ユーザドキュメント例}
+\label{user_ex}
+\end{figure}
+
+\newpage
+\subsection{品質試験結果の登録と組み立て工程の自動更新}
+ローカルデータベースへアップロードした品質試験結果の中から、本結果として中央データベースへアップロードする結果を選択する機能を開発した。
+品質試験は3章で述べたように、各モジュール、各組み立て工程に対して行うものであるため、結果選択も同様に工程毎に行うことを想定している。
+結果選択後、データベースにおける組み立て工程の情報も次のものへ自動的に更新する機能となっている。
+
+\subsubsection{概要}
+あるモジュール、組み立て工程に対して結果を選択する様子を図\ref{webapp_sign_off}に示す。組み立て工程も自動更新されていることがわかる。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{webapp_sign_off}
+\caption[サインオフ機能]{サインオフ機能}
+\label{webapp_sign_off}
+\end{figure}
+
+\subsubsection{仕組み}
+
+\begin{figure}[bpt]
+  \begin{center}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=6cm]{qc_status_doc}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=6cm]{qc_module_status_doc}
+  \end{minipage}
+  \caption[ステージ機能実装詳細]{ステージ機能実装詳細}
+  \label{Tutorial_picture}
+  \end{center}
+\end{figure}
+
+\subsubsection{改善項目}
+
+\ref{stage_branching}
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{stage_branching}
+\caption[ステージ分岐]{ステージ分岐}
+\label{stage_branching}
+\end{figure}
+
+\newpage
+\subsection{読み出し試験結果の検索機能}
+登録モジュールや品質試験結果の一覧ページに検索機能を実装した。
+確認したいモジュール情報や試験結果を迅速に取得し、閲覧できることを目的としている。検索機能を使用している様子を図\ref{webapp_search_function}に示す。
+
+フリーキーワードを入力し、検索することができる仕組みとなっていて、一般的なウェブページの検索エンジンのように扱うことができる。
+現在は単一キーワード検索の他に、以下の機能を実装している。
+\begin{itemize}
+  \item 完全一致、部分一致検索
+  \item AND、OR検索
+\end{itemize}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=12cm]{webapp_search_function}
+\caption[検索機能の様子]{検索機能の様子}
+\label{webapp_search_function}
+\end{figure}
+
+また生産に向けて、検索にかかる処理時間測定を行った。検索機能の詳しい実装方法と処理時間についての詳細は、6章で述べる。
+
+\newpage
 \subsection{中央データベースとの情報同期ツール}
 生産時にはローカルデータベースと中央データベースにおいて、情報の同期が必要となる。例えば、モジュールのIDや組み立て工程、テスト結果といった情報があげられる。
 この情報同期のためのインターフェースツールを開発した。主に開発した項目については以下の2つである。
 \begin{itemize}
   \item モジュールのID及びモジュールを構成するFE chipのIDのダウンロード機能
-  \item 品質試験の中の読み出し試験に関しての試験結果アップロード機能
+  \item 読み出し試験に関しての試験結果アップロード機能
 \end{itemize}
 
 ダウンロード機能についての詳細を図\ref{pd_download_info}にまとめた。中央データベースに登録されているモジュールの ID、FE chipのIDとその数、対応関係をダウンロードしてくるものとなる。
@@ -241,106 +439,13 @@ MongoDBの内部構造について簡単に図\ref{mongodb_schema}に示す。
 \label{pd_download_info}
 \end{figure}
 
-アップロード機能についての詳細を図\ref{pd_upload_info}にまとめた。YARRで取得されるデータはFE chipごとであるため、取得ファイルはFE chipごとにアップロードすることとしている。
-
 \begin{figure}[bpt]\centering
 \includegraphics[width=1cm]{figure}
 \caption[アップロード機能の概要]{アップロード機能の概要}
 \label{pd_upload_info}
 \end{figure}
 
-生産の際には、これら機能は後述するウェブアプリケーションを通して使用する。具体的な使用方法については、後の節で述べる。処理速度に関する性能評価を6章で述べる。
-
-\subsection{情報管理アプリケーション}
-\subsubsection{概要、意義}
-各組み立て機関において、試験者が品質試験結果を閲覧、管理するツールとして、ウェブアプリケーションを開発した。
-試験結果を迅速に分かりやすく見るシステムを作り、円滑な生産の補助や異常結果の早期発見を目的としている。
-アプリケーションの機能として、具体的に以下のような項目を実装している。
-
-\begin{itemize}
-  \item 登録モジュール及び品質試験結果の情報閲覧機能
-  \item 登録モジュール及び品質試験結果の検索機能
-  \item 試験者情報の管理及び各種機能
-  \item 中央データベースへアップロードする品質試験結果の登録と組み立て工程の管理機能
-  \item 中央データベースとのデータ同期機能
-\end{itemize}
-
-それぞれの機能の詳細を以下に記す。
-
-\subsubsection{登録モジュール及び品質試験結果の情報閲覧}
-アプリケーションを用いて、登録したモジュール情報やアップロードした品質試験結果を閲覧することができる。
-モジュールページの例を図\ref{webapp_modulepage}に、読み出し試験の結果ページの例を図\ref{webapp_scanpage}に示す。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[モジュールページの例]{モジュールページの例}
-\label{webapp_modulepage}
-\end{figure}
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[読み出し試験結果ページの例]{読み出し試験結果ページの例}
-\label{webapp_scanpage}
-\end{figure}
-
-\subsubsection{登録モジュール及び品質試験結果の検索機能}
-登録モジュールや品質試験結果の一覧ページに検索機能を実装した。
-確認したいモジュール情報や試験結果を迅速に取得し、閲覧できることを目的としている。検索機能を使用している様子を図\ref{webapp_search_function}に示す。
-一般的なウェブページの検索エンジンのように扱うことができる。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[検索機能の様子]{検索機能の様子}
-\label{webapp_search_function}
-\end{figure}
-
-また生産に向けて、検索にかかる処理速度測定を行った。これについては付録Aで詳細を述べる。
-
-\subsubsection{試験者情報の管理及び各種機能}
-
-異常があった際に確認することを目的として、誰が試験を行ったかを記録することが必要である。
-また、モジュールの登録や中央データベースとのデータ同期など、データベースの機能使用を制限することも必要である。
-これらを目的として、試験者及びデータベース使用者情報の管理システムを開発、実装した。
-この機能の概要について図?に示す。
-データベースの管理者が試験者を登録することができる。また以下のような機能が登録試験者に制限される。
-
-\begin{itemize}
-  \item 試験結果のアップロード
-  \item 中央データベースへアップロードする品質試験結果の登録と組み立て工程の管理機能
-  \item 中央データベースとのデータ同期機能
-\end{itemize}
-
-上記の他に、登録ユーザは結果に対するコメント機能、任意のタグを貼る機能を使用することができる。各種機能について、使用したときの様子を図\ref{webapp_comment}、\ref{webapp_tag}に示す。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[コメント機能]{コメント機能}
-\label{webapp_comment}
-\end{figure}
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[タグ機能]{タグ機能}
-\label{webapp_tag}
-\end{figure}
-
-\subsubsection{中央データベースへアップロードする品質試験結果の登録と組み立て工程の自動更新}
-ローカルデータベースへアップロードした品質試験結果の中から、本結果として中央データベースへアップロードする結果を選択する機能を開発した。
-品質試験は3章で述べたように、各モジュール、各組み立て工程に対して行うものであるため、結果選択も同様に工程毎に行うことを想定している。
-結果選択後、データベースにおける組み立て工程の情報も次のものへ自動的に更新する機能となっている。
-
-あるモジュール、組み立て工程に対して結果を選択する様子を図\ref{webapp_sign_off}に示す。組み立て工程も自動更新されていることがわかる。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[サインオフ機能]{サインオフ機能}
-\label{webapp_sign_off}
-\end{figure}
-
-\subsubsection{中央データベースとのデータ同期機能}
-モジュールのダウンロード機能、読み出し試験結果のアップロード機能をアプリケーションの中で使うことができる仕組みを実装した。
-モジュールのトップページからこの操作が可能となっている。
-
+\newpage
 \section{量産時の情報登録・データ同期の流れ}
 想定している、モジュールに関しての組み立て工程とデータベースシステムでのユーザ操作の流れを図\ref{dbsystem_flow}に示す。
 

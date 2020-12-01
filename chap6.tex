@@ -101,6 +101,9 @@
 \label{monitoring_dcs}
 \end{figure}
 
+・検索機能の確認
+検索機能の確認を行った。
+
 ・試験結果の閲覧
 
 ウェブアプリケーションを用いて、試験結果を閲覧した。その様子を図\ref{view_scan_result}、\ref{view_dcs}に示す。
@@ -115,14 +118,6 @@
 \includegraphics[width=1cm]{figure}
 \caption[各測定値の閲覧]{各測定値の閲覧}
 \label{view_dcs}
-\end{figure}
-
-各scanの結果を\ref{scan_result}に示す。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[各scan結果]{各scan結果}
-\label{scan_result}
 \end{figure}
 
 \subsubsection{結果選択とピクセル解析}
@@ -159,16 +154,4 @@
   \end{tabular}
 \end{center}
 \end{table}
-
-\subsubsection{今後の開発方針}
-
-生産の本番に向けて、中央データベースにあげるデータを再検討する必要がある。
-現在のシステムでは5つの試験に対して結果ファイルだけをあげるものとなっている。
-情報としては不十分であり、以下のような項目を検討しアップロード情報として付け加えることが必要であり、今後の課題となっている。
-
-\begin{itemize}
-  \item DCSの情報
-  \item 適切な読み出し試験項目
-  \item ピクセル解析の結果
-\end{itemize}
 
