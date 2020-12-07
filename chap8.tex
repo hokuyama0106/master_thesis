@@ -21,13 +21,15 @@
 \end{itemize}
 
 そこで実装方法として、以下の2つを考えた。
+
 \begin{enumerate}
   \item 各試験に関する情報をPythonリスト集め、検索ワードが含まれるかを確認する方法
   \item 各試験に関する情報を持つドキュメント、コレクションを予め作成、それを参照し検索を行う方法
 \end{enumerate}
 
 これらについて以下で詳細を説明する。
-以下のような流れで検索処理を行う。
+
+Pythonリストを使う実装の場合、以下のような流れで検索処理を行う。
 \begin{enumerate}
   \item ユーザが検索ワードを入力し、処理を実行
   \item 読み出し試験に関する情報を全て取得
@@ -35,28 +37,101 @@
   \item ブラウザーに送信
 \end{enumerate}
 
-1について、この方法のアルゴリズムのイメージを図\ref{search_python_list}に示す。
-この方法はデータベース内の試験結果とアプリケーションの関数内だけで全ての処理を行うことが可能なため、シンプルな実装方法である。
+アルゴリズムのイメージを図\ref{search_python_list}に示す。
+この方法では、データベース内の試験結果とアプリケーションの関数内だけで全ての処理を行うことが可能なため、シンプルな実装方法である。
 
 \begin{figure}[bpt]
   \begin{center}
     \includegraphics[width=16cm]{search_python_list}
     \includegraphics[width=16cm]{search_python_list_flow}
-  \caption[検索機能実装方法1]{検索機能実装方法1}
+  \caption[検索機能実装方法1:Pythonリストを用いた場合]{検索機能実装方法1:Pythonリストを用いた場合}
   \label{search_python_list}
   \end{center}
 \end{figure}
 
-
-1の方法について、ユーザが処理を実行した際にデータベース内で情報を取得し、Pythonリストにつめる処理を行う。
+ユーザが処理を実行した際にデータベース内で情報を取得し、Pythonリストにつめる処理を行う。
 しかしこの方法を試験実装したところ、データベース内の構造は複雑であり複数のコレクションを跨いで情報を保持しているため、試験結果全てに対してリアルタイムでこの処理を行うと、時間を大きく要してしまう問題が発生した。
 イメージを図\ref{search_python_list_problem}に示す。
 
-そこで方法2を考案し、実装を行った。アルゴリズムのイメージを図\ref{search_mongo_collection}に示す。
-検索キーワードを別のドキュメントに予め保持しておき、処理実行時にはそれを参照することで検索を行うというものである。
+\begin{figure}[bpt]
+  \begin{center}
+    \includegraphics[width=16cm]{search_python_list_problem}
+  \caption[検索機能実装方法1の問題点]{検索機能実装方法1の問題点}
+  \label{search_python_list_problem}
+  \end{center}
+\end{figure}
 
+そこで方法2を考案し、実装を行った。アルゴリズムのイメージを図\ref{search_mongo_collection}に示す。
+検索キーワードを別のドキュメントに予め保持しておき、処理実行時にはそれを参照することで検索を行う。
+
+\begin{figure}[bpt]
+  \begin{center}
+    \includegraphics[width=16cm]{search_mongo_collection}
+    \includegraphics[width=16cm]{search_mongo_collection_flow}
+  \caption[検索機能実装方法2:検索キーワード専用コレクションを用いた場合]{検索機能実装方法2:検索キーワード専用コレクションを用いた場合}
+  \label{search_mongo_collection}
+  \end{center}
+\end{figure}
 
 \section{処理時間測定}
+先述した方法1と2において、検索処理時間の測定を行った。
+測定には個人のlaptopPCを用いた。specを表\ref{laptop_spec}に示す。
+
+\begin{table}[tbp]
+\caption[laptopの性能]{laptopの性能}
+\label{laptop_spec}
+\scalebox{0.9}{
+  \begin{tabular}{|l|llll|l|l|} \hline
+    設置機関 & CPU & & & & Memory & Disk \\
+     & Type & Core & Thread & Clock speed[GHz]& [kB] & [GB] \\ \hline 
+    CERN & Intel Core Processor (Broadwell, IBRS) & 1 & 10 & 2.2 & 29,978,888 & 80\\ \hline
+  \end{tabular}
+}
+\end{table}
+
+結果を図\ref{searching_time}に示す。
+方法1に対して、方法2の処理時間は格段に小さいことが分かる。
+現在は方法2で検索機能を実装し、サービスの1つとしている。
+
+\begin{figure}[bpt]
+  \begin{center}
+    \includegraphics[width=16cm]{figure}
+  \caption[検索処理速度測定]{検索処理速度測定}
+  \label{search_python_list_problem}
+  \end{center}
+\end{figure}
+
+生産時における処理時間の見積もりを行う。簡単のため生産時に使うサーバーのspecとの性能差は考慮に入れない。
+hogehogehoge
  
 \section{いくつかの改善点と比較}
+\subsection{ボトルネックとなっている処理}
+mongo fildが問題点になっているよ。
+
+\subsection{改善点}
+上記の問題点を踏まえ、以下の2つの方法を新しく考え処理時間測定を行った。
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item 検索情報のコレクションに一覧表示に必要な情報を保持、参照 
+  \item 方法3に付け加えて、検索情報のドキュメントを複数コレクションに分散、マルチスレッド
+\end{enumerate}
+
+方法3、4について、アルゴリズムのイメージをそれぞれ図\ref{search_summary_hash}、\ref{search_multi_thread}に示す。
+
+\begin{figure}[bpt]
+  \begin{center}
+    \includegraphics[width=16cm]{search_summary_hash}
+  \caption[検索機能実装方法3:検索情報と共に一覧表示に必要な情報を保持]{検索機能実装方法3:検索情報と共に一覧表示に必要な情報を保持}
+  \label{search_summary_hash}
+  \end{center}
+\end{figure}
+
+\begin{figure}[bpt]
+  \begin{center}
+    \includegraphics[width=16cm]{search_multi_thread}
+  \caption[検索機能実装方法4:検索情報コレクションを分散、マルチスレッドを用いる]{検索機能実装方法4:検索情報コレクションを分散、マルチスレッドを用いる}
+  \label{search_multi_thread}
+  \end{center}
+\end{figure}
 
