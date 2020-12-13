@@ -332,9 +332,9 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
     管理者       & ユーザ管理権限                     & 権限付きユーザ登録機能\\ 
                  & データベース読み書き権限           & \\ 
                  & ウェブアプリケーションログイン権限 & \\ \hline
-    権限付ユーザ & ユーザ管理権限                     & 試験結果のアップロード\\ 
-                 & データベース読み書き権限           & 中央データベースとのデータ同期機能\\ 
-                 & ウェブアプリケーションログイン権限 & その他ウェブアプリケーションの機能(コメント、タグ)\\ \hline
+    権限付ユーザ & データベース読み書き権限           & 試験結果のアップロード\\ 
+                 & ウェブアプリケーションログイン権限 & 中央データベースとのデータ同期機能\\ 
+                 &                                    & その他ウェブアプリケーションの機能(コメント、タグ)\\ \hline
     一般ユーザ   &                                    & モジュール情報及び試験結果の閲覧　\\ \hline
   \end{tabular}
 \end{center}
@@ -354,26 +354,71 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \label{webapp_tag}
 \end{figure}
 
+\subsubsection{ユーザ登録操作}
+
+
 \subsubsection{機能の仕組み}
-管理者登録はアプリケーション起動前にシェルスクリプトを用いて行う。また、権限付きユーザはアプリケーション起動後、内部の機能を用いて動く仕組みとした。
-ユーザ登録の際に以下の2つの処理が行われるように実装した。
+ユーザ登録の際には内部で以下の2つの処理が行われるように実装した。
 
 \begin{enumerate}
-  \item mongoDBに対する読み書き権限の付与
-  \item ウェブアプリケーションで用いるユーザ情報の保持
+  \item mongoDBアカウントの作成、読み書き権限の付与
+  \item ウェブアプリケーションで用いるユーザ情報ドキュメントの作成
 \end{enumerate}
 
 1の処理を行う理由は、登録ユーザが関連ソフトウェアを用いて試験結果をmongoDBにアップロードできるようにするためである。
-
-2の処理は、ウェブアプリケーション内でのログイン判断、ユーザの情報保持に使う。
+2の情報は、ウェブアプリケーション内でのログイン判断、ユーザの情報保持に使う。
 試験結果アップロードの際にもこの情報を用いて、試験者の記録が行われる。
-この情報は表\ref{localdb_structure}のviewer.userに保存される。実際に保存されるドキュメントの例を図\ref{user_ex}に示す。
+この情報は表\ref{localdb_structure}のviewer.userに保存される。
+2つの処理について、実際に保存されるドキュメントの例を以下に示す。
 
-\begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{user_ex}
-\caption[ユーザドキュメント例]{ユーザドキュメント例}
-\label{user_ex}
-\end{figure}
+\begin{lstlisting}[caption=hoge,label=fuga]
+{
+	"_id" : "localdb.hokuyama",
+	"userId" : UUID("fee321eb-83b8-434a-a4a0-fff638b5db36"),
+	"user" : "hokuyama",
+	"db" : "localdb",
+	"credentials" : {
+		"SCRAM-SHA-1" : {
+			"iterationCount" : 10000,
+			"salt" : "smkhqvrYnxtsN7rvdadw8g==",
+			"storedKey" : "6wC3HyeGTN4px+FV839ou1bylp0=",
+			"serverKey" : "/sUu8aX86hnvvMvNq9tC+WZHTDE="
+		},
+		"SCRAM-SHA-256" : {
+			"iterationCount" : 15000,
+			"salt" : "RCC51GuZ4IQK+fINo5HDKP4Vp6LPdersp2gmIA==",
+			"storedKey" : "+WwblqTl/SvyyiP7H867kMPPh3Uy2wRIeQ2PgCpdWzs=",
+			"serverKey" : "651T+2BkP1FE4YEHKbxf+JTnzsR9yWcZQPA/y9RN8e0="
+		}
+	},
+	"roles" : [
+		{
+			"role" : "readWrite",
+			"db" : "localdb"
+		},
+		{
+			"role" : "readWrite",
+			"db" : "localdbtools"
+		}
+	]
+}
+\end{lstlisting}
+\begin{lstlisting}[caption=hoge,label=fuga]
+{
+	"_id" : ObjectId("5f0bbe84ef87af2628865de7"),
+	"sys" : {
+		"rev" : 0,
+		"cts" : ISODate("2020-07-13T10:53:07.943Z"),
+		"mts" : ISODate("2020-07-13T10:53:07.943Z")
+	},
+	"username" : "hokuyama",
+	"name" : "Hiroki Okuyama",
+	"auth" : "readWrite",
+	"institution" : "Tokyo Institute of Technology",
+	"Email" : "okuyama@hep.phys.titech.ac.jp",
+	"password" : "5f4dcc3b5aa765d61d8327deb882cf99"
+}
+\end{lstlisting}
 
 \newpage
 \subsection{品質試験結果の登録と組み立て工程の自動更新}
@@ -390,29 +435,100 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \label{webapp_sign_off}
 \end{figure}
 
+\newpage
 \subsubsection{仕組み}
+\begin{lstlisting}[caption=hoge,label=fuga]
+{
+	"_id" : ObjectId("5fc89aa232d56b29091fd64d"),
+	"sys" : {
+		"mts" : ISODate("2020-12-03T07:58:26.310Z"),
+		"cts" : ISODate("2020-12-03T07:58:26.310Z"),
+		"rev" : 0
+	},
+	"dbVersion" : 1.01,
+	"proddbVersion" : 1.01,
+	"stage_flow" : [
+		"MODULETOPCB",
+		"MODULEWIREBONDING",
+		"MODULEWIREBONDPROTECTION",
+		"MODULEPARYLENECOATING",
+		"MODULETHERMALCYCLING",
+		"MODULEBURNIN",
+		"MODULERECEPTION"
+	],
+	"stage_test" : {
+		"MODULETOPCB" : [
+			"OPTICAL",
+			"GLUE_MODULE_FLEX_ATTACH",
+			"MASS",
+			"METROLOGY"
+		],
+		"MODULEWIREBONDING" : [
+			"WIREBONDING",
+			"OPTICAL",
+			"SENSOR_IV",
+			"PIXEL_FAILURE_TEST",
+			"SLDO_VI",
+			"WIREBOND",
+			"CHIP_CONFIGURATION"
+		],
+		"MODULEWIREBONDPROTECTION" : [
+			"OPTICAL",
+			"POTTING",
+			"MASS",
+			"READOUT_IN_BASIC_ELECTRICAL_TEST",
+			"SENSOR_IV",
+			"REGISTER_TEST"
+		],
+    ...
+	},
+...
+}
+\end{lstlisting}
 
-\begin{figure}[bpt]
-  \begin{center}
-  \begin{minipage}{0.4\hsize}
-    \includegraphics[width=6cm]{qc_status_doc}
-  \end{minipage}
-  \begin{minipage}{0.4\hsize}
-    \includegraphics[width=6cm]{qc_module_status_doc}
-  \end{minipage}
-  \caption[ステージ機能実装詳細]{ステージ機能実装詳細}
-  \label{Tutorial_picture}
-  \end{center}
-\end{figure}
-
-\subsubsection{改善項目}
-
-\ref{stage_branching}
-\begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{stage_branching}
-\caption[ステージ分岐]{ステージ分岐}
-\label{stage_branching}
-\end{figure}
+\begin{lstlisting}[caption=hoge,label=fuga]
+{
+	"_id" : ObjectId("5fc4be4c12a45922a91b0e75"),
+	"sys" : {
+		"mts" : ISODate("2020-11-30T09:41:32.411Z"),
+		"cts" : ISODate("2020-11-30T09:41:32.411Z"),
+		"rev" : 0
+	},
+	"dbVersion" : 1.01,
+	"proddbVersion" : 1.01,
+	"component" : "5fa79114e615fa000a1a5976",
+	"currentStage" : "MODULEWIREBONDPROTECTION",
+	"latestSyncedStage" : "MODULEWIREBONDING",
+	"status" : "created",
+	"rework_stage" : [ ],
+	"QC_results" : {
+		"MODULETOPCB" : {
+			"OPTICAL" : "5fc4c2cfb6c93d451e2c9ac1",
+			"GLUE_MODULE_FLEX_ATTACH" : "-1",
+			"MASS" : "5fc4c2da27766dc6e89c024f",
+			"METROLOGY" : "5fc4c2eaf1f19d9cb5859f00"
+		},
+		"MODULEWIREBONDING" : {
+			"WIREBONDING" : "-1",
+			"OPTICAL" : "5fc4c4c8b7d0c86912b4958f",
+			"SENSOR_IV" : "5fc4c59e9e283a57ccaa1088",
+			"PIXEL_FAILURE_TEST" : "5fca342f6e9f1f5eafedfb92",
+			"SLDO_VI" : "-1",
+			"WIREBOND" : "-1",
+			"CHIP_CONFIGURATION" : "-1"
+		},
+		"MODULEWIREBONDPROTECTION" : {
+			"OPTICAL" : "-1",
+			"POTTING" : "-1",
+			"MASS" : "-1",
+			"READOUT_IN_BASIC_ELECTRICAL_TEST" : "-1",
+			"SENSOR_IV" : "-1",
+			"REGISTER_TEST" : "-1"
+		},
+    ...
+	}
+}
+\end{lstlisting}
 
 \newpage
 \subsection{読み出し試験結果の検索機能}
@@ -438,22 +554,19 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \subsection{中央データベースとの情報同期ツール}
 生産時にはローカルデータベースと中央データベースにおいて、情報の同期が必要となる。例えば、モジュールのIDや組み立て工程、テスト結果といった情報があげられる。
 この情報同期のためのインターフェースツールを開発した。主に開発した項目については以下の2つである。
+
 \begin{itemize}
-  \item モジュールのID及びモジュールを構成するFE chipのIDのダウンロード機能
-  \item 読み出し試験に関しての試験結果アップロード機能
+  \item モジュール及び構成するFEチップ情報のダウンロード機能
+  \item 読み出し試験結果のアップロード機能
 \end{itemize}
 
-ダウンロード機能についての詳細を図\ref{pd_download_info}にまとめた。中央データベースに登録されているモジュールの ID、FE chipのIDとその数、対応関係をダウンロードしてくるものとなる。
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[ダウンロード機能の概要]{ダウンロード機能の概要}
-\label{pd_download_info}
-\end{figure}
+これらの機能のイメージを図\ref{interface_overview}に示す。
+実装の詳細については8章で後述する。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[アップロード機能の概要]{アップロード機能の概要}
-\label{pd_upload_info}
+\includegraphics[width=12cm]{interface_overview}
+\caption[データ同期機能の概要]{データ同期機能の概要}
+\label{interface_overview}
 \end{figure}
 
 \newpage

@@ -80,7 +80,7 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 \subsection{方法2: 検索情報を持つドキュメントを作成、使用}
 検索機能を改善するため方法2を考案し、実装を行った。アルゴリズムのイメージを図\ref{search_mongo_collection}に示す。
 検索キーワードを別のドキュメントに予め保持しておき、処理実行時にはそれを参照することで検索を行う。
-検索情報コレクションに入るドキュメント数は、試験結果数と同じであるため$O(n)$であり、検索コストを削減できると考えた。
+検索情報コレクションに入るドキュメント数は、試験結果数と同じであるためドキュメント数に対する処理時間は$O(n)$と考えられ、検索コストを削減できると思い、この方法を考案した。
 
 \begin{figure}[bpt]
   \begin{center}
@@ -90,6 +90,23 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
   \label{search_mongo_collection}
   \end{center}
 \end{figure}
+
+以下に検索情報のドキュメントの例を示す。
+\begin{lstlisting}[caption=hoge,label=fuga]
+{
+	"_id" : ObjectId("5fd489f60e2ca70557e44a8b"),
+	"runId" : "5fc4d027b1ef7c6297c91040",
+	"timeStamp" : ISODate("2020-11-30T10:57:19Z"),
+	"data" : [
+		"20UPGR00000001",
+		"20UPGFC9999999",
+		"std_digitalscan",
+		"hokuyama",
+		"tokyo_institute_of_technology",
+		"2020/12/09"
+	]
+}
+\end{lstlisting}
 
 \section{処理時間測定} \label{sec:search_process_time_mes}
 先述した方法1と2において、検索処理時間の測定を行った。詳細を以下に示す。
@@ -119,7 +136,7 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 
 \begin{lstlisting}
 curl "http://127.0.0.1:5000/localdb/scan?keywords=okuyama&match=partial" 
--o /dev/null -w "$\%${time$\_$total}\n" 2> /dev/null -s
+-o /dev/null -w "\%{time\_total}\n" 2> /dev/null -s
 \end{lstlisting}
 
 上記のコマンドを用いて、試験結果数に対するレスポンス時間の測定を行った。

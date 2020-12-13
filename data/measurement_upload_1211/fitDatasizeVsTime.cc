@@ -2,7 +2,7 @@
   TCanvas *c = new TCanvas("test1");
   c->SetLogx();
   c->SetLogy();
-  TH1 *frame = c->DrawFrame( 0.5, 0.2, 5000., 10 );
+  TH1 *frame = c->DrawFrame( 0.5, 0.2, 5000., 11 );
   frame->GetXaxis()->SetTitle("Datasize[KB]");
   frame->GetXaxis()->SetTitleSize(0.05);
   frame->GetXaxis()->SetTitleOffset(0.9);
@@ -52,10 +52,10 @@
   TF1 *f3 = new TF1("f3","[0]*x+[1]",0.0,4000);
   f3->SetLineColor(kGreen);
   
-  TLegend *leg =new TLegend(0.1,0.75,0.3,0.9,"");
-  leg->AddEntry(g,"KEK(Red)");
-  leg->AddEntry(g1,"LBL(Blue)");
-  leg->AddEntry(g2,"LOCAL(Green)");
+  TLegend *leg =new TLegend(0.1,0.7,0.25,0.9,"");
+  leg->AddEntry(g,"KEK");
+  leg->AddEntry(g1,"LBL");
+  leg->AddEntry(g2,"CERN");
   leg->Draw("SAME");
   
   //g->Fit("f1");

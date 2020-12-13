@@ -1,4 +1,4 @@
-\chapter{中央データベースとローカルデータベースのデータ同期ツールに関する研究}
+\chapter{中央データベースとローカルデータベースのデータ同期ツールに関する開発}
 
 開発した機能が生産時に十分であるかどうか見積もりは今後の開発を効率よく進めていく上で重要である。
 生産時のデータの数や量を想定してその際のシステム性能を見積もることで、今の実装で十分かどうか、改善が必要な場合どのように改善すればいいかを知ることができる。
@@ -105,20 +105,87 @@
 \end{table}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=7cm,angle=270]{datasize_vs_time.pdf}
-\caption[添付するファイルサイズと処理時間の関係]{添付するファイルサイズと処理時間の関係}
-\label{datasize_vs_time}
+  \begin{center}
+    \includegraphics[width=8cm,angle=270]{datasize_vs_time_new.pdf}
+  \caption[添付するファイルサイズと処理時間の関係]{添付するファイルサイズと処理時間の関係}
+  \label{datasize_vs_time}
+  \end{center}
+
 \end{figure}
 
 \section{モジュールIDのダウンロード機能確認と処理時間測定}
-\subsection{アルゴリズム}
-開発したモジュールIDをダウンロードするツールのアルゴリズムについて記す。
-アルゴリズムのイメージを図\ref{download_algorithm}に示す。
+\subsection{ダウンロードする情報と構造}
+中央データベースから、モジュール及びFEチップの情報をダウンロードする。
+それぞれの情報の詳細について以下に示す。
+\begin{itemize}
+  \item モジュール情報
+     \begin{itemize}
+       \item シリアルナンバー
+       \item FEチップの種類
+       \item 登録された機関
+       \item FEチップの枚数
+     \end{itemize}
+  \item FEチップ情報
+     \begin{itemize}
+       \item シリアルナンバー
+       \item FEチップID(モジュール上の位置情報に相当)
+       \item 登録された機関
+     \end{itemize}
+\end{itemize}
+
+ダウンロードされたモジュールのドキュメントの例を以下に示す。
+\begin{lstlisting}[caption=モジュール,label=fuga]
+{
+	"_id" : ObjectId("5fa79114e615fa000a1a5976"),
+	"name" : "20UPGR00000001",
+	"chipType" : "RD53A",
+	"serialNumber" : "20UPGR00000001",
+	"chipId" : -1,
+	"componentType" : "module",
+	"address" : "5fd597fdf7339bbf26b87fb2",
+	"children" : 1,
+	"sys" : {
+		"mts" : ISODate("2020-12-13T04:26:37.989Z"),
+		"cts" : ISODate("2020-12-13T04:26:37.989Z"),
+		"rev" : 0
+	},
+	"dbVersion" : 1.01,
+	"user_id" : -1,
+	"proDB" : true
+}
+\end{lstlisting}
+\begin{lstlisting}[caption=FEチップ,label=fuga]
+{
+	"_id" : ObjectId("5fa79560e615fa000a1a5a16"),
+	"name" : "20UPGFC9999999",
+	"chipType" : "RD53A",
+	"serialNumber" : "20UPGFC9999999",
+	"chipId" : 0,
+	"componentType" : "front-end_chip",
+	"address" : "5fd597fdf7339bbf26b87fb2",
+	"children" : -1,
+	"sys" : {
+		"mts" : ISODate("2020-12-13T04:26:37.984Z"),
+		"cts" : ISODate("2020-12-13T04:26:37.984Z"),
+		"rev" : 0
+	},
+	"dbVersion" : 1.01,
+	"user_id" : -1,
+	"proDB" : true
+}
+\end{lstlisting}
+
+\subsection{処理の流れ}
+
+ダウンロード機能における処理の流れのイメージを図\ref{download_algorithm}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[ダウンロードアルゴリズムのイメージ図]{ダウンロードアルゴリズムのイメージ図}
-\label{download_algorithm}
+  \begin{center}
+  \includegraphics[width=11cm]{download_tool_flow_whole.png}
+  \includegraphics[width=11cm]{download_tool_flow_detail.png}
+  \caption[ダウンロード処理に関する流れのイメージ図]{ダウンロード処理に関する流れのイメージ図}
+  \label{download_algorithm}
+  \end{center}
 \end{figure}
 
 \subsection{機能確認}
@@ -157,19 +224,57 @@ KEKモジュールをダウンロードした際の処理時間を測定した�
 \end{center}
 \end{table}
 
+\subsection{生産時における見積もり}
+
 \subsection{改善点}
 
 \section{読み出し試験結果のアップロード機能確認と処理時間測定}
 4章で述べたように、読み出し試験結果について中央データベースへアップロードするツールを開発した。
 以下で詳細を述べる。
 \subsection{アップロードする情報とその構造}
-読み出し試験の結果をアップロードするツールのアルゴリズムについて記す。
-アルゴリズムのイメージを図\ref{upload_algorithm}に示す。
+読み出し試験結果について、中央データベースにアップロードする情報を以下に記す。
+\begin{itemize}
+  \item 試験日時
+  \item モジュール周りの環境温度
+  \item ピクセル解析結果 
+  \item 各試験結果データファイル
+  \item 読み出し設定ファイル
+  \item その他設定ファイル(DB、ユーザ、組み立て機関等)
+\end{itemize}
+
+中央データベースにおける読み出し試験の構造に関して、YARRを用いて行った読み出し結果は全てFEチップ毎に取得、保存される。
+そのため、データベースの内部でもFEチップに読み出し試験結果を紐つける構造を設け、モジュールの結果では、各FEチップの結果ページのIDを持つ構造とした。イメージを図\ref{structure_for_electrical_tests}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[アップロードアルゴリズムのイメージ図]{アップロードアルゴリズムのイメージ図}
-\label{download_algorithm}
+  \begin{center}
+  \includegraphics[width=13cm]{structure_for_electrical_tests.png}
+  \caption[中央データベースにおける読み出し試験結果の構造]{中央データベースにおける読み出し試験結果の構造}
+  \label{structure_for_electrical_tests}
+  \end{center}
+\end{figure}
+
+また中央データベースにおいてモジュール、FEチップの試験結果が持つ情報を表\ref{electrical_parameters}にまとめる。
+\begin{table}[tbp]
+\begin{center}
+\caption[ダウンロード処理時間測定]{ダウンロード処理時間測定}
+\label{electrical_parameters}
+  \begin{tabular}{|l|l|l|} \hline
+    部品 & 試験情報、結果 & 添付ファイル \\ \hline\hline
+    モジュール &  モジュール環境温度 & \\  
+               &  FEチップにつく読み出し試験結果のID & \\  \hline
+    FEチップ &  ピクセル解析結果 & 試験結果データファイル\\ 
+             &                   & 読み出し設定ファイル\\
+             &                   & その他設定ファイル\\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
+
+\subsection{処理の流れ}
+アップロード機能における処理の流れのイメージを図\ref{upload_algorithm}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{upload_algorithm}
+\caption[アップロード処理に関する流れのイメージ図]{アップロード処理に関する流れのイメージ図}
+\label{upload_algorithm}
 \end{figure}
 
 \subsection{機能確認と問題点}
@@ -179,8 +284,7 @@ KEKモジュールをダウンロードした際の処理時間を測定した�
 各処理にかかる時間の詳細を以下の表に示す。attachmentに多く使われている。
 また各ファイルに対してのアップロード時間をまとめる。
 
-\subsection{改善策}
-容量を減らす。-> json fileのspaceと改行を抜く。
+\subsection{改善}
 容量を減らし、APIの使用回数を減らす。 -> zipにしてまとめて送る。
 
 \subsection{生産時における合計処理時間の見積もり}
