@@ -1,0 +1,108 @@
+std_digitalscan
+EnMask.json Ok 1313980
+OccupancyMap.json Ok 1467583
+L1Dist.json Ok 527
+ctrlCfg_ctrlCfg.json Ok 461
+dbCfg_dbCfg.json Ok 604
+siteCfg_siteCfg.json Ok 33
+userCfg_userCfg.json Ok 141
+scanCfg_std_digitalscan.json Ok 2233
+beforeCfg_chipCfg.json Error 7167044
+afterCfg_chipCfg.json Error 7167044
+
+std_analogscan
+EnMask.json Ok 1313980
+OccupancyMap.json Ok 1438429
+L1Dist.json Ok 599
+ctrlCfg_ctrlCfg.json Ok 461
+dbCfg_dbCfg.json Ok 604
+siteCfg_siteCfg.json Ok 33
+userCfg_userCfg.json Ok 141
+scanCfg_std_analogscan.json Ok 2067
+beforeCfg_chipCfg.json Error 7167044
+afterCfg_chipCfg.json Error 7167044
+
+std_thresholdscan
+Scurve-30-96.json Ok 984
+Scurve-110-96.json Ok 985
+Scurve-70-96.json Ok 983
+Scurve-150-96.json Ok 1019
+Scurve-190-96.json Ok 1018
+Scurve-230-96.json Ok 1018
+Scurve-270-96.json Ok 1017
+Scurve-310-96.json Ok 1018
+Scurve-350-96.json Ok 1019
+Scurve-390-96.json Ok 1018
+Scurve-40-96.json Ok 998
+Scurve-80-96.json Ok 988
+Scurve-120-96.json Ok 1001
+Scurve-160-96.json Ok 1018
+Scurve-200-96.json Ok 1018
+Scurve-240-96.json Ok 1018
+Scurve-280-96.json Ok 1018
+Scurve-320-96.json Ok 1019
+Scurve-360-96.json Ok 1019
+Scurve-400-96.json Ok 1018
+Scurve-10-96.json Ok 997
+Scurve-50-96.json Ok 994
+Scurve-90-96.json Ok 992
+Scurve-130-96.json Ok 1022
+Scurve-170-96.json Ok 1011
+Scurve-210-96.json Ok 1018
+Scurve-250-96.json Ok 1019
+Scurve-290-96.json Ok 1018
+Scurve-330-96.json Ok 1017
+Scurve-370-96.json Ok 1017
+Scurve-60-96.json Ok 989
+Scurve-100-96.json Ok 1001
+Scurve-140-96.json Ok 1017
+Scurve-180-96.json Ok 1018
+Scurve-220-96.json Ok 1019
+Scurve-260-96.json Ok 1019
+Scurve-300-96.json Ok 1018
+Scurve-340-96.json Ok 1018
+Scurve-380-96.json Ok 1018
+sCurve-0.json Ok 49318
+ThresholdDist-0.json Ok 4616
+ThresholdMap-0.json Ok 2160520
+NoiseDist-0.json Ok 2323
+Chi2Map-0.json Ok 2261013
+StatusMap-0.json Ok 1313988
+StatusDist-0.json Ok 490
+NoiseMap-0.json Ok 2166829
+Chi2Dist-0.json Ok 1129
+TimePerFitDist-0.json Ok 3111
+ctrlCfg_ctrlCfg.json Ok 461
+dbCfg_dbCfg.json Ok 604
+siteCfg_siteCfg.json Ok 33
+userCfg_userCfg.json Ok 141
+scanCfg_std_thresholdscan.json Ok 2159
+beforeCfg_chipCfg.json Error 7201833
+afterCfg_chipCfg.json Error 7201833
+
+std_totscan
+MeanTotMap-0.json Ok 1900578
+SigmaTotMap-0.json Ok 2237422
+MeanTotDist-0.json Ok 588
+SigmaTotDist-0.json Ok 1758
+L1Dist.json Ok 592
+ctrlCfg_ctrlCfg.json Ok 461
+dbCfg_dbCfg.json Ok 604
+siteCfg_siteCfg.json Ok 33
+userCfg_userCfg.json Ok 141
+scanCfg_std_totscan.json Ok 2048
+beforeCfg_chipCfg.json Error 7201833
+afterCfg_chipCfg.json Error 7201833
+
+std_noisescan
+Occupancy.json Ok 1314610
+NoiseOccupancy.json Ok 1316883
+NoiseMask.json Ok 1313977
+ctrlCfg_ctrlCfg.json Ok 461
+dbCfg_dbCfg.json Ok 604
+siteCfg_siteCfg.json Ok 33
+userCfg_userCfg.json Ok 141
+scanCfg_std_noisescan.json Ok 1405
+beforeCfg_chipCfg.json Error 7201833
+afterCfg_chipCfg.json Error 7201831
+
