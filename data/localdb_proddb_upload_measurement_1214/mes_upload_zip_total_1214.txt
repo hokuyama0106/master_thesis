@@ -1,0 +1,365 @@
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.3416907787322998
+std_digitalscan_configfiles.zip 56043 Ok 2.0427379608154297
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.91579270362854
+std_analogscan_configfiles.zip 58062 Ok 1.891838788986206
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.88185977935791
+std_thresholdscan_configfiles.zip 192867 Ok 0.9904069900512695
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.5313284397125244
+std_totscan_configfiles.zip 192839 Ok 0.743445634841919
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.3580477237701416
+std_noisescan_configfiles.zip 191972 Ok 1.627711296081543
+real	0m43.344s
+user	0m2.512s
+sys	0m0.466s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.6882166862487793
+std_digitalscan_configfiles.zip 56043 Ok 1.5465943813323975
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 2.028181314468384
+std_analogscan_configfiles.zip 58062 Ok 1.380492925643921
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.519188165664673
+std_thresholdscan_configfiles.zip 192867 Ok 0.4846501350402832
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.0877494812011719
+std_totscan_configfiles.zip 192839 Ok 0.5299496650695801
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.518794059753418
+std_noisescan_configfiles.zip 191972 Ok 0.6529922485351562
+real	0m37.347s
+user	0m2.531s
+sys	0m0.477s
+
+real	0m31.817s
+user	0m2.509s
+sys	0m0.465s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.33171868324279785
+std_digitalscan_configfiles.zip 56043 Ok 0.6456403732299805
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.357982873916626
+std_analogscan_configfiles.zip 58062 Ok 0.3762502670288086
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.2347073554992676
+std_thresholdscan_configfiles.zip 192867 Ok 0.6831152439117432
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 3.6976981163024902
+std_totscan_configfiles.zip 192839 Ok 3.2865500450134277
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.5831677913665771
+std_noisescan_configfiles.zip 191972 Ok 1.1165311336517334
+real	0m38.824s
+user	0m2.557s
+sys	0m0.498s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.3882458209991455
+std_digitalscan_configfiles.zip 56043 Ok 1.4377708435058594
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 1.3799359798431396
+std_analogscan_configfiles.zip 58062 Ok 0.8388664722442627
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.1492698192596436
+std_thresholdscan_configfiles.zip 192867 Ok 0.9599149227142334
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.9787211418151855
+std_totscan_configfiles.zip 192839 Ok 1.066594123840332
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.5024707317352295
+std_noisescan_configfiles.zip 191972 Ok 0.8944175243377686
+real	0m37.330s
+user	0m2.509s
+sys	0m0.494s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.34281158447265625
+std_digitalscan_configfiles.zip 56043 Ok 0.8443076610565186
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 1.043339729309082
+std_analogscan_configfiles.zip 58062 Ok 0.5920000076293945
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.3472249507904053
+std_thresholdscan_configfiles.zip 192867 Ok 0.6986777782440186
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.4060778617858887
+std_totscan_configfiles.zip 192839 Ok 0.4178018569946289
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.8015899658203125
+std_noisescan_configfiles.zip 191972 Ok 0.6668837070465088
+real	0m32.322s
+user	0m2.360s
+sys	0m0.453s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.3336925506591797
+std_digitalscan_configfiles.zip 56043 Ok 0.5842466354370117
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.47248196601867676
+std_analogscan_configfiles.zip 58062 Ok 1.195918083190918
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.778555393218994
+std_thresholdscan_configfiles.zip 192867 Ok 0.8318915367126465
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.1910066604614258
+std_totscan_configfiles.zip 192839 Ok 0.6860454082489014
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.3840477466583252
+std_noisescan_configfiles.zip 191972 Ok 1.0121181011199951
+real	0m31.872s
+user	0m2.453s
+sys	0m0.450s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 1.6071362495422363
+std_digitalscan_configfiles.zip 56043 Ok 1.6206998825073242
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.8451266288757324
+std_analogscan_configfiles.zip 58062 Ok 3.856795310974121
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.3913536071777344
+std_thresholdscan_configfiles.zip 192867 Ok 1.689042091369629
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 2.186366558074951
+std_totscan_configfiles.zip 192839 Ok 0.695281982421875
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 1.308830738067627
+std_noisescan_configfiles.zip 191972 Ok 1.8704180717468262
+real	0m42.357s
+user	0m2.421s
+sys	0m0.479s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 2.4942641258239746
+std_digitalscan_configfiles.zip 56043 Ok 0.9121520519256592
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.5782938003540039
+std_analogscan_configfiles.zip 58062 Ok 1.5421757698059082
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.5225820541381836
+std_thresholdscan_configfiles.zip 192867 Ok 0.6181011199951172
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.658987283706665
+std_totscan_configfiles.zip 192839 Ok 0.7782254219055176
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 1.3644585609436035
+std_noisescan_configfiles.zip 191972 Ok 2.421961545944214
+real	0m41.331s
+user	0m2.531s
+sys	0m0.446s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.9985995292663574
+std_digitalscan_configfiles.zip 56043 Ok 1.2451300621032715
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.740969181060791
+std_analogscan_configfiles.zip 58062 Ok 0.984565019607544
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.7301254272460938
+std_thresholdscan_configfiles.zip 192867 Ok 0.9000554084777832
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.0905523300170898
+std_totscan_configfiles.zip 192839 Ok 0.44477152824401855
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.37377071380615234
+std_noisescan_configfiles.zip 191972 Ok 0.9913539886474609
+real	0m33.358s
+user	0m2.439s
+sys	0m0.462s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.33591198921203613
+std_digitalscan_configfiles.zip 56043 Ok 0.740821123123169
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.5692596435546875
+std_analogscan_configfiles.zip 58062 Ok 1.4136147499084473
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.6684842109680176
+std_thresholdscan_configfiles.zip 192867 Ok 1.013603687286377
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.135521650314331
+std_totscan_configfiles.zip 192839 Ok 0.5059938430786133
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.4163014888763428
+std_noisescan_configfiles.zip 191972 Ok 0.8578827381134033
+real	0m36.826s
+user	0m2.406s
+sys	0m0.479s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.8172194957733154
+std_digitalscan_configfiles.zip 56043 Ok 0.9794938564300537
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.9309816360473633
+std_analogscan_configfiles.zip 58062 Ok 2.069075107574463
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.5207247734069824
+std_thresholdscan_configfiles.zip 192867 Ok 0.5043244361877441
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.2892732620239258
+std_totscan_configfiles.zip 192839 Ok 0.6365420818328857
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.4006073474884033
+std_noisescan_configfiles.zip 191972 Ok 0.6646950244903564
+real	0m32.832s
+user	0m2.398s
+sys	0m0.455s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.35178112983703613
+std_digitalscan_configfiles.zip 56043 Ok 0.8771224021911621
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.6968965530395508
+std_analogscan_configfiles.zip 58062 Ok 0.8002252578735352
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.2964041233062744
+std_thresholdscan_configfiles.zip 192867 Ok 0.5453314781188965
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.0712482929229736
+std_totscan_configfiles.zip 192839 Ok 0.6177706718444824
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.3666574954986572
+std_noisescan_configfiles.zip 191972 Ok 0.9408864974975586
+real	0m29.339s
+user	0m2.431s
+sys	0m0.466s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.35495448112487793
+std_digitalscan_configfiles.zip 56043 Ok 0.8298070430755615
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 1.6041407585144043
+std_analogscan_configfiles.zip 58062 Ok 1.009359359741211
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.6743874549865723
+std_thresholdscan_configfiles.zip 192867 Ok 0.7717244625091553
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 2.7191131114959717
+std_totscan_configfiles.zip 192839 Ok 1.2959673404693604
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.5041258335113525
+std_noisescan_configfiles.zip 191972 Ok 1.5940377712249756
+real	0m35.359s
+user	0m2.668s
+sys	0m0.506s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.4137580394744873
+std_digitalscan_configfiles.zip 56043 Ok 1.158951997756958
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.6149928569793701
+std_analogscan_configfiles.zip 58062 Ok 0.6008138656616211
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.3094139099121094
+std_thresholdscan_configfiles.zip 192867 Ok 0.8254835605621338
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.263031244277954
+std_totscan_configfiles.zip 192839 Ok 0.4631226062774658
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.39703893661499023
+std_noisescan_configfiles.zip 191972 Ok 0.6627490520477295
+real	0m29.311s
+user	0m2.373s
+sys	0m0.460s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 2.9140853881835938
+std_digitalscan_configfiles.zip 56043 Ok 1.8836867809295654
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.8140482902526855
+std_analogscan_configfiles.zip 58062 Ok 1.1912860870361328
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 3.1495141983032227
+std_thresholdscan_configfiles.zip 192867 Ok 0.8272509574890137
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.6035609245300293
+std_totscan_configfiles.zip 192839 Ok 0.6020247936248779
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.7221925258636475
+std_noisescan_configfiles.zip 191972 Ok 1.103705644607544
+real	0m41.828s
+user	0m2.461s
+sys	0m0.472s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.7895147800445557
+std_digitalscan_configfiles.zip 56043 Ok 0.9554004669189453
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.6715023517608643
+std_analogscan_configfiles.zip 58062 Ok 0.8291172981262207
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.7127888202667236
+std_thresholdscan_configfiles.zip 192867 Ok 1.0436477661132812
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.3556532859802246
+std_totscan_configfiles.zip 192839 Ok 0.45125341415405273
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.5920789241790771
+std_noisescan_configfiles.zip 191972 Ok 0.7305796146392822
+real	0m33.857s
+user	0m2.448s
+sys	0m0.489s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.3501601219177246
+std_digitalscan_configfiles.zip 56043 Ok 1.0732691287994385
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.6336164474487305
+std_analogscan_configfiles.zip 58062 Ok 0.659677267074585
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.349177598953247
+std_thresholdscan_configfiles.zip 192867 Ok 0.6074755191802979
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 1.3111114501953125
+std_totscan_configfiles.zip 192839 Ok 0.49910402297973633
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.3780081272125244
+std_noisescan_configfiles.zip 191972 Ok 1.2180581092834473
+real	0m29.807s
+user	0m2.462s
+sys	0m0.490s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.36960792541503906
+std_digitalscan_configfiles.zip 56043 Ok 0.7588980197906494
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 4.115979909896851
+std_analogscan_configfiles.zip 58062 Ok 1.0842385292053223
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 2.571105480194092
+std_thresholdscan_configfiles.zip 192867 Ok 0.6570219993591309
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 2.383469581604004
+std_totscan_configfiles.zip 192839 Ok 0.957648515701294
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.3577549457550049
+std_noisescan_configfiles.zip 191972 Ok 1.430471420288086
+real	0m36.854s
+user	0m2.480s
+sys	0m0.500s
+
+std_digitalscan
+std_digitalscan_datafiles.zip 10040 Ok 0.33188819885253906
+std_digitalscan_configfiles.zip 56043 Ok 0.7346899509429932
+std_analogscan
+std_analogscan_datafiles.zip 45573 Ok 0.5883395671844482
+std_analogscan_configfiles.zip 58062 Ok 0.615107536315918
+std_thresholdscan
+std_thresholdscan_datafiles.zip 1492606 Ok 4.281261682510376
+std_thresholdscan_configfiles.zip 192867 Ok 1.7369139194488525
+std_totscan
+std_totscan_datafiles.zip 726375 Ok 2.4648191928863525
+std_totscan_configfiles.zip 192839 Ok 1.0389513969421387
+std_noisescan
+std_noisescan_datafiles.zip 18693 Ok 0.37229132652282715
+std_noisescan_configfiles.zip 191972 Ok 0.8756377696990967
+real	0m33.814s
+user	0m2.428s
+sys	0m0.524s
+

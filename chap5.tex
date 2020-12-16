@@ -228,6 +228,9 @@ KEKモジュールをダウンロードした際の処理時間を測定した�
 
 \subsection{改善点}
 
+
+\newpage
+
 \section{読み出し試験結果のアップロード機能確認と処理時間測定}
 4章で述べたように、読み出し試験結果について中央データベースへアップロードするツールを開発した。
 以下で詳細を述べる。
@@ -243,7 +246,7 @@ KEKモジュールをダウンロードした際の処理時間を測定した�
 \end{itemize}
 
 中央データベースにおける読み出し試験の構造に関して、YARRを用いて行った読み出し結果は全てFEチップ毎に取得、保存される。
-そのため、データベースの内部でもFEチップに読み出し試験結果を紐つける構造を設け、モジュールの結果では、各FEチップの結果ページのIDを持つ構造とした。イメージを図\ref{structure_for_electrical_tests}に示す。
+そのため、データベースの内部でもFEチップに読み出し試験結果を紐つける構造を設け、モジュールの結果では各FEチップの結果ページのIDを持つ構造とした。イメージを図\ref{structure_for_electrical_tests}に示す。
 
 \begin{figure}[bpt]\centering
   \begin{center}
@@ -253,7 +256,7 @@ KEKモジュールをダウンロードした際の処理時間を測定した�
   \end{center}
 \end{figure}
 
-また中央データベースにおいてモジュール、FEチップの試験結果が持つ情報を表\ref{electrical_parameters}にまとめる。
+中央データベースにおいてモジュール、FEチップの試験結果が持つ情報を表\ref{electrical_parameters}にまとめる。
 \begin{table}[tbp]
 \begin{center}
 \caption[ダウンロード処理時間測定]{ダウンロード処理時間測定}
@@ -270,7 +273,10 @@ KEKモジュールをダウンロードした際の処理時間を測定した�
 \end{table}
 
 \subsection{処理の流れ}
+
 アップロード機能における処理の流れのイメージを図\ref{upload_algorithm}に示す。
+流れの中には共通して行われる処理と、各FEチップに対して行われる処理がある。
+
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{upload_algorithm}
 \caption[アップロード処理に関する流れのイメージ図]{アップロード処理に関する流れのイメージ図}
@@ -279,22 +285,23 @@ KEKモジュールをダウンロードした際の処理時間を測定した�
 
 \subsection{機能確認と問題点}
 上述した処理のツールを開発し、機能確認と処理時間測定を行った。
-その際以下のような問題点があった。
+その際以下のような問題があった。
 \begin{itemize}
-  \item 処理時間が長い。
+  \item 処理時間が長くかかってしまった。
   \item ファイルの容量制限により、データ容量が4MBを超えるファイルの添付に失敗した。
 \end{itemize}
 
-問題1の改善に向けて、アップロードにかかる時間を測定した。
-KEKのサーバーを用いて、20回アップロード処理を行い、かかる時間を測定した。
-その平均を測定値とした。
+初めに、問題1の改善に向けて、アップロードにかかる時間を測定した。
+KEKのサーバーを用いてアップロード処理を20回行い、全体でかかる時間を測定した。
+平均値と標準偏差を測定値と誤差とした。
 
 以下のようになった。
 \bbb
   (1.3 \pm 0.0) \times 10^2 [{\rm sec}]
 \eee
 
-処理時間を改善するにあたって、処理時間詳細測定を行った。表\ref{upload_algorithm}より特に以下の詳細処理を抜粋し、それぞれにかかる時間を測定した。
+ここで処理流れの表\ref{upload_algorithm}より特に以下の詳細処理を抜粋し、それぞれにかかる時間を測定した。
+
 \begin{enumerate}
   \item 中央データベース接続、認証。
   \item 中央データベース、ローカルデータベースからモジュール情報の取得。
@@ -304,7 +311,6 @@ KEKのサーバーを用いて、20回アップロード処理を行い、かか
   \item 中央データベースにモジュールの結果ページの作成。結果情報をアップロード。
 \end{enumerate}
 
-測定条件は上記のものと同じとする。
 結果を表\ref{upload_process_detail_result}に示す。
 \begin{table}[tbp]
 \begin{center}
@@ -316,23 +322,41 @@ KEKのサーバーを用いて、20回アップロード処理を行い、かか
     2 & $ 0.88 \pm 0.14 $ \\  
     3 & $ 2.2 \pm  0.1 $ \\  
     4 & $ 68 \pm 3 $ \\  
-    5 & $ 44 \pm 0 $ \\ \hline 
-    6 & $ 1.8 \pm 0.1 $ \\  
+    5 & $ 44 \pm 0 $ \\ 
+    6 & $ 1.8 \pm 0.1 $ \\ \hline  
   \end{tabular}
 \end{center}
 \end{table}
 
 それぞれの処理が全体に占める割合をグラフにしたものを表\ref{upload_process_detail_gragh}に示す。
+結果データや各設定値のファイル添付に大きく時間がかかっていることがわかった。
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{upload_process_detail_gragh}
 \caption[アップロード時における各詳細処理が占める割合]{アップロード時における各詳細処理が占める割合}
 \label{upload_process_detail_gragh}
 \end{figure}
-ファイル添付に多く時間がかかっていることがわかる。
 
-各ファイル添付に対する処理時間の測定を行った。
+\subsubsection{生産時における見積もり}
+Quadモジュールにおける読み出し試験結果アップロード処理合計時間の見積もりを行った。
+上述した測定はSCCであるためFEチップに対する処理は1回であるため、Quadモジュールの場合は表\ref{upload_process_detail_result}を用いて以下のように計算できる。
+\bbb
+{\rm FE}チップ処理: ((2.2+68+44) \pm \sqrt{(0.1)^2 + 3^2 + 0^2)} \times 4 \\\nonumber 
+= (4.6 \pm 0.1 ) \times 10^2 [{\rm sec}]\\
+合計: (4.6 \pm 0.1 ) \times 10^2 + (14\pm0) + (0.88 \pm 0.14) + (1.8\pm0.1) = (4.7 \pm 0.1) \times 10^2 [{\rm sec}] \\\nonumber
+= 7.9 \pm 0.1 [{\rm min}]
+\eee
+
+モジュール読み出し試験1回に対して、約8分程度かかる見積もりとなった。
+円滑なモジュール組み立て、データ管理を行うために、データ同期は速やかに行われる必要がある。
+さらに同期が必要な品質試験結果は、各組み立て工程に読み出し試験以外にも多く存在する。
+よって現状のアルゴリズムを見直し、処理速度を改善に努める必要があると考えた。
+
+\subsection{改善策}
+
+ファイル添付に多く時間がかかってしまっている現状を踏まえ、各ファイルに対して添付処理時間の測定を行った。
+測定は上述したものと同様にKEKサーバーを用いて合計20回行った。
 添付する結果データファイル、設定ファイルの種類とデータ容量、添付処理実行結果、処理時間を表\ref{upload_status_to_pd}に示す。
-問題点2にあげたように、4MBを超える容量のファイル添付は失敗していることがわかる。
+ここで、さらに4MBを超える容量のファイル添付は失敗していることがわかった。
 
 \begin{longtable}{|llllll|}
   \caption[アップロード処理時のファイル添付実行結果]{アップロード処理時のファイル添付実行結果}
@@ -446,32 +470,61 @@ std$\_$noisescan & Occupancy.json & Ok & 1,300 & 4.0 $\pm$ 0.1 & 18$\pm$0\\
 \hline
 \end{longtable}
 
-\subsubsection{生産時における見積もり}
-Quadモジュールにおいて、1つのモジュールに対する生産時のアップロード処理合計時間の見積もりを以下で行った。
-上述した測定はSCCであるため、FEチップに対する処理は1回である。Quadの場合は4回分であることを考慮すると、モジュール1つに対して以下のように見積もることができる。
+\newpage
+表\ref{upload_status_to_pd}より、データサイズの大きいものにアップロード時間がかかっていることがわかる。
+また添付処理を行うオフセットがあることから、threshold scanのように各容量が大きくなくてもファイル数が多いものにはアップロード時間が合計して多くかかってしまうことがわかる。
+
+これらのことと添付処理の失敗をなくすことを考慮に入れ、次のような改善策を考えた。
+
+\begin{itemize}
+  \item 各試験項目に対する結果データ、設定ファイルをそれぞれZipファイルに統合し、圧縮後にアップロードを行う。
+\end{itemize}
+
+こうすることで、アップロードするファイルの容量、数共に削減することができる。
+圧縮率によってはアップロード処理の失敗もなくすことができると考えた。
+
+これを踏まえアップロードツールを改良し、再び各ファイルの添付処理にかかる時間を測定した。
+合計処理時間は以下のようになり、全てのファイルのアップロードに成功した。
+
 \bbb
-hogehoge
+  36 \pm 1 [{\rm sec}]
 \eee
-
-\subsection{改善策}
-
-容量を減らし、APIの使用回数を減らす。
-
-合計処理時間は以下のようになった。??$\%$の削減に成功した。
-
 
 \begin{longtable}{|llllll|}
   \caption[アップロード処理時のzipファイル添付実行結果]{アップロード処理時のzipファイル添付実行結果}
   \label{upload_status_to_pd_zip}
   \endhead
   \hline
-  読み出し項目 & ファイル名 & 添付処理実行結果 & データ容量[KB] & 処理時間[sec] & 削減率[$\%$] \\ 
+  読み出し項目 & ファイル名 & 実行結果 & 容量[KB] & 処理時間[sec] & 全体[sec] \\ 
   \hline
-  std$\_$digitalscan & datafile.zip & Ok & 1,300 & & \\
-                     & configfile.zip & Ok & 7,200 & &\\
-  \hline
+ std$\_$digitalscan & std$\_$digitalscan$\_$datafiles.zip & Ok & 10 & 0.77 $\pm$ 0.18 & 1.9 $\pm$ 0.2\\
+ & std$\_$digitalscan$\_$configfiles.zip & Ok & 56 & 1.1 $\pm$ 0.1 &\\
+\hline
+ std$\_$analogscan & std$\_$analogscan$\_$datafiles.zip & Ok & 46 & 1.0 $\pm$ 0.2 & 2.2 $\pm$ 0.3 \\
+ & std$\_$analogscan$\_$configfiles.zip & Ok & 58 & 1.2 $\pm$ 0.2 &\\
+\hline
+ std$\_$thresholdscan & std$\_$thresholdscan$\_$datafiles.zip & Ok & 1,500 & 2.6 $\pm$ 0.1 & 3.5 $\pm$ 0.1 \\
+ & std$\_$thresholdscan$\_$configfiles.zip & Ok & 190 & 0.86 $\pm$ 0.08 &\\
+\hline
+ std$\_$totscan & std$\_$totscan$\_$datafiles.zip & Ok & 730 & 1.7 $\pm$ 0.2 & 2.5 $\pm$ 0.2\\
+ & std$\_$totscan$\_$configfiles.zip & Ok & 190 & 0.83 $\pm$ 0.15 &\\
+\hline
+ std$\_$noisescan & std$\_$noisescan$\_$datafiles.zip & Ok & 19 & 0.56 $\pm$ 0.07 & 1.7 $\pm$ 0.1 \\
+ & std$\_$noisescan$\_$configfiles.zip & Ok & 190 & 1.1 $\pm$ 0.1 &\\
+\hline
 \end{longtable}
 
 \subsubsection{生産時における見積もり}
-十分に運用可能であると考えられる。
+上記の見積もりと同様に、改善後のツールにおけるアップロード時間の見積もりを行った。
+表\ref{upload_process_detail_result}において、添付処理に対応する処理4、5以外は同じとする。
+改良後の処理4、5の処理時間は、
+\bbb
+{\rm FE}チップ処理: ((2.2+6.7+5.1) \pm \sqrt{(0.1)^2 + (1.1)^2 + (0.3)^2)} \times 4 \\\nonumber 
+= 56 \pm 5  [{\rm sec}]\\
+合計: (56 \pm 5 ) + (14\pm0) + (0.88 \pm 0.14) + (1.8\pm0.1) = 73 \pm 5 [{\rm sec}] \\\nonumber
+= 1.2 \pm 0.1 [{\rm min}]
+\eee
 
+約1分でアップロードを完了できる見積もりとなった。
+改善前に比べて15$\%$の処理時間となった。
+現在は改善後の方法を用いたツールを提供している。
