@@ -1,14 +1,13 @@
 \chapter{中央データベースとローカルデータベースのデータ同期ツールに関する開発}
 
-開発した機能が生産時に十分であるかどうか見積もりは今後の開発を効率よく進めていく上で重要である。
-生産時のデータの数や量を想定してその際のシステム性能を見積もることで、今の実装で十分かどうか、改善が必要な場合どのように改善すればいいかを知ることができる。
-中央データベースとローカルデータベースのデータ同期機能に関して処理時間評価を行った。
+この章では中央データベースとローカルデータベースのデータ同期機能に関しての調査と各ツールにおける改善策の考案、処理時間測定を行った。
 詳細について以下で説明する。
 
 \section{サーバーの設置場所による処理時間の違い}
 4章で述べたように、中央データベースはチェコに設置されている。
 そのため試験結果のアップロードに関して、各組み立て機関から接続しデータ送信する処理時間は、機関の場所に大きく依存すると考えられる。
-世界的にデータ同期ツールが不自由なく動くことに向けた開発、改善に役立てることを目的として、データを送信する処理時間を、以下の3つの場所に置かれているサーバーを用いて測定した。
+世界的にデータ同期ツールが不自由なく動くことに向けた開発、改善に役立てることを目的として、データベース間の情報通信にかかる処理時間を、以下の3つの場所に置かれているサーバーを用いて測定した。
+図\ref{localdb_world_map}より、ローカルデータベースの設置場所はヨーロッパ、アメリカ、日本の3つの地域に分布しており、それぞれにおける代表機関として以下の3つに設置されたサーバーを用いて調査を行った。
 
 \begin{itemize}
   \item 日本、高エネルギー加速器研究所(KEK) 
@@ -19,36 +18,34 @@
 各サーバーの性能を表\ref{server_spec}に示す。また各サーバーが置かれている場所の位置関係を図\ref{server_geometry}に示す。
 
 \begin{table}[tbp]
-\caption[サーバーの性能一覧]{サーバーの性能一覧}
+\caption[各ローカルデータベースサーバーの性能一覧]{各ローカルデータベースサーバーの性能一覧。今回の調査に利用したサーバーの性能を示す。KEK(日本)、LBL(アメリカ)、CERN(スイス)に設置されたサーバーを用いた。}
 \label{server_spec}
 \scalebox{0.9}{
   \begin{tabular}{|l|llll|l|l|} \hline
     設置機関 & CPU & & & & Memory & Disk \\
      & Type & Core & Thread & Clock speed[GHz]& [kB] & [GB] \\ \hline 
-    KEK & Intel(R) Core(TM) i7-9700K & 8 & 16 & 3.6 & 32,658,772 & 1800 + 1800\\
-    LBL & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32,628,000 & 233\\
-    CERN & Intel(R) Core(TM) i7-4790 & 4 & 8 & 3.6 & 32,686,404 & 238.5 + 3700 + 3700\\ \hline
+    KEK(日本) & Intel(R) Core(TM) i7-9700K & 8 & 16 & 3.6 & 32,658,772 & 1800 + 1800\\
+    LBL(アメリカ) & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32,628,000 & 233\\
+    CERN(スイス) & Intel(R) Core(TM) i7-4790 & 4 & 8 & 3.6 & 32,686,404 & 238.5 + 3700 + 3700\\ \hline
   \end{tabular}
 }
 \end{table}
 
-
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{server_geometry}
-\caption[各サーバの位置関係]{各サーバの位置関係}
+\caption[各サーバーの設置場所]{各サーバーの設置場所。赤点で示しているのがそれぞれローカルデータベースサーバーの設置位置であり、オレンジで示しているのが中央データベースである。距離としてはCERNが一番近く、LBL、KEKの順番となっている。}
 \label{server_geometry}
 \end{figure}
 
-これらのサーバーは実際に生産の際に使用するものと同程度の性能を持ち、サーバーが置かれている環境も生産時と同じであるとしている。
-回線の混雑具合などによる処理時間の低下は、本測定では考慮に入れていない。
+これらのサーバーは実際に生産の際に使用するものと同程度の性能を持ち、サーバーが置かれているネットワーク環境も生産時と同じであると仮定している。
 
 \subsection{データ同期ツールに使用するAPI}
-中央データベースのデータ取得には、用意されているAPIのサービスを使用している。
+中央データベースのデータ取得には、開発されたAPIをいくつか使用している。
 ローカルデータベースとのデータ同期ツールの中で主に使用しているAPIを表\ref{pd_API}に示す。
 
 \begin{table}[tbp]
   \begin{center}
-  \caption[データ同期ツールの中で使用しているAPI]{データ同期ツールの中で使用したAPI}
+  \caption[データ同期ツールの中で使用する中央データベースの主なAPI一覧]{データ同期ツールの中で使用する中央データベースの主なAPI一覧。データ同期ツールにおいて、中央データベースの情報取得には提供されているいくつかのAPIを用いており代表的なものをいかに示す。このAPIをPythonを用いて実行することで、情報取得や試験結果のアップロードをすることができる。}
   \label{pd_API}
   \scalebox{0.7}{
     \begin{tabular}{|lll|} \hline
@@ -75,14 +72,16 @@
   \item createTestRunAttachmentを用いて、ある試験結果ページに容量の異なるデータファイルを添付、容量に対する時間依存性を測定
 \end{itemize}
 
-最初の2項目に関して、各処理時間についてまとめたものを表\ref{getting_1module}、\ref{sendpd_1byte}に示す。
-またファイル容量と処理時間の関係を図\ref{datasize_vs_time}に示す。1Byteでの測定点も含んでいる。
+最初の2項目に関して、まとめたものを表\ref{use_prodDB_API}に示す。
+ファイル容量と処理時間の関係を図\ref{datasize_vs_time}に示す
+ここで、どの場合においてもKEKにおける処理時間が最も長いことがわかる。
+そのため、KEKにおける処理時間を測定し、ツールの開発、改善について考えることとした。
 
 \begin{table}[tbp]
+  \caption[中央データベースAPI実行時の処理時間測定結果。]{中央データベースAPI実行時の処理時間測定結果。左の結果は表\ref{pd_API}における"getComponent"を用いてモジュール1つの情報を取得するのにかかった時間、右は"createTestRunAttachment"を用いて1Byteのファイル送信にかかった時間である。どのサーバーにおいても0.3秒以上の処理時間がかかっていることがわかり、データベースのアクセス、情報取得にかかる時間が読み取れる。3つのサーバーを比べると、どちらの場合もKEKサーバーでの処理時間が一番大きいことが分かる。}
+  \label{use_prodDB_API}
   \begin{minipage}[t]{.45\textwidth}
   \begin{center}
-  \caption[モジュール情報の取得にかかる時間]{モジュール情報の取得にかかる時間}
-  \label{getting_1module}
     \begin{tabular}{|ll|} \hline
       サーバー & 処理時間[秒] \\ \hline
       KEK & 0.49 $\pm$ 0.02 \\ 
@@ -94,8 +93,6 @@
   \hfill 
   \begin{minipage}[t]{.45\textwidth}
   \begin{center}
-  \caption[1Byteのデータファイル添付にかかる処理時間]{1Byteのデータファイル添付にかかる処理時間}
-  \label{sendpd_1byte}
     \begin{tabular}{|ll|} \hline
       サーバー & 処理時間[秒] \\ \hline
       KEK & 0.54 $\pm$ 0.04 \\ 
@@ -109,22 +106,21 @@
 \begin{figure}[bpt]\centering
   \begin{center}
     \includegraphics[width=8cm,angle=270]{datasize_vs_time_new.pdf}
-  \caption[添付するファイルサイズと処理時間の関係]{添付するファイルサイズと処理時間の関係}
+  \caption["createTestRunAttachment"を用いた添付処理におけるファイル容量と処理時間の関係]{"createTestRunAttachment"を用いた添付処理におけるファイル容量と処理時間の関係。それぞれのサーバーで1、3、10、30、100、300KB、1、4MBのファイル送信にかかる時間を測定した。どの点においてもKEKサーバーが最も処理時間を要していることが分かる。またこのグラフについての詳しい考察を付録Cに記す。}
   \label{datasize_vs_time}
   \end{center}
-
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\newpage
 \section{モジュールIDのダウンロード機能確認と処理時間測定}
 \subsection{ダウンロードする情報と構造}
-中央データベースから、モジュール及びFEチップの情報をダウンロードする。
-それぞれの情報の詳細について表\ref{download_information}に示す。
+中央データベースから、モジュール及びFEチップの情報をダウンロードする機能を開発、実装した。
+ダウンロードする情報の詳細について表\ref{download_information}に示す。
 
 \begin{table}[tbp]
 \begin{center}
-\caption[ダウンロードする情報]{ダウンロードする情報}
+\caption[ダウンロード機能を用いて保存する情報一覧。]{ダウンロード機能を用いて保存する情報一覧。ダウンロード機能を用いて中央データベースからローカルデータベースに保存する情報の一覧を示している。保存の際にはモジュール、FEチップにそれぞれ分かれたドキュメントに保存される。}
 \label{download_information}
   \begin{tabular}{|ll|} \hline
     部品 & 情報 \\ \hline
@@ -133,14 +129,14 @@
      & 登録機関  \\ 
      & 搭載FEチップの枚数  \\ \hline 
     FEチップ & シリアルナンバー \\
-     & FEチップID(モジュール上の位置を表す情報) \\ \hline 
+     & FEチップID(モジュール上の位置を表す情報) \\  
      & 登録機関 \\ \hline 
   \end{tabular}
 \end{center}
 \end{table}
 
-ダウンロードされたモジュール、FEチップのドキュメントの例を以下に示す。
-\begin{lstlisting}[caption=モジュール,label=fuga]
+ダウンロードされたモジュール、FEチップのドキュメントの例をリスト\ref{download_module_document}、\ref{download_fechip_document}に示す。
+\begin{lstlisting}[caption=ダウンロードしたモジュール情報のドキュメントの例。ドキュメントが表\ref{download_information}の情報を持つことが分かる。,label=download_module_document]
 {
 	"_id" : ObjectId("5fa79114e615fa000a1a5976"),
 	"name" : "20UPGR00000001",
@@ -160,7 +156,7 @@
 	"proDB" : true
 }
 \end{lstlisting}
-\begin{lstlisting}[caption=FEチップ,label=fuga]
+\begin{lstlisting}[caption=ダウンロードしたFEチップ情報のドキュメントの例。ドキュメントが表\ref{download_information}の情報を持つことが分かる。,label=download_fechip_document]
 {
 	"_id" : ObjectId("5fa79560e615fa000a1a5a16"),
 	"name" : "20UPGFC9999999",
@@ -189,24 +185,24 @@
   \begin{center}
   \includegraphics[width=11cm]{download_tool_flow_whole.png}
   \includegraphics[width=11cm]{download_tool_flow_detail.png}
-  \caption[ダウンロード処理に関する流れのイメージ図]{ダウンロード処理に関する流れのイメージ図}
+  \caption[ダウンロード処理における流れのイメージ図]{ダウンロード処理における流れのイメージ図。上図が処理全体の流れを表すものであり、下図は各モジュール情報のダウンロードにおける処理の流れを示している。上図中のループ構造の1処理が下図に対応している。流れの中で複数回中央データベースに接続し、モジュールやFEチップの情報取得をしていることが分かる。}
   \label{download_algorithm}
   \end{center}
 \end{figure}
 
 \subsection{機能確認}
-KEKで組み立てられた6台のモジュールを中央データベースに登録し、ダウンロードを行った。
+KEKで組み立てられた6台のQuadモジュールを中央データベースに登録し、ダウンロードを行った。
 登録したモジュールを表\ref{registered_kek_module}、ダウンロードをしてアプリケーションで確認した様子を図\ref{registered_kek_module_viewer}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{registered_kek_module}
-\caption[登録したKEKモジュールのシリアルナンバー]{登録したKEKモジュールのシリアルナンバー}
+\caption[登録したQuadモジュールと構成部品のシリアルナンバー一覧。]{登録したQuadモジュールとその構成部品のシリアルナンバー一覧。左から、登録したモジュール、搭載されているベアモジュール、シリコンセンサー、PCB、モジュールキャリア、FEチップの中央データベース内でのシリアルナンバーを示している。Quadモジュールであるため、FEチップをそれぞれ4つ搭載している。}
 \label{registered_kek_module}
 \end{figure}
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{registerd_kek_module_viewer}
-\caption[ダウンロードしたKEKモジュールがアプリケーションで確認できている様子]{ダウンロードしたKEKモジュールがアプリケーションで確認できている様子}
+\caption[登録したQuadモジュールのダウンロードの様子]{登録したQuadモジュールのダウンロードの様子。上図が中央データベースのウェブページを表しており、下図がローカルデータベースのものである。上図で登録したモジュール一覧を確認でき、赤枠で囲っているところでシリアルナンバーを見ることができる。ダウンロード実行後は下図のようにローカルデータベースで対応するモジュールを確認することができる。ローカルデータベースではモジュール情報に加えてFEチップの情報も取得するため、下図の表ではこれらのシリアルナンバーも確認できる。}
 \label{registered_kek_module_viewer}
 \end{figure}
 
@@ -216,7 +212,7 @@ KEKで組み立てられた6台のモジュールを中央データベースに�
 
 \begin{table}[tbp]
 \begin{center}
-\caption[ダウンロード処理時間測定]{ダウンロード処理時間測定}
+\caption[登録したモジュールのダウンロード処理時間測定結果]{登録したモジュールのダウンロード処理時間測定結果。登録したそれぞれのモジュールについてダウンロードにかかる時間を測定した。表より1つあたり平均4秒の時間がかかっていることが分かる。}
 \label{download_measurement}
   \begin{tabular}{|ll|} \hline
     モジュール & 処理時間 \\ \hline
@@ -269,14 +265,14 @@ KEKで組み立てられた6台のモジュールを中央データベースに�
 このようにQuadモジュールの場合、ダウンロードの流れの中で合計して7回、データベースAPIを用いて情報取得を行う。
 \begin{figure}[bpt]\centering
 \includegraphics[width=15cm]{download_process_image}
-\caption[モジュール及び構成部品情報取得のイメージ]{モジュール及び構成部品情報取得のイメージ}
+\caption[モジュール及び構成部品情報取得のイメージ図]{モジュール及び構成部品情報取得のイメージ。図のように処理の流れの中で合計7回中央データベースに接続し、モジュール、ベアモジュール、 FEチップの情報取得を行っている。}
 \label{download_process_image}
 \end{figure}
 
 結果を表\ref{download_process_details}に示す。
 \begin{table}[tbp]
 \begin{center}
-\caption[ダウンロード処理時間詳細]{ダウンロード処理時間詳細}
+\caption[ダウンロード機能における詳細処理にかかる時間測定]{ダウンロード機能における詳細処理にかかる時間測定。図\ref{download_process_image}より、中央データベースに接続、情報取得を合計して7回行っており、それが処理1から4に対応する。どの処理においても0.5秒程度の時間がかかっていることが分かる。処理5はローカルデータベースへの書き込み処理であるが、他の処理に比べて十分に小さいことが分かる。}
 \label{download_process_details}
   \begin{tabular}{|ll|} \hline
     処理 & 時間 \\ \hline
@@ -288,14 +284,13 @@ KEKで組み立てられた6台のモジュールを中央データベースに�
       &  0.51 $\pm$ 0.04 \\ 
       &  0.57 $\pm$ 0.12 \\ 
     5 &  0.0025 $\pm$ 0.0011 \\ 
-    合計 & 4.0 $\pm$ 0.1 
+    合計 & 4.0 $\pm$ 0.1 \\ \hline
   \end{tabular}
 \end{center}
 \end{table}
 
 この結果より、各構成部品情報の取得(モジュール、ベアモジュール、FEチップ)の取得にそれぞれ均等に処理時間がかかっていることがわかった。
 そのため、処理時間を改善するために、この情報取得の回数を減らすアルゴリズムを考える。
-
 
 \subsection{改善点の考案と見積もり}
 
@@ -377,7 +372,7 @@ FEチップの名前情報がモジュールのプロパティにも保存され
 \begin{figure}[bpt]\centering
   \begin{center}
   \includegraphics[width=13cm]{structure_for_electrical_tests.png}
-  \caption[中央データベースにおける読み出し試験結果の構造]{中央データベースにおける読み出し試験結果の構造}
+  \caption[中央データベースにおける読み出し試験結果の構造]{中央データベースにおける読み出し試験結果の構造。YARRの出力ファイル及びローカルデータベースのデータ構造において、読み出し試験結果は全てFEチップに紐つけられている。そのため、図のように中央データベースにおいてもこのデータ構造を保持する形でアップロードを行う。モジュールの結果は各FEチップの試験結果に対するIDを持つことで紐付けを行っている。}
   \label{structure_for_electrical_tests}
   \end{center}
 \end{figure}
@@ -385,7 +380,7 @@ FEチップの名前情報がモジュールのプロパティにも保存され
 中央データベースにおいてモジュール、FEチップの試験結果が持つ情報を表\ref{electrical_parameters}にまとめる。
 \begin{table}[tbp]
 \begin{center}
-\caption[ダウンロード処理時間測定]{ダウンロード処理時間測定}
+\caption[中央データベースにおける読み出し試験結果に関する情報一覧]{中央データベースにおける読み出し試験結果に関する情報一覧。モジュール及びFEチップが中央データベース内で持つ試験結果の情報を示している。}
 \label{electrical_parameters}
   \begin{tabular}{|l|l|l|} \hline
     部品 & 試験情報、結果 & 添付ファイル \\ \hline\hline
@@ -405,12 +400,13 @@ FEチップの名前情報がモジュールのプロパティにも保存され
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{upload_algorithm}
-\caption[アップロード処理に関する流れのイメージ図]{アップロード処理に関する流れのイメージ図}
+\caption[アップロード処理に関する流れのイメージ図]{アップロード処理に関する流れのイメージ図。流れの中にはFEチップに関するループ構造があり、ここでFEチップの結果生成、結果ファイルのアップロードを行う。最後にモジュールに対する結果生成とアップロードを行う。}
 \label{upload_algorithm}
 \end{figure}
 
 \subsection{機能確認と問題点}
 上述した処理のツールを開発し、機能確認と処理時間測定を行った。
+ここで行ったアップロード及び読み出し試験の項目は5章で行ったデモンストレーションのものと同じとする。
 その際以下のような問題があった。
 \begin{itemize}
   \item 処理時間が長くかかってしまった。
@@ -440,7 +436,8 @@ KEKのサーバーを用いてアップロード処理を20回行い、全体で
 結果を表\ref{upload_process_detail_result}に示す。
 \begin{table}[tbp]
 \begin{center}
-\caption[アップロード処理詳細結果]{アップロード処理詳細結果}
+\caption[アップロード機能における詳細処理測定結果]{アップロード機能における詳細処理測定結果。アップロードの処理を本文中で述べたように分け、
+各処理時間を測定した結果である。}
 \label{upload_process_detail_result}
   \begin{tabular}{|ll|} \hline
     処理 & 時間[sec] \\ \hline
@@ -458,7 +455,7 @@ KEKのサーバーを用いてアップロード処理を20回行い、全体で
 結果データや各設定値のファイル添付に大きく時間がかかっていることがわかった。
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{upload_process_detail_gragh}
-\caption[アップロード時における各詳細処理が占める割合]{アップロード時における各詳細処理が占める割合}
+\caption[アップロード機能における各詳細処理が占める時間の割合]{アップロード時における各詳細処理が占める時間の割合。図より、処理4、5の結果ファイルの添付、設定値ファイルの添付に多く時間がかかっていることが分かる。}
 \label{upload_process_detail_gragh}
 \end{figure}
 
@@ -485,7 +482,7 @@ Quadモジュールにおける読み出し試験結果アップロード処理�
 ここで、さらに4MBを超える容量のファイル添付は失敗していることがわかった。
 
 \begin{longtable}{|llllll|}
-  \caption[アップロード処理時のファイル添付実行結果]{アップロード処理時のファイル添付実行結果}
+  \caption[アップロード処理における結果、設定値ファイル添付実行結果と処理時間]{アップロード処理における結果、設定値ファイル添付実行結果と処理時間。図\ref{upload_process_detail_gragh}より、読み出し試験に対して出力される各ファイルのアップロード実行結果、データ容量と処理時間をまとめた。図よりファイルのデータ容量が大きいほど処理時間が長いことが分かる。std$\_$thresholdscanのようにファイル数が多い項目の場合、合計して大きい処理時間を要することが分かる。全項目において読み出しの設定ファイルにあたるbeforeCfg$\_$chipCfg.json、afterCfg$\_$chipCfg.jsonにおいては中央データベースの容量制限により、アップロードが失敗している。}
   \label{upload_status_to_pd}
   \endhead
   \hline
@@ -617,7 +614,7 @@ std$\_$noisescan & Occupancy.json & Ok & 1,300 & 4.0 $\pm$ 0.1 & 18$\pm$0\\
 \eee
 
 \begin{longtable}{|llllll|}
-  \caption[アップロード処理時のzipファイル添付実行結果]{アップロード処理時のzipファイル添付実行結果}
+  \caption[アップロード処理改善後における結果、設定値ファイル添付実行結果と処理時間]{アップロード処理改善後における結果、設定値ファイル添付実行結果と処理時間。各試験結果毎に結果ファイル、設定値ファイルをZipファイルにまとめアップロードする処理とした。これにより、ファイル数、容量の削減に成功し、アップロード時間が改善した。全てのファイルのアップロードに成功していることが分かる。}
   \label{upload_status_to_pd_zip}
   \endhead
   \hline
@@ -654,3 +651,4 @@ std$\_$noisescan & Occupancy.json & Ok & 1,300 & 4.0 $\pm$ 0.1 & 18$\pm$0\\
 約1分でアップロードを完了できる見積もりとなった。
 改善前に比べて15$\%$の処理時間となった。
 現在は改善後の方法を用いたツールを提供している。
+

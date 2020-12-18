@@ -50,10 +50,9 @@ while n<len(l):
         k=0
         while l_detail[n*10+k] != "\n": 
            lll = l_detail[n*10+k].replace("\n","").split(":") 
-           if lll[0] in dict_:
-               dict_[lll[0]] += float(lll[1])/weight
-           else:
-               dict_[lll[0]] = float(lll[1])/weight       
+           if not lll[0] in dict_:
+               dict_[lll[0]] = []
+           dict_[lll[0]].append(float(lll[1])/weight)       
            if "process" in lll[0]:
                 total+=float(lll[1])
            k+=1 
@@ -74,6 +73,7 @@ print("")
 
 total=0
 for i,v in dict_.items():
-    print(i+":"+str(v/20))
-    total+=v/20
+    print(i+":",end=" ")
+    print(sum(v)/20, end=" +- ")
+    print(math.sqrt(variance(v)/(20-1)))
 print(total)
