@@ -50,10 +50,10 @@
   f3->SetLineColor(kGreen);
   
   TLegend *leg =new TLegend(0.1,0.65,0.4,0.9,"");
-  leg->AddEntry(g,"With words hash(red)");
-  leg->AddEntry(g1,"With summary hash(blue)");
-  leg->AddEntry(g2,"With multi thread(green)");
-  //leg->Draw("SAME");
+  leg->AddEntry(g,"Method 2(red)");
+  leg->AddEntry(g1,"Method 3(blue)");
+  leg->AddEntry(g2,"Method 4(green)");
+  leg->Draw("SAME");
 
   g->Draw("P");
   g->Fit("f1");

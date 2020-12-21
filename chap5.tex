@@ -1,4 +1,4 @@
-\chapter{中央データベースとローカルデータベースのデータ同期ツールに関する開発}
+\chapter{中央データベースとローカルデータベースの同期}
 
 この章では中央データベースとローカルデータベースのデータ同期機能に関しての調査と各ツールにおける改善策の考案、処理時間測定を行った。
 詳細について以下で説明する。
@@ -23,10 +23,10 @@
 \scalebox{0.9}{
   \begin{tabular}{|l|llll|l|l|} \hline
     設置機関 & CPU & & & & Memory & Disk \\
-     & Type & Core & Thread & Clock speed[GHz]& [kB] & [GB] \\ \hline 
-    KEK(日本) & Intel(R) Core(TM) i7-9700K & 8 & 16 & 3.6 & 32,658,772 & 1800 + 1800\\
-    LBL(アメリカ) & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32,628,000 & 233\\
-    CERN(スイス) & Intel(R) Core(TM) i7-4790 & 4 & 8 & 3.6 & 32,686,404 & 238.5 + 3700 + 3700\\ \hline
+     & Type & Core & Thread & Clock speed[GHz]& [GB] & [GB] \\ \hline 
+    KEK(日本) & Intel(R) Core(TM) i7-9700K & 8 & 16 & 3.6 & 32,66 & 1800 + 1800\\
+    LBL(アメリカ) & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32,63 & 233\\
+    CERN(スイス) & Intel(R) Core(TM) i7-4790 & 4 & 8 & 3.6 & 32,69 & 238.5 + 3700 + 3700\\ \hline
   \end{tabular}
 }
 \end{table}
@@ -67,9 +67,9 @@
 上述したAPI使用時の処理時間を各サーバーで測定した。
 以下の3つの測定を行なった。
 \begin{itemize}
-  \item getComponentを用いた、登録モジュール情報1つの取得時間測定
-  \item createTestRunAttachmentを用いて、ある試験結果ページに1Byteのデータファイルを添付する時間測定
-  \item createTestRunAttachmentを用いて、ある試験結果ページに容量の異なるデータファイルを添付、容量に対する時間依存性を測定
+  \item getComponentを用いた、登録モジュール情報1つの取得時間測定.
+  \item createTestRunAttachmentを用いて、ある試験結果ページに1Byteのデータファイルを添付する時間測定.
+  \item createTestRunAttachmentを用いて、ある試験結果ページに容量の異なるデータファイルを添付、容量に対する時間依存性を測定.
 \end{itemize}
 
 最初の2項目に関して、まとめたものを表\ref{use_prodDB_API}に示す。
@@ -254,11 +254,11 @@ KEKで組み立てられた6台のQuadモジュールを中央データベース
 \subsection{処理時間詳細}
 ダウンロード処理の詳細について以下の測定した。
 \begin{enumerate}
-  \item 中央データベースからモジュール情報の取得
-  \item データベースでのFEチップ確認処理
-  \item 中央データベースからベアモジュール情報の取得
-  \item 中央データベースからFEチップ情報の取得(4枚分)
-  \item ローカルデータベースへの情報の書き込み(モジュール、FEチップ、品質試験情報)
+  \item 中央データベースからモジュール情報の取得.
+  \item データベースでのFEチップ確認処理.
+  \item 中央データベースからベアモジュール情報の取得.
+  \item 中央データベースからFEチップ情報の取得(4枚分).
+  \item ローカルデータベースへの情報の書き込み(モジュール、FEチップ、品質試験情報).
 \end{enumerate}
 
 情報取得のイメージを表\ref{download_process_image}に示す。
@@ -286,6 +286,13 @@ KEKで組み立てられた6台のQuadモジュールを中央データベース
     5 &  0.0025 $\pm$ 0.0011 \\ 
     合計 & 4.0 $\pm$ 0.1 \\ \hline
   \end{tabular}
+  \begin{tablenotes}
+    \item[1] 1. 中央データベースからモジュール情報の取得.
+    \item[2] 2. データベースでのFEチップ確認処理.
+    \item[3] 3. 中央データベースからベアモジュール情報の取得.
+    \item[4] 4. 中央データベースからFEチップ情報の取得(4枚分).
+    \item[5] 5. ローカルデータベースへの情報の書き込み(モジュール、FEチップ、品質試験情報).
+  \end{tablenotes}
 \end{center}
 \end{table}
 
@@ -296,10 +303,10 @@ KEKで組み立てられた6台のQuadモジュールを中央データベース
 
 一括ダウンロード機能については以下の改善点が考えられる。
 \begin{enumerate}
-  \item モジュールの現在位置に対応したもののみのダウンロード
-  \item FEチップの登録機関を取得しない
-  \item モジュールのプロパティとして、ダウンロードに必要な情報を全て保存 
-  \item データベースAPIを改良し、モジュール一覧取得の際に構成要素の情報を取得できるようにする
+  \item モジュールの現在位置に対応したもののみのダウンロード.
+  \item FEチップの登録機関を取得しない.
+  \item モジュールのプロパティとして、ダウンロードに必要な情報を全て保存.
+  \item データベースAPIを改良し、モジュール一覧取得の際に構成要素の情報を取得できるようにする.
 \end{enumerate}
 
 これらについて詳細と処理時間の見積もりを以下で行う。
@@ -358,12 +365,12 @@ FEチップの名前情報がモジュールのプロパティにも保存され
 \subsection{アップロードする情報とその構造}
 読み出し試験結果について、中央データベースにアップロードする情報を以下に記す。
 \begin{itemize}
-  \item 試験日時
-  \item モジュール周りの環境温度
-  \item ピクセル解析結果 
-  \item 各試験結果データファイル
-  \item 読み出し設定ファイル
-  \item その他設定ファイル(DB、ユーザ、組み立て機関等)
+  \item 試験日時.
+  \item モジュール周りの環境温度.
+  \item ピクセル解析結果.
+  \item 各試験結果データファイル.
+  \item 読み出し設定ファイル.
+  \item その他設定ファイル(DB、ユーザ、組み立て機関等).
 \end{itemize}
 
 中央データベースにおける読み出し試験の構造に関して、YARRを用いて行った読み出し結果は全てFEチップ毎に取得、保存される。
@@ -425,38 +432,49 @@ KEKのサーバーを用いてアップロード処理を20回行い、全体で
 ここで処理流れの表\ref{upload_algorithm}より特に以下の詳細処理を抜粋し、それぞれにかかる時間を測定した。
 
 \begin{enumerate}
-  \item 中央データベース接続、認証。
-  \item 中央データベース、ローカルデータベースからモジュール情報の取得。
-  \item 中央データベースにFEチップ結果ページの作成。結果情報をアップロード。
-  \item 2で作成した結果に対して、各データファイルを添付。
-  \item 2で作成した結果に対して、各設定値ファイルを添付。
-  \item 中央データベースにモジュールの結果ページの作成。結果情報をアップロード。
+  \item 中央データベース接続、認証.
+  \item 中央データベース、ローカルデータベースからモジュール情報の取得.
+  \item 中央データベースにFEチップ結果ページの作成。結果情報をアップロード.
+  \item 2で作成した結果に対して、各データファイルを添付.
+  \item 2で作成した結果に対して、各設定値ファイルを添付.
+  \item 中央データベースにモジュールの結果ページの作成、結果情報をアップロード.
 \end{enumerate}
 
 結果を表\ref{upload_process_detail_result}に示す。
-\begin{table}[tbp]
-\begin{center}
-\caption[アップロード機能における詳細処理測定結果]{アップロード機能における詳細処理測定結果。アップロードの処理を本文中で述べたように分け、
-各処理時間を測定した結果である。}
-\label{upload_process_detail_result}
-  \begin{tabular}{|ll|} \hline
-    処理 & 時間[sec] \\ \hline
-    1 & $ 14 \pm 0 $ \\  
-    2 & $ 0.88 \pm 0.14 $ \\  
-    3 & $ 2.2 \pm  0.1 $ \\  
-    4 & $ 68 \pm 3 $ \\  
-    5 & $ 44 \pm 0 $ \\ 
-    6 & $ 1.8 \pm 0.1 $ \\ \hline  
-  \end{tabular}
-\end{center}
-\end{table}
-
-それぞれの処理が全体に占める割合をグラフにしたものを表\ref{upload_process_detail_gragh}に示す。
 結果データや各設定値のファイル添付に大きく時間がかかっていることがわかった。
-\begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{upload_process_detail_gragh}
-\caption[アップロード機能における各詳細処理が占める時間の割合]{アップロード時における各詳細処理が占める時間の割合。図より、処理4、5の結果ファイルの添付、設定値ファイルの添付に多く時間がかかっていることが分かる。}
-\label{upload_process_detail_gragh}
+
+\begin{figure}
+\begin{minipage}{0.4\textwidth}
+\begin{center}
+\makeatletter
+\def\@captype{table}
+\makeatother
+\begin{tabular}{|ll|} \hline
+  処理 & 時間[sec] \\ \hline
+  1 & $ 14 \pm 0 $ \\  
+  2 & $ 0.88 \pm 0.14 $ \\  
+  3 & $ 2.2 \pm  0.1 $ \\  
+  4 & $ 68 \pm 3 $ \\  
+  5 & $ 44 \pm 0 $ \\ 
+  6 & $ 1.8 \pm 0.1 $ \\ \hline  
+\end{tabular}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\begin{center}
+\includegraphics[width=8cm]{upload_process_detail_gragh}
+\end{center}
+\end{minipage}
+\begin{tablenotes}
+\item[1] 1. 中央データベース接続、認証.
+\item[2] 2. 中央データベース、ローカルデータベースからモジュール情報の取得.   
+\item[3] 3. 中央データベースにFEチップ結果ページの作成。結果情報をアップロード. 
+\item[4] 4. 2で作成した結果に対して、各データファイルを添付.  
+\item[5] 5. 2で作成した結果に対して、各設定値ファイルを添付.   
+\item[6] 6. 中央データベースにモジュールの結果ページの作成、結果情報をアップロード.  
+\end{tablenotes}
+\caption[アップロード機能における詳細処理測定結果]{アップロード機能における詳細処理測定結果。アップロード機能において、各詳細処理時間を測定した結果である。左図は測定値であり、右図はそれぞれの割合を示したものである。右図より、処理4、5の結果ファイルの添付、設定値ファイルの添付に多く時間がかかっていることが分かる。}
+\label{upload_process_detail_result}
 \end{figure}
 
 \subsubsection{生産時における見積もり}
@@ -468,7 +486,6 @@ Quadモジュールにおける読み出し試験結果アップロード処理�
 合計: (4.6 \pm 0.1 ) \times 10^2 + (14\pm0) + (0.88 \pm 0.14) + (1.8\pm0.1) = (4.7 \pm 0.1) \times 10^2 [{\rm sec}] \\\nonumber
 = 7.9 \pm 0.1 [{\rm min}]
 \eee
-
 
 モジュール読み出し試験1回に対して、約8分程度かかる見積もりとなった。
 円滑なモジュール組み立て、データ管理を行うために、データ同期は速やかに行われる必要がある。

@@ -41,9 +41,15 @@
   g->SetMarkerStyle(23);
   g1->SetMarkerStyle(8);
   g2->SetMarkerStyle(26);
-  g->Draw("P");
-  g1->Draw("P");
-  g2->Draw("P");
+  //g->SetMarkerColor(kRed);
+  g->SetLineColor(kRed);
+  //g1->SetMarkerColor(kBlue);
+  g1->SetLineColor(kBlue);
+  //g2->SetMarkerColor(kGreen);
+  g2->SetLineColor(kGreen);
+  g->Draw("PL");
+  g1->Draw("PL");
+  g2->Draw("PL");
   
   TF1 *f1 = new TF1("f1","[0]*x+[1]",0.0,1.2);
   f1->SetLineColor(kRed);
@@ -52,10 +58,10 @@
   TF1 *f3 = new TF1("f3","[0]*x+[1]",0.0,4000);
   f3->SetLineColor(kGreen);
   
-  TLegend *leg =new TLegend(0.1,0.7,0.25,0.9,"");
-  leg->AddEntry(g,"KEK");
-  leg->AddEntry(g1,"LBL");
-  leg->AddEntry(g2,"CERN");
+  TLegend *leg =new TLegend(0.1,0.7,0.35,0.9,"");
+  leg->AddEntry(g,"KEK(Red)");
+  leg->AddEntry(g1,"LBL(Blue)");
+  leg->AddEntry(g2,"CERN(Green)");
   leg->Draw("SAME");
   
   //g->Fit("f1");
