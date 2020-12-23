@@ -3,7 +3,7 @@
 デモンストレーションの内容としては、4章で述べた2月にCERNで行ったチュートリアルとほぼ同じ内容である。
 この章の前半では開発したツールと試験で使用するソフトウェアの概要について説明し、後にデモンストレーションの内容、各ソフトウェアの機能確認について述べる。
 
-\section{読み出し試験結果解析ツールの開発}
+\section{ピクセル解析ツールの開発}
 品質試験における読み出し試験では、3章で述べたようにモジュールの性能確認のためにピクセル解析を行う。
 これを円滑に行うために、ピクセル解析ツールを開発した。また開発した解析ツールをローカルデータベースシステムに組み込んだ。
 このツールについての詳細を以下に示す。
@@ -63,9 +63,15 @@ makeTreeはformat、将来的に違う解析にも対応させたい。
 \label{analysis_tool_flow}
 \end{figure}
 
-\section{読み出し試験に用いるソフトウェアの概要}
+\newpage
+\section{学内実験室におけるデモンストレーション}
 
-試験で用いるソフトウェアをいかに示す。
+上述したピクセル解析ツールを含む読み出し試験用ソフトウェアの機能確認を目的として、生産時における流れのデモンストレーションを学内実験室で行なった。
+その詳細について以下に示す。
+
+\subsection{用いたソフトウェアの概要}
+
+試験で用いたソフトウェアをいかに示す。
 また、これらソフトウェアの概要を図\ref{readout_SW_overview}に示す。
 \begin{itemize}
   \item YARR
@@ -97,38 +103,24 @@ makeTreeはformat、将来的に違う解析にも対応させたい。
 \label{readout_SW_overview}
 \end{figure}
 
-\section{学内実験室におけるデモンストレーション}
-学内実験室で開発しているソフトウェアを用いて読み出し試験を行い、実際の生産時における流れのデモンストレーションを局所的に行なった。
-その詳細について以下に示す。
-
-\subsection{デモンストレーションの流れ}
-
-今回のデモンストレーションで確認した機能を以下に示す。
-\begin{itemize}
-  \item 中央データベースとローカルデータベースの同期.
-  \item 読み出し試験に使う各種機能
-   \begin{itemize}
-     \item 読み出し用設定ファイル生成、
-     \item 温度、電圧、電流モニタリング、
-     \item 試験結果閲覧
-   \end{itemize}
-  \item 結果選択とピクセル解析機能
-\end{itemize}
-
-またデモンストレーションにおける流れの概要を図\ref{demo_flow}に示す。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
-\caption[デモンストレーションの流れ]{デモンストレーションの流れ}
-\label{demo_flow}
-\end{figure}
-
-
-\subsection{セットアップ}
+\subsection{用いたハードウェア}
 読み出し試験に用いたハードウェアについて、以下に詳細を記す。
 
+\subsubsection{RD53Aシングルモジュール(RD53A Single Chip Card, SCC)}
+今回読み出しに使うモジュールとして、研究室で所有しているRD53Aシングルモジュール(RD53A Single Chip Card, SCC)を使用した。
+SCCは試験用に作られたFEチップを一枚搭載するモジュールである。今回の実験ではシリコンセンサーを持たないものを使用した。
+SCCはFEチップ電源端子、データ転送端子をもち、読み出しを行う際はそれぞれ配線をする。
+FEチップ付近にはNTCサーミスタを搭載していて、ボード上の端子からその抵抗値を取得することで温度を測定することができる。
+図\ref{demo_rd53a_SCC}に写真を示す。
+
+\begin{figure}[h]\centering
+\includegraphics[width=8cm]{rd53a_SCC}
+\caption[RD53A]{RD53A}
+\label{demo_rd53a_SCC}
+\end{figure}
+
 \subsubsection{電源}
-モジュールの電圧供給にKEYSIGHTのE3646A 60 Wデュアル出力電源\cite{1}(図\ref{demo_power_supply})を用いた。
+モジュールの電圧供給にKEYSIGHTのE3646A 60Wデュアル出力電源\cite{1}(図\ref{demo_power_supply})を用いた。
 \begin{figure}[h]\centering
 \includegraphics[width=8cm]{power_supply}
 \caption[電源]{電源}
@@ -147,9 +139,9 @@ makeTreeはformat、将来的に違う解析にも対応させたい。
 \label{demo_temp_device}
   \begin{tabular}{|ll|} \hline
     装置 & 機種 \\ \hline
-    10$k\Omega$抵抗 & - \\
+    10$\rm{k\Omega}$抵抗 & - \\
     ADC & MCP3002\cite{3} \\  
-    RaspberryPi &  Raspberry Pi 3 Model B Plus Rev 1.3\cite{3} \\ \hline 
+    RaspberryPi &  Raspberry Pi 3 Model B Plus Rev 1.3\cite{4} \\ \hline 
   \end{tabular}
 \end{center}
 \end{table}
@@ -161,7 +153,7 @@ makeTreeはformat、将来的に違う解析にも対応させたい。
   \begin{minipage}{0.5\hsize}
     \includegraphics[width=6cm]{temp_circit_pic}
   \end{minipage}
-\caption[サーミスタを用いた温度読み出し回路]{サーミスタを用いた温度読み出し回路}
+\caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路}
 \label{demo_temp_circit_pic}
 \end{figure}
 
@@ -174,7 +166,19 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 \label{demo_fpga_board}
 \end{figure}
 
+\subsubsection{FMC-DisplayPort変換カード}
+
+今回使用したFMC-DisplayPort変換カード(Ohio Card)を図\ref{demo_ohio}に示す。
+\begin{figure}[h]\centering
+\includegraphics[width=8cm]{figure}
+\caption[オハイオ]{オハイオ}
+\label{demo_ohio}
+\end{figure}
+
 \subsubsection{PC}
+今回用いたPCの性能を以下に示す。
+
+\subsubsection{セットアップ}
 読み出し試験に用いるハードウェアのセットアップを概要を図\ref{readout_setup_overview}に示す。
 
 \begin{figure}[bpt]\centering
@@ -189,17 +193,39 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 \label{readout_setup_overview}
 \end{figure}
 
-\subsection{読み出し試験内容}
-読み出し試験を通して、モジュールに与える電圧値、電流値、チップ横についているサーミスタから読み取れる温度を記録した。
-以下の流れに沿って読み出しを行なった。
+
+\subsection{デモンストレーションの流れ}
+
+今回のデモンストレーションで確認した機能を以下に示す。
+\begin{itemize}
+  \item 中央データベースとローカルデータベースの同期.(モジュール情報、読み出し試験結果)
+  \item 読み出し試験に使う各種機能.
+   \begin{itemize}
+     \item 試験実施と結果のアップロード.
+     \item DCS情報の取得、監視.
+     \item 試験結果検索.
+     \item 試験結果閲覧.
+   \end{itemize}
+  \item 結果選択とピクセル解析機能.
+\end{itemize}
+
+またデモンストレーションにおける流れの概要を図\ref{demo_flow}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=1cm]{figure}
+\caption[デモンストレーションの流れ]{デモンストレーションの流れ}
+\label{demo_flow}
+\end{figure}
+
 
 \subsection{機能確認}
-研究室で使用するモジュール、FEチップを中央データベースにアップロードした。
-以下にそれぞれのIDを記す。
+読み出し試験を通して、各ソフトウェア機能が正しく動くことを確認した。
+詳細を以下に記す。
 
-\subsubsection{モジュールIDのダウンロード}
+\subsubsection{中央データベースからモジュール情報のダウンロード}
 ダウンロードし、ウェブアプリケーションで確認した。
 確認した画面を図\ref{demo_download_SCC}に示す。
+今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存される。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=1cm]{demo_download_SCC}
@@ -207,14 +233,25 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 \label{demo_download_SCC}
 \end{figure}
 
-\subsubsection{読み出し試験}
-以下のメニューで読み出し試験を行った。
-試験結果はダウンロードしたモジュール情報に紐つける形でローカルデータベースにアップロードした。
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{電圧値、電流値、温度のモニタリング}
+\subsubsection{読み出し試験実施}
+以下の流れに沿って読み出しを行ない、結果をローカルデータベースにアップロードした。
+\begin{enumerate}
+  \item デジタル回路読み出し(\texttt{std$\_$digitalscan})
+  \item アナログ回路読み出し(\texttt{std$\_$analogscan})
+  \item 調整前Threshold測定(\texttt{std$\_$thresholdscan})
+  \item Threshold調整、ToT調整 
+  \item 調整後Threshold測定
+  \item ToT測定(\texttt{std$\_$totscan})
+  \item ノイズ測定(\texttt{std$\_$noisescan})
+\end{enumerate}
+また読み出し試験を通してDCS情報は監視し、試験結果と同様にローカルデータベースにアップロードした。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{DCS情報の監視}
 読み出し試験は、DCS情報を監視しながら行った。
 それぞれの値は対応するソフトウェアを用いてInfluxDBにアップロードした。
 その値をGrafanaを使って監視をした。その様子を図\ref{demo_monitor_dcs}に示す。
@@ -245,7 +282,7 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 \begin{figure}[bpt]\centering
   \begin{center}
   \begin{minipage}{0.4\hsize}
-    \includegraphics[width=6cm]{demo_view_scan_result}
+    \includegraphics[width=65mm]{demo_view_scan_result}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
     \includegraphics[width=7cm]{demo_view_dcs}
