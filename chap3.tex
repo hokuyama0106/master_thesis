@@ -1,18 +1,18 @@
 \chapter{検出器量産と品質試験}
 
-\section{検出器量産}
 \section{組み立て工程}
+現在モジュールの組み立て工程として以下が設定されている。
+\begin{enumerate}
+  \item プリント基板・ベアモジュール貼り付け
+  \item ワイヤー配線
+  \item ワイヤー保護
+  \item パリレンコーティング
+  \item 温度サイクル試験
+  \item 熱耐久試験
+\end{enumerate}
+
 \section{品質試験}
 各組み立て工程に対して、いくつかの品質試験を行う。行う品質試験の代表的なものを以下に示す。
-
-\begin{itemize}
-  \item 外観検査
-  \item 質量測定
-  \item 平坦性測定
-  \item 電気的試験
-\end{itemize}
-
-各試験項目についての詳細と現時点での決定事項を以下に記す。
 
 \subsection{外観検査}
 
@@ -20,28 +20,27 @@
 
 \subsection{平坦性測定}
 
-\subsection{電気的試験}
-電気的試験はさらに以下のようないくつかの項目に細分化される。
-\subsubsection{First Power Up}
+\subsection{センサー特性確認試験}
 
-\subsubsection{センサー特性確認試験}
+\subsection{SLDO VI}
 
-\subsubsection{SLDO VI}
+\subsection{読み出し試験}
+
+\subsubsection{用いるSWとSetup}
 
 \subsubsection{Chip Configuration}
 
-\subsubsection{読み出し試験}
+\subsubsection{試験項目詳細}
+\begin{itemize}
+  \item デジタル回路試験
+  \item アナログ回路試験
 
-\subsubsection{Bump bond quarity}
+\subsubsection{Threshold調整とピクセル解析}
 
-\subsection{簡易電気的試験}
-\subsubsection{}
+\subsubsection{簡易読み出し試験}
 
+\subsubsection{バンプ接合確認試験}
 
+\subsection{各組み立て工程における品質試験}
 
-\section{品質試験に用いるソフトウェア}
-\subsection{YARR}
-\subsection{QC helper}
-
-
-
+\section{検出器量産と品質試験データ管理に対する要求}
