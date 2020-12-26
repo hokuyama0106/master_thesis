@@ -103,22 +103,23 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
     3. Wirebond Protection  & Visual Inspection \\ 
                             & Potting information \\
                             & Sensor IV \\
-                            & Chip configuration\\
+                            & Register test\\
                             & Readout for basic electrical \\\hline
 
     4. Parylene Coating     & Visual Inspection \\ 
                             & Palylene information \\
                             & Mass measurement \\
                             & Sensor IV \\
-                            & Chip configuration\\
+                            & Register test\\
                             & Readout for basic electrical \\
                             & Bump bond quality \\\hline
 
     5. Thermal Cycling      & Visual Inspection \\ 
                             & Thermal cycling info \\
                             & Sensor IV \\
-                            & Chip configuration\\
-                            & Readout for basic electrical \\\hline
+                            & Register test\\
+                            & Readout for basic electrical \\
+                            & Bump bond quality \\\hline
 
     6. Burn-in              & Visual Inspection \\ 
                             & Metrology \\
@@ -309,7 +310,8 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
   \item ユーザ管理機能
   \item 品質試験結果の登録と組み立て工程の管理機能
   \item 読み出し試験結果検索機能
-  \item 中央データベースとのデータ同期ツール
+  \item 読み出し試験におけるピクセル解析ツール
+  \item 中央データベースとの同期ツール
 \end{itemize}
 
 \subsection{ユーザ管理機能及び各種機能}
@@ -549,6 +551,8 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{figure}
 
 また生産に向けて、検索にかかる処理時間測定を行った。検索機能の詳しい実装方法と処理時間についての詳細は、6章で述べる。
+
+\subsection{読み出し試験結果におけるピクセル解析ツール}
 
 \newpage
 \subsection{中央データベースとの情報同期ツール}

@@ -242,7 +242,9 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
   \item デジタル回路読み出し(\texttt{std$\_$digitalscan})
   \item アナログ回路読み出し(\texttt{std$\_$analogscan})
   \item 調整前Threshold測定(\texttt{std$\_$thresholdscan})
-  \item Threshold調整、ToT調整 
+  \item Threshold調整
+  \item ToT調整
+  \item Threshold再調整
   \item 調整後Threshold測定
   \item ToT測定(\texttt{std$\_$totscan})
   \item ノイズ測定(\texttt{std$\_$noisescan})
@@ -297,8 +299,8 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \subsubsection{結果選択とピクセル解析}
-読み出し結果を選択し、ピクセル解析を行なった。結果選択の様子を図\ref{demo_select_scans}、解析結果を表\ref{pixel_analysis_result}に示す。
-
+読み出し結果を選択し、ピクセル解析を行なった。
+結果選択の様子を図\ref{demo_select_scans}に示す。
 \begin{figure}[bpt]\centering
   \begin{center}
     \includegraphics[width=10cm]{demo_select_scans}
@@ -307,6 +309,20 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
   \end{center}
 \end{figure}
 
+不良評価基準は3章に述べた表\ref{pixel_analysis_criteria}の中から、基準が現時点で明確な以下の項目を選んだ。
+\begin{itemize}
+  \item Digital Dead 
+  \item Digital Bad 
+  \item Analog Dead 
+  \item Analog Bad 
+  \item Tuning Failed
+  \item Tuning Bad for Threshold
+  \item Tuning Bad for ToT
+  \item High ENC
+  \item Noisy
+\end{itemize}
+
+解析結果を表\ref{pixel_analysis_result}、図\ref{pixel_analysis_result_figure}に示す。
 \begin{table}[tbp]
 \begin{center}
 \caption[ピクセル解析結果]{ピクセル解析結果}
@@ -318,6 +334,11 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 \end{center}
 \end{table}
 
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{figure}
+\caption[ピクセル解析結果プロット]{ピクセル解析結果プロット}
+\label{pixel_analysis_result_figure}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
