@@ -13,7 +13,7 @@ YARRで読み出し試験を行った場合、結果ファイルはdigital scan�
 また各結果ファイルにはモジュール上の全ピクセル結果がJSONの形で保存されている。
 結果ファイルを模式的に表したものを以下に示す。
 
-一方、品質試験の不良ピクセル解析においては、いくつかの試験結果を統一的に扱い、かつ各ピクセルごとに解析を行う必要がある。
+一方、ピクセル解析において、いくつかの試験結果を統一的に扱い、かつ各ピクセルごとに解析を行う必要がある。
 そこで、開発した解析ツールでは複数の結果ファイルを1つのファイルにまとめ、ピクセルごとの解析処理を単純化する役割を担っている。
 開発にはPythonとC++を用いた。またCERNが提供している解析フレームワークであるROOTを使用し、いくつかの試験データの統一ファイルとして、ROOT内部の機能であるTreeを使用した。
 イメージを図\ref{analysis_tool_motivation}に示す。
@@ -31,7 +31,7 @@ YARRで読み出し試験を行った場合、結果ファイルはdigital scan�
   \begin{minipage}{0.4\hsize}
     \includegraphics[width=8cm]{analysis_tool_tree_file}
   \end{minipage}
-  \begin{minipage}{0.5\hsize}
+  \begin{minipage}{0.4\hsize}
     \includegraphics[width=8cm]{analysis_tool_tree_image}
   \end{minipage}
   \caption[Treeファイルとそのデータ保持]{Treeファイルとそのデータ保持}
@@ -151,7 +151,7 @@ FEチップ付近にはNTCサーミスタを搭載していて、ボード上の
     \includegraphics[width=8cm]{temp_circit}
   \end{minipage}
   \begin{minipage}{0.5\hsize}
-    \includegraphics[width=6cm]{temp_circit_pic}
+    \includegraphics[width=5cm]{temp_circit_pic}
   \end{minipage}
 \caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路}
 \label{demo_temp_circit_pic}
@@ -228,7 +228,7 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存される。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{demo_download_SCC}
+\includegraphics[width=10cm]{demo_download_SCC}
 \caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面}
 \label{demo_download_SCC}
 \end{figure}
@@ -253,6 +253,7 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \subsubsection{DCS情報の監視}
 読み出し試験は、DCS情報を監視しながら行った。
 それぞれの値は対応するソフトウェアを用いてInfluxDBにアップロードした。
@@ -266,7 +267,7 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
+\clearpage
 \subsubsection{検索機能の確認}
 
 検索機能の確認を行った。
@@ -278,7 +279,7 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
+\clearpage
 \subsubsection{試験結果の閲覧}
 ウェブアプリケーションを用いて、試験結果を閲覧した。その様子を図\ref{demo_view_result}に示す。
 \begin{figure}[bpt]\centering
@@ -297,19 +298,20 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
+\clearpage
 \subsubsection{結果選択とピクセル解析}
 読み出し結果を選択し、ピクセル解析を行なった。
-結果選択の様子を図\ref{demo_select_scans}に示す。
+結果選択画面を図\ref{demo_select_scans}に示す。
+
 \begin{figure}[bpt]\centering
   \begin{center}
-    \includegraphics[width=10cm]{demo_select_scans}
+    \includegraphics[width=9cm]{demo_select_scans}
   \caption[試験結果の選択]{試験結果の選択}
   \label{demo_select_scans}
   \end{center}
 \end{figure}
 
-不良評価基準は3章に述べた表\ref{pixel_analysis_criteria}の中から、基準が現時点で明確な以下の項目を選んだ。
+このデモンストレーションにおける不良評価基準は3章に述べた表\ref{pixel_analysis_criteria}の中から、現時点でシステムに実装している以下の項目を抜粋した。
 \begin{itemize}
   \item Digital Dead 
   \item Digital Bad 
@@ -322,28 +324,46 @@ FPGAボードにXpressK7\cite{2}(図\ref{demo_fpga_board})を用いた。
   \item Noisy
 \end{itemize}
 
-解析結果を表\ref{pixel_analysis_result}、図\ref{pixel_analysis_result_figure}に示す。
-\begin{table}[tbp]
-\begin{center}
+解析結果を図\ref{pixel_analysis_result}、それぞれの評価基準における不良ピクセルの分布を図\ref{pixel_analysis_result_dist}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=9cm]{./data/analysis_result/Bad_Pixels.png}
 \caption[ピクセル解析結果]{ピクセル解析結果}
 \label{pixel_analysis_result}
-  \begin{tabular}{|ll|} \hline
-    1 & 2 \\ \hline
-    result 1 & result 2 \\ \hline 
-  \end{tabular}
-\end{center}
-\end{table}
-
+\end{figure}
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{figure}
-\caption[ピクセル解析結果プロット]{ピクセル解析結果プロット}
-\label{pixel_analysis_result_figure}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/digital_dead.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/digital_bad.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/analog_dead.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/analog_bad.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/tuning_failed.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/tuning_bad_threshold.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/tuning_bad_tot.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.5cm]{./data/analysis_result/high_enc.png}
+  \end{minipage}
+  \includegraphics[width=6.5cm]{./data/analysis_result/noisy.png}
+
+\caption[不良ピクセル分布]{不良ピクセル分布}
+\label{pixel_analysis_result_figure_dist}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
+\clearpage
 \subsubsection{試験結果アップロード}
-選択した結果を中央データベースにアップロードし、各ファイルが正しくアップロードされていることを確認した。
-各ファイルの存在を確認した結果を表\ref{scan_upload_pd}に示す。
-
+読み出し試験の結果を解析結果と合わせて中央データベースにアップロードし、情報が正しくアップロードされていることを確認した。
+図\ref{demo_upload_to_pd}に中央データベースのウェブページを示す。結果ファイルや解析結果が正しくアップロードされていることが分かる。

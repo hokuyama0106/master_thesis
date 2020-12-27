@@ -572,7 +572,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \newpage
 \subsection{読み出し試験結果におけるピクセル解析ツール}
-\ref{pixel_analysis}で述べたように、読み出し試験ではピクセル解析を行う。
+節\ref{sec:pixel_analysis}で述べたように、読み出し試験ではピクセル解析を行う。
 ローカルデータベースにアップロードされた結果を用いて、この解析を行うツールを開発した。
 開発の詳細とツール確認のためのデモンストレーションについて5章で述べる。
 
@@ -631,13 +631,19 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{enumerate}
 
 流れのイメージを図\ref{dbsystem_flow}に示す。
+品質試験結果のアップロードは各組み立て工程毎に行う。ローカルデータベースで品質試験結果を組み立て工程毎にまとめて扱い、各モジュールの現組み立て工程を正確に管理する目的がある。
 \begin{figure}[bpt]\centering
-\includegraphics[width=1cm]{figure}
+  \begin{minipage}{0.5\hsize}
+    \includegraphics[width=7cm]{dbsystem_flowchart}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=5cm]{dbsystem_flow_image}
+  \end{minipage}
 \caption[データベースシステム操作の流れ]{データベースシステム操作の流れ}
 \label{dbsystem_flow}
 \end{figure}
 
-最終的には、モジュールの情報及び品質試験結果が全て中央データベースへ同期されている状態となる。
+全組み立て工程が終了すると、モジュールの情報及び品質試験結果が全て中央データベースへ同期されている状態となる。
 データベース操作の流れの一部を学内実験室にて行った。詳細を5章で述べる。
 
 \section{モジュール生産状況の解析}
