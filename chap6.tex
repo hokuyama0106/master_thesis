@@ -19,7 +19,7 @@ YARRで読み出し試験を行った場合、結果ファイル及びディレ�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{analysis_tool_motivation}
-\caption[ピクセル解析ツール開発の動機]{ピクセル解析ツール開発の動機}
+\caption[ピクセル解析ツールにおけるファイル統合処理のイメージ]{ピクセル解析ツールにおけるファイル統合処理のイメージ。YARRの出力ファイルは\texttt{std$\_$digitalscan}や\texttt{std$\_$thresholdscan}というように読み出し項目ごとである。ピクセル解析ツールでは、図のようにあるモジュールに関連する結果ファイルを統合し、ピクセルごとに行う解析処理を簡易化する狙いがある。}
 \label{analysis_tool_motivation}
 \end{figure}
 
@@ -33,7 +33,7 @@ YARRで読み出し試験を行った場合、結果ファイル及びディレ�
   \begin{minipage}{0.4\hsize}
     \includegraphics[width=8cm]{analysis_tool_tree_image}
   \end{minipage}
-  \caption[Treeファイルとそのデータ保持]{Treeファイルとそのデータ保持}
+  \caption[Treeファイルとそのデータ保持]{Treeファイルとそのデータ保持。実際にこのツールを用いて作ったTreeファイルの内部構造の様子(左)とそのデータ保持のイメージ(右図)を示す。Treeファイルでは、右図のように1つの表に試験結果をまとめている。各行が\texttt{std$\_$digitalscan}といった各読み出し項目に対応し、各列が1ピクセルに対応する。モジュール上の行列(Row、Col)の番号を表の上部に持っておくことで、モジュール上におけるピクセルの位置情報を保持する。}
   \label{analysis_tool_tree}
   \end{center}
 \end{figure}
@@ -58,7 +58,7 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{analysis_tool_flow}
-\caption[ピクセル解析ツールの処理の流れ]{ピクセル解析ツールの処理の流れ}
+\caption[ピクセル解析ツールの処理の流れ]{ピクセル解析ツールの処理の流れ。ピクセル解析ツールは、図のように3つの実行ファイルにより構成される。getData.py(Python)にてデータベースから結果の取得を行い、makeTree(C++)にてTreeファイルの作成、analysis(C++)にてピクセル解析及び結果のプロットが出力される。}
 \label{analysis_tool_flow}
 \end{figure}
 
@@ -98,7 +98,7 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=14cm]{readout_SW_overview}
-\caption[読み出し試験に用いるソフトウェアの概要]{読み出し試験に用いるソフトウェアの概要}
+\caption[読み出し試験に用いるソフトウェアの概要]{読み出し試験に用いるソフトウェアの概要。FEチップの読み出しとそのデータ通信はYARRを用いて行われる。試験結果はMongoDBにアップロードされ、ウェブアプリケーションを通じて試験者は結果を確認することができる。電源操作用ソフトを用いて電源のスイッチ、電圧、電流値の取得がなされ、取得値はInfluxDBに保存される。モジュール付属のサーミスタ読み出しシステムを用いてFEチップ付近の温度を読み出し、InfluxDBに保存する。InfluxDBに保存されたDCSデータはGrafanaを用いてブラウザ上で確認することができる。またMongoDBに同期されるため、ローカルデータベースアプリケーションを通しても確認ができる。}
 \label{readout_SW_overview}
 \end{figure}
 
@@ -115,7 +115,7 @@ FEチップ付近にはNTCサーミスタを搭載していて、ボード上の
 
 \begin{figure}[h]\centering
 \includegraphics[width=8cm]{rd53a_SCC}
-\caption[RD53A]{RD53A}
+\caption[RD53Aシングルモジュール(SCC)]{RD53Aシングルモジュール(SCC)。RD53AのFEチップを一枚搭載したモジュールである。図の中心部の青いカバーで囲われた中にFEチップが設置されている。このボード上にはデータ転送端子、電源端子、サーミスタ抵抗取得端子が設置されており、これらの端子に対応する配線をすることで読み出し試験のセットアップを組む。}
 \label{demo_rd53a_SCC}
 \end{figure}
 
@@ -127,7 +127,7 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 
 \begin{table}[tbp]
 \begin{center}
-\caption[hoge]{hoge}
+\caption[温度読み出しシステムに使用した装置一覧]{温度読み出しシステムに使用した装置一覧。}
 \label{demo_temp_device}
   \begin{tabular}{|ll|} \hline
     装置 & 機種 \\ \hline
@@ -145,7 +145,7 @@ ADC値はGPIO通信\cite{5-9}により取得している。
   \begin{minipage}{0.4\hsize}
     \includegraphics[width=5cm]{temp_circit_pic}
   \end{minipage}
-\caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路}
+\caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路。図は回路図(左図)と実際に配線し、読み出しを行っている様子(右図)を示している。抵抗、MCP3002、Raspberry Piを用いて読み出し回路を作成した。抵抗とMCP3002は右図のようにブレッドボード上に設置した。ADCとRaspberryPiはGPIO通信\cite{5-9}を行うことで、ADC値を取得している。}
 \label{demo_temp_circit_pic}
 \end{figure}
 
@@ -153,29 +153,29 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 モジュールの電圧供給にKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}(図\ref{demo_power_supply})を用いた。
 \begin{figure}[h]\centering
 \includegraphics[width=6cm]{power_supply}
-\caption[電源]{電源}
+\caption[用いた電源]{用いた電源。 FEチップ電圧供給のための電源としてKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}を用いた。}
 \label{demo_power_supply}
 \end{figure}
 
 \subsubsection{FPGAボード}
-FPGAボードにXpressK7\cite{5-2}(図\ref{demo_fpga_board})を用いた。
+FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示す。
 
 \subsubsection{FMC-DisplayPort変換カード}
-今回使用したFMC-DisplayPort変換カード(Ohio Card)を図\ref{demo_ohio}に示す。
+使用したFMC-DisplayPort変換カード(オハイオカード)を図\ref{demo_ohio}に示す。
 
 \begin{figure}[htbp]
  \begin{minipage}{0.5\hsize}
   \begin{center}
    \includegraphics[width=60mm]{fpga_board}
   \end{center}
-  \caption[FPGAボード]{FPGAボード}
+  \caption[使用したFPGAボード(XpressK7)]{使用したFPGAボード(XpressK7\cite{5-2})。中央にFMC端子、右側にFPGAチップ、下側にPCI Expressが配置されている。}
   \label{demo_fpga_board}
  \end{minipage}
  \begin{minipage}{0.5\hsize}
   \begin{center}
    \includegraphics[width=60mm]{figure}
   \end{center}
-  \caption[オハイオ]{オハイオ}
+  \caption[使用したFMC-DisplayPort変換カード]{使用したFMC-DisplayPort変換カード。FMC端子を4つのmini Display Portに変換する。今回読み出すFEチップは1枚であるため、1つの端子だけを用いる。}
   \label{demo_ohio}
  \end{minipage}
 \end{figure}
@@ -184,7 +184,7 @@ FPGAボードにXpressK7\cite{5-2}(図\ref{demo_fpga_board})を用いた。
 今回用いたPCの性能を表\ref{daq_machine_spec}に示す。
 \begin{table}[tbp]
 \begin{center}
-\caption[]{}
+\caption[読み出しに使用したPCの性能]{読み出しに使用したPCの性能。研究室で所有するPCを使用した。OSはcentOS7である。}
 \label{daq_machine_spec}
 \scalebox{0.9}{
   \begin{tabular}{|llll|l|l|} \hline
@@ -201,12 +201,12 @@ FPGAボードにXpressK7\cite{5-2}(図\ref{demo_fpga_board})を用いた。
 
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.5\hsize}
-    \includegraphics[width=7cm]{HW_setup}
+    \includegraphics[width=6cm]{HW_setup}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
-    \includegraphics[width=6.5cm]{HW_setup_pic}
+    \includegraphics[width=5.5cm]{HW_setup_pic}
   \end{minipage}
-\caption[ハードウェアセットアップの概要]{ハードウェアセットアップの概要}
+\caption[ハードウェアセットアップ]{ハードウェアセットアップ。図はセットアップの概要(左図)と実際に設置した様子(右図)を示している。FEチップ読み出し装置、電源、サーミスタ読み出し装置をそれぞれ設置、配線し、読み出し操作、データ取得を行った。}
 \label{readout_setup_overview}
 \end{figure}
 

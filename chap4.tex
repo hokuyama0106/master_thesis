@@ -21,8 +21,6 @@
 また運転前の状態における検出器の性能、運転前後での検出機性能比較を行うことができる。
 HL-LHCでは1章で述べたように、運転時における放射線量が大きいものとなるため、運転前後での放射線損傷の影響の研究を行うことができ、検出機の寿命の推定や放射線損傷に関しての対策に役に立てることができる。
 
-それらしいデータかこんな解析に役立てたいみたいなのを考え中です。
-
 \subsection{モジュール情報構造および構成部品との関係の実装}
 中央データベースにモジュールを登録するためには、1章で述べたようにモジュールの種類、モジュールを構成する部品といった情報構造を決定し、データベース上に定義しておく必要がある。この情報構造をデータベースに実装し、登録できる仕組みを整えた。
 詳細な種類と構造については表\ref{pd_module_structure}に示す。
@@ -30,7 +28,7 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
 
 \begin{table}[tbp]
 \begin{center}
-\caption[中央データベースにおけるモジュールの種類と構造]{中央データベースにおけるモジュールの種類と構造}
+\caption[中央データベースにおけるモジュールの種類と構造一覧]{中央データベースにおけるモジュールの種類と構造一覧。中央データベースにモジュールを登録するときの情報として、モジュールの種類、構成部品を表のように実装した。Triplet、Quadというように、モジュールの種類ごとに登録できるシステムとなっており、PCBなどの対応する構成部品の紐付けも同時に行うことができる。}
 \label{pd_module_structure}
   \begin{tabular}{|ll|} \hline
     種類 & 構成する部品(数) \\ \hline
@@ -72,7 +70,7 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=7cm]{example_module_structure}
-\caption[モジュール構造の一例]{モジュール構造の一例}
+\caption[中央データベース内におけるモジュール構造の一例(Quadモジュール)]{中央データベース内におけるモジュール構造の一例(Quadモジュール)。例としてOuter system quad moduleの中央データベース内の構造を示している。この種類では構成要素としてそれぞれ対応する種類のModule carrier、Bare Module、PCBを持つことがわかる。さらにBare ModuleはFE chipを4、Sensorを1持つことが分かり、Quadモジュールの構造が正しく実装されていることが分かる。}
 \label{example_module_structure}
 \end{figure}
 
@@ -83,7 +81,7 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
 
 \begin{table}[tbp]
 \begin{center}
-\caption[中央データベースにおける組み立て工程と付随するテスト項目]{中央データベースにおける組み立て工程と付随するテスト項目}
+\caption[中央データベースにおける組み立て工程と付随するテスト項目]{中央データベースにおける組み立て工程と付随するテスト項目。モジュールの組み立て工程及び品質試験を登録するため、表のような構造を実装した。データベース内でこの表に沿った組み立て工程の登録、更新、試験結果のアップロードができるようになった。}
 \label{pd_stage_structure}
   \begin{tabular}{|ll|} \hline
     組み立て項目 & 付随する組み立て情報及び品質試験項目 \\ \hline
@@ -146,7 +144,7 @@ HL-LHCでは1章で述べたように、運転時における放射線量が大�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=15cm]{localdb_overview}
-\caption[ローカルデータベースシステムの概要]{ローカルデータベースシステムの概要}
+\caption[ローカルデータベースシステムの概要]{ローカルデータベースシステムの概要。各組み立て機関でMongoDBとローカルデータベース用ウェブアプリケーションの立ち上げを行い、独自にデータ管理をするシステムとなっている。品質試験者は図のようにいくつかのソフトウェアを用いて試験結果をMongoDBにアップロードする。アップロードされた結果はウェブアプリケーションによって閲覧することができる。また結果は中央データベースに集める必要があるため、同期ツールを用いて試験結果の共有を行う。}
 \label{localdb_overview}
 \end{figure}
 
@@ -168,7 +166,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{mongodb_schema}
-\caption[MongoDBの構造の例]{MongoDBの構造の例}
+\caption[MongoDBの構造の例]{MongoDBの構造の例。図のようにMongoDBではJSON形式でデータを格納する。1枚のシートをドキュメントと呼び、複数のドキュメントが格納されている枠組みをコレクションと呼ぶ。ドキュメントの構造及びコレクション間の関係等を決めることでデータベースの構造を定義する。}
 \label{mongodb_schema}
 \end{figure}
 
@@ -184,7 +182,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{table}[tbp]
 \begin{center}
-\caption[品質試験に用いる主なコレクション]{品質試験に用いる主なコレクション}
+\caption[品質試験に用いる主なコレクション]{品質試験に用いる主なコレクション。ローカルデータベースシステムにおいて、MongoDB内に2つのデータベースを設置し、使用する。}
 \label{localdb_structure}
   \begin{tabular}{|lll|} \hline
     データベース名 & コレクション名 & 情報 \\ \hline
@@ -200,7 +198,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
     localdbtools & QC.status & 組み立て工程及び試験項目\\
                  & viewer.user & 登録ユーザの情報 \\
                  & viewer.query & 読み出し結果キーワード、検索機能実行時に使用 \\ 
-                 & viewer.tag.docs & モジュール及び試験結果に付けるタグ情報 \\ \hline
+                 & viewer.tag.docs & モジュールや試験結果に付けるタグの情報 \\ \hline
   \end{tabular}
 \end{center}
 \end{table}
@@ -222,7 +220,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=16cm]{webapp_process}
-\caption[ウェブアプリケーション処理のイメージ]{ウェブアプリケーション処理のイメージ}
+\caption[ウェブアプリケーション処理のイメージ]{ウェブアプリケーション処理のイメージ。ウェブアプリケーションではMongoDBのAPIを用いて、データベースのコレクションに検索をかけることで情報を取得する。取得した情報は整形されたのちブラウザに送信、中央データベースとの同期等の処理に用いられる。}
 \label{viewer_result}
 \end{figure}
 
@@ -234,12 +232,12 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \begin{itemize}
   \item 登録モジュール情報及び品質試験結果の閲覧機能
   \item ローカルデータベースにおけるユーザ管理機能
-  \item 上述したデータ同期処理実行機能
+  \item 上述した同期処理実行機能
 \end{itemize}
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{viewer_result}
-\caption[品質試験結果の例]{品質試験結果の例}
+\caption[品質試験結果ページの例]{品質試験結果ページの例。図は品質試験項目であるデジタル回路読み出しの結果を表している。図の上部に試験情報や設定値、下部に結果のグラフが表示されているのを確認できる。}
 \label{viewer_result}
 \end{figure}
 
@@ -265,7 +263,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
   \begin{minipage}{0.4\hsize}
     \includegraphics[width=6cm]{hands_off}
   \end{minipage}
-  \caption[ハンズオンとハンズオフ]{ハンズオンとハンズオフ}
+  \caption[ローカルデータベースシステムチュートリアルの様子]{ローカルデータベースシステムチュートリアルの様子。2020年2月にCERNでローカルデータベースシステムのチュートリアルを行った。参加者が実際にシステムの設置、機能実行を行うハンズオンセッション(左図)と、参加者の前で実際に機能の動作をみせ、議論を行うハンズオフセッション(右図)に分けて行った。システムに有益な情報を獲得したと共に、システムの機能普及に成功した。}
   \label{Tutorial_picture}
   \end{center}
 \end{figure}
@@ -298,7 +296,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=14cm]{localdb_world_map}
-\caption[ローカルデータベース地図]{ローカルデータベース地図}
+\caption[ローカルデータベースシステム導入及び試運転場所]{ローカルデータベースシステム導入及び試運転場所。2020年11月現在、ローカルデータベースシステムは世界18の機関で試験運転がなされている。日本を除いてその多くはヨーロッパとアメリカに位置していることが分かる。}
 \label{localdb_world_map}
 \end{figure}
 
@@ -331,7 +329,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{table}[tbp]
 \begin{center}
-\caption[ユーザ権限一覧]{ユーザ権限一覧}
+\caption[ローカルデータベースユーザ権限及び使用機能一覧]{ローカルデータベースユーザ権限及び使用機能一覧。ローカルデータシステムにおけるユーザとして、管理者、権限付きユーザ、一般ユーザの3つを設けた。全てのユーザがウェブアプリケーションの閲覧をすることができる。管理者、権限付きユーザにはデータベース読み書き権限とウェブアプリケーションログイン権限が与えられ、試験結果のアップロード、アプリケーション上のユーザ機能の実行ができる。また管理者は権限付きユーザを登録することができる。}
 \label{user_functions_summary}
   \begin{tabular}{|lll|} \hline
     ユーザ       & 付加される権限                               & 使用できる機能 \\ \hline
@@ -350,13 +348,13 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{viewer_comment}
-\caption[コメント機能]{コメント機能}
+\caption[ウェブアプリケーションにおけるコメント機能]{ウェブアプリケーションにおけるコメント機能。権限付きユーザ及び管理者はモジュールや試験結果に対してコメントをすることができる。図のようにページの右側にコメント欄があり、コメントをテキスト形式で記述することができる。}
 \label{webapp_comment}
 \end{figure}
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{viewer_tag}
-\caption[タグ機能]{タグ機能}
+\caption[ウェブアプリケーションにおけるタグ機能]{ウェブアプリケーションにおけるタグ機能。権限付きユーザ及び管理者はモジュールや試験結果に対してタグをつけることができる。図は試験結果の一覧ページであり、図の表において一番右の列がつけられたタグを示しており、図ではanomalyやgoodといったタグが付けられていることが分かる。}
 \label{webapp_tag}
 \end{figure}
 
@@ -384,7 +382,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 ユーザ登録の際には内部で以下の2つの処理が行われるように実装した。
 
 \begin{enumerate}
-  \item mongoDBアカウントの作成、読み書き権限の付与
+  \item MongoDBアカウントの作成、読み書き権限の付与
   \item ウェブアプリケーションで用いるユーザ情報ドキュメントの作成
 \end{enumerate}
 
@@ -392,9 +390,9 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 2の情報は、ウェブアプリケーション内でのログイン判断、ユーザの情報保持に使う。
 試験結果アップロードの際にもこの情報を用いて、試験者の記録が行われる。
 この情報は表\ref{localdb_structure}のviewer.userに保存される。
-2つの処理について、実際に保存されるドキュメントの例を以下に示す。
+2つの処理について、実際に保存されるドキュメントの例をリスト\ref{user_doc_1}、\ref{user_doc_2}以下に示す。
 
-\begin{lstlisting}[caption=hoge,label=fuga]
+\begin{lstlisting}[caption=MongoDBアカウント情報を持つドキュメントの例。リスト中の"roles"より、localdbとlocaldbtoolsの読み書き権限が付加されていることが分かる。,label=user_doc_1]
 {
 	"_id" : "localdb.hokuyama",
 	"userId" : UUID("fee321eb-83b8-434a-a4a0-fff638b5db36"),
@@ -426,7 +424,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 	]
 }
 \end{lstlisting}
-\begin{lstlisting}[caption=hoge,label=fuga]
+\begin{lstlisting}[caption=ウェブアプリケーションで扱うユーザ情報を持つドキュメントの例。リスト\ref{user_doc_1}で示したものとは別に、ウェブアプリケーション内でユーザ情報を扱うためにこのドキュメントを保持する必要がある。ウェブにおいてログインはこのドキュメントの存在確認をもってなされる。パスワードはhash化して保存している。,label=user_doc_2]
 {
 	"_id" : ObjectId("5f0bbe84ef87af2628865de7"),
 	"sys" : {
@@ -456,7 +454,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{webapp_sign_off}
-\caption[サインオフ機能]{サインオフ機能}
+\caption[結果選択画面及び組み立て工程表示の例]{結果選択画面及び組み立て工程表示の例。図の上部で組み立て工程が"MODULETOPCB"である。この段階において結果を選択する処理を行うとrーカルデータベース内で選択された結果にタグ付けがなされる。この結果は中央データベースと同期される。また結果選択後は組み立て工程が自動的に更新される。図の下部では"MODULEWIREBONDING"になっていることが分かる。}
 \label{webapp_sign_off}
 \end{figure}
 
@@ -474,7 +472,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{itemize}
 
 
-\begin{lstlisting}[caption=hoge,label=qc_status]
+\begin{lstlisting}[caption=組み立て工程及び品質試験一覧情報ドキュメント。このようなドキュメントを作成、保持しておくことで組み立て工程及び品質試験の情報を扱う。ローカルデータベース内に1つこのドキュメントを保持し、品質試験結果選択、組み立て工程の更新時にこのドキュメントを参照する。このドキュメントは中央データベースよりデータ取得して作成する。,label=qc_status]
 {
 	"_id" : ObjectId("5fc89aa232d56b29091fd64d"),
 	"sys" : {
@@ -523,7 +521,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption=hoge,label=qc_module_status]
+\begin{lstlisting}[caption=モジュールの組み立て工程及び品質試験結果管理のためのドキュメント例。各モジュールにおいて現在の組み立て工程及び選択された品質試験結果がこのドキュメントに保存される。ドキュメント内の"currentStage"に現工程を保持する。また選択した試験結果のIDを"QC$\_$results"に各組み立て工程ごとに持つようになっている。,label=qc_module_status]
 {
 	"_id" : ObjectId("5fc4be4c12a45922a91b0e75"),
 	"sys" : {
@@ -591,8 +589,8 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{webapp_search_function}
-\caption[検索機能の様子]{検索機能の様子}
+\includegraphics[width=9cm]{webapp_search_function}
+\caption[ウェブアプリケーションにおける検索機能の様子]{ウェブアプリケーションにおける検索機能の様子。図は検索結果一覧表示のページである。図の上部に入力欄があり(赤破線)、ここにキーワードを入力し検索を実行する。図の例では"QU-13"と入力しており、検索結果にはモジュール名QU-13の試験結果が一覧表示されていることが分かる。}
 \label{webapp_search_function}
 \end{figure}
 
@@ -615,7 +613,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{interface_overview}
-\caption[データ同期機能の概要]{データ同期機能の概要}
+\caption[同期機能の概要]{同期機能の概要。同期機能の中でも、本研究ではモジュール情報のダウンロードと読み出し試験結果のアップロード機能を実装した。図に示している情報を同期する機能となっている。}
 \label{interface_overview}
 \end{figure}
 
@@ -639,13 +637,14 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
   \begin{minipage}{0.4\hsize}
     \includegraphics[width=5cm]{dbsystem_flow_image}
   \end{minipage}
-\caption[データベースシステム操作の流れ]{データベースシステム操作の流れ}
+\caption[各モジュールにおけるデータベースシステム操作の流れ]{各モジュールにおけるデータベースシステム操作の流れ。モジュール組み立てにおけるデータベース操作の初めに、中央データベースにモジュール登録及びローカルデータベースへモジュール情報のダウンロードを行う(処理1)。その後、ダウンロードしたモジュールに対して組み立て工程に応じた試験結果を生成、ローカルデータベースに保存する(処理2)。各組み立て工程の終わりに試験結果の選択を行い、中央データベースに試験結果を同期する(処理3)。}
 \label{dbsystem_flow}
 \end{figure}
 
 全組み立て工程が終了すると、モジュールの情報及び品質試験結果が全て中央データベースへ同期されている状態となる。
 データベース操作の流れの一部を学内実験室にて行った。詳細を5章で述べる。
 
+\clearpage
 \section{モジュール生産状況の解析}
 
 上述したデータベースシステムを使って、モジュール生産状況の解析を行うことができる。
@@ -655,7 +654,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=8cm,angle=270]{production_analysis}
-\caption[生産時のモジュール組み立て状況解析の例]{生産時のモジュール組み立て状況解析の例}
+\caption[生産時のモジュール組み立て状況解析の例]{生産時のモジュール組み立て状況解析の例。ローカルデータベースにて組み立て工程は管理され、工程毎に中央データベースに同期されるため、生産時には全てのモジュールの現工程を中央データベースで取得できる。図の例ように各段階におけるモジュール数を見ることで生産状況の確認ができる。さらにある期間ごとに工程を取得することで生産レートなども計算することができ、今後の生産計画やモジュール選別の参考とすることができる。}
 \label{production_analysis}
 \end{figure}
 
