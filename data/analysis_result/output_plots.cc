@@ -1,6 +1,10 @@
 {
+  Int_t palette[2];
+  palette[0] = 0;
+  palette[1] = 2;
+  gStyle->SetPalette(2,palette);
   gStyle -> SetOptStat(0);
-  gStyle -> SetPalette(1);
+
   std::vector<std::string> criteria = {
     "digital_dead",
     "digital_bad", 
@@ -20,6 +24,7 @@
   auto *output_file = TFile::Open("after_analysis.root");
   for(int n=0;n<criteria.size();n++){
     auto *h = new TH2D("h_tmp", (criteria.at(n) + ";Col;Row").c_str(), ncol, 0.5, ncol+0.5, nrow, 0.5, nrow+0.5);
+    h->GetZaxis()->SetRange(0., 1.);
     if(n==0){
       auto *h_read1 = (TH2D*)output_file -> Get(("h_" + criteria.at(n)).c_str());
       for (int i = 0; i < ncol; i++) {
