@@ -1,31 +1,33 @@
 \chapter{検出器量産と品質試験}
+この章ではモジュールの組み立て工程と品質試験について説明する。
 
 \section{組み立て工程}
-現在モジュールの組み立て工程として以下が設定されている。
+モジュール組み立て機関は、初めにベアモジュールとフレキシブル基板を受け取る。
+組み立て工程として以下が設定されている。
 \begin{enumerate}
-  \item プリント基板・ベアモジュール貼り付け
+  \item フレキシブル基板・ベアモジュール貼り付け
   \begin{itemize}
-    \item hoge
+    \item 受け取ったベアモジュールとフレキシブル基板を接着剤を用いて貼り付ける。
   \end{itemize}
   \item ワイヤー配線
   \begin{itemize}
-    \item hoge
+    \item FEチップとフレキシブル基板を電気的に接続する。
   \end{itemize}
   \item ワイヤー保護
   \begin{itemize}
-    \item hoge
+    \item ワイヤーが損傷があり断線が起きると、そのワイヤーに対するピクセルの読み出しができなくなるため、モジュールに屋根型の物質を取り付け、ワイヤーを物理的に保護する。
   \end{itemize}
   \item パリレンコーティング
   \begin{itemize}
-    \item hoge
+    \item モジュール読み出し部以外での電通や放電を防ぐため、パリレン高分子を用いてモジュールを保護する。
   \end{itemize}
   \item 温度サイクル試験
   \begin{itemize}
-    \item hoge
+    \item ITk運転時の環境温度は$-45^\circ$Cから$40^\circ$Cまで変化しうる\cite{3-2}。この温度変化に耐えうるかを確認するため、温度サイクルを行う。
   \end{itemize}
   \item 低温耐久試験
   \begin{itemize}
-    \item hoge
+    \item ITk運転時の環境温度は$-40^\circ$C付近である。これに耐えうる性能を持つかを確認するために、低温下にモジュールを長時間設置する試験を行う。
   \end{itemize}
 \end{enumerate}
 
@@ -40,18 +42,79 @@
 各組み立て工程に対して、いくつかの品質試験を行う。行う品質試験の代表的なものを以下に示す。
 
 \subsection{外観検査(Visual Inspection)}
+モジュールの外観写真を撮り、モジュールに以下のような欠陥がないかを確認する。
+また外観検査の様子を図\ref{VI_ovewview}に示す。
+\begin{itemize}
+  \item 抵抗等取り付け部品の損傷.
+  \item ワイヤーの接着位置確認.
+  \item 基板上の回路やワイヤーの断線.
+  \item 付着汚れ.
+\end{itemize}
+
+\begin{figure}[bpt]\centering
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=60mm]{VI_setup}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=65mm]{VI_analysis}
+    \end{center}
+  \end{minipage}
+  \caption[外観検査の様子]{外観検査の様子}
+  \label{VI_overview}
+\end{figure}
 
 \subsection{質量測定(Mass Measurement)}
+モジュールの質量を測定。
 
 \subsection{平坦性測定(Metrology)}
+モジュール上の位置座標を相対的に何点か測定し、モジュールの平坦度、厚さ、歪み具合等を測定する。
+測定の様子と解析の例を図\ref{Metrology_overview}に示す。
 
-\subsection{センサー電流$-$電圧特性確認(Sensor IV)}
+\begin{figure}[bpt]\centering
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=60mm]{Metrology_setup}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=65mm]{Metrology_analysis}
+    \end{center}
+  \end{minipage}
+  \caption[平坦性測定の様子]{平坦性測定の様子}
+  \label{Metrology_overview}
+\end{figure}
 
-\subsection{FEチップ電流$-$電圧特性確認(SLDO VI)}
+\subsection{センサー電流-電圧特性確認(Sensor IV)}
+モジュールのシリコンセンサーに逆バイアス電圧をかけ、電流-電圧特性をみる。
+印加電圧を段階的に変化させて測定点をとり、電流と電圧の関係を確認する。
+この試験の結果の例を図\ref{sensor_IV_result}に示す。
+図\ref{pn_iv}に示すように、逆方向電圧では電流はほとんど流れないが、臨界電圧に達すると急激に増大する。
 
+\begin{figure}[bpt]\centering
+\includegraphics[width=14cm]{sensor_IV_result}
+\caption[センサー電流-電圧特性結果の例]{センサー電流-電圧特性結果の例。}
+\label{sensor_IV_result}
+\end{figure}
+
+\subsection{FEチップ電流-電圧特性確認(SLDO VI)}
+FEチップに対して電圧をかけ、電流-電圧特性をみる。
+センサーに対してと同様に、印加電圧を段階的に変化させて測定点をとり、電流と電圧の関係を確認する。
+抵抗として振る舞うため、電流、電圧間の関係は図\ref{SLDO_VI_result}のように線形性を持つ。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=14cm]{SLDO_VI_result}
+\caption[FEチップ電流-電圧特性試験結果の例。]{FEチップ電流-電圧特性試験結果の例。}
+\label{SLDO_VI_result}
+\end{figure}
+
+\clearpage
 \subsection{読み出し試験}
 
-\subsubsection{用いるSWとSetup}
+\subsubsection{汎用読み出しシステムYARR}
 
 \subsubsection{レジスタ書き換え(Chip Configuration)}
 
@@ -146,3 +209,4 @@ digital scan
 \section{検出器量産と品質試験データ管理に対する要求}
 
 読み出し試験については特にデータ管理が大変。
+

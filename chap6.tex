@@ -1,70 +1,9 @@
-\chapter{ピクセル解析ツールと読み出し試験のデモンストレーション}
-品質試験項目の１つである読み出し試験のデモンストレーションを学内実験室にて行った。
-デモンストレーションの内容としては、4章で述べた2月にCERNで行ったチュートリアルとほぼ同じ内容である。
+\chapter{品質試験のデモンストレーション}
+品質試験項目のデモンストレーションを行った。
+今回のデモンストレーションでは、品質試験項目として読み出し試験を行い、データベース機能や試験の流れを確認した。
 この章の前半では開発したツールと試験で使用するソフトウェア、ハードウェアについて説明し、後にデモンストレーションの内容、各ソフトウェアの機能確認について述べる。
 
-\section{ピクセル解析ツールの開発}
-品質試験における読み出し試験では、3章で述べたようにモジュールの性能確認のためにピクセル解析を行う。
-これを円滑に行うために、ピクセル解析ツールを開発した。また開発した解析ツールをローカルデータベースシステムに組み込んだ。
-このツールについての詳細を以下に示す。
-
-\subsection{概要}
-YARRで読み出し試験を行った場合、結果ファイル及びディレクトリは各試験項目ごとにわかれて生成される。
-また各結果ファイルにはモジュール上の全ピクセル結果がJSONの形で保存されている。
-
-一方、ピクセル解析において、いくつかの試験結果を統一的に扱い、各ピクセルごとに解析を行う必要がある。
-そこで、開発した解析ツールでは複数の結果ファイルを1つに統合し、ピクセルごとの解析処理を単純化する役割を担っている。
-開発にはPythonとC++を用いた。またCERNが提供している解析フレームワークであるROOT\cite{5-5}を使用し、いくつかの試験データの統一ファイルとして、ROOT内部機能であるTreeを使用した。
-このファイル統合処理のイメージを図\ref{analysis_tool_motivation}に示す。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{analysis_tool_motivation}
-\caption[ピクセル解析ツールにおけるファイル統合処理のイメージ]{ピクセル解析ツールにおけるファイル統合処理のイメージ。YARRの出力ファイル及びディレクトリは\texttt{std$\_$digitalscan}や\texttt{std$\_$thresholdscan}というように読み出し項目ごとである。ピクセル解析ツールでは、図のようにあるモジュールに関連する結果ファイルを統合し、ピクセルごとに行う解析処理を簡易化する狙いがある。}
-\label{analysis_tool_motivation}
-\end{figure}
-
-実際に作ったTreeファイルと、データ構造のイメージを図\ref{analysis_tool_tree}に示す。
-
-\begin{figure}[bpt]
-  \begin{center}
-  \begin{minipage}{0.4\hsize}
-    \includegraphics[width=6cm]{analysis_tool_tree_file}
-  \end{minipage}
-  \begin{minipage}{0.4\hsize}
-    \includegraphics[width=8cm]{analysis_tool_tree_image}
-  \end{minipage}
-  \caption[Treeファイルとそのデータ保持]{Treeファイルとそのデータ保持。実際にこのツールを用いて作ったTreeファイルの内部構造の様子(左)とそのデータ保持のイメージ(右図)を示す。Treeファイルでは、右図のように1つの表に試験結果をまとめている。各行が\texttt{std$\_$digitalscan}といった各読み出し項目に対応し、各列が1ピクセルに対応する。モジュール上の行列(Row、Col)の番号を表の上部に持っておくことで、モジュール上におけるピクセルの位置情報を保持する。}
-  \label{analysis_tool_tree}
-  \end{center}
-\end{figure}
-
-\clearpage
-\subsection{ツールの内部構造と処理の流れ}
-開発したツールは、主に以下で説明する3つの実行ファイルで構成される。それぞれの役割について説明する。
-
-\begin{description}
-  \item[getData.py (Python)]\mbox{}\\ 
-    データベースから対象となるデータファイルを取得、キャッシュファイルとしてサーバー上の一時ディレクトリに保存.
-  \item[makeTree (C++)]\mbox{}\\ 
-    getData.pyを用いて生成されたキャッシュファイルを読み込み、Treeファイルを作成.
-  \item[analysis (C++)]\mbox{}\\ 
-　　作成したTreeファイルを読み込みピクセル解析を実行、結果値やプロットを出力.
-\end{description}
-
-処理の流れのイメージを図\ref{analysis_tool_flow}に示す。
-データベースとの通信に関してはMongoDBや現システムとの親和性を考慮し、Pythonを使用した。
-Treeファイル作成やその後の解析処理のスクリプトは、ROOTを使用する観点からC++を使用した。
-またピクセル解析以外の解析に対しても適応可能とするため、Tree作成部と解析処理部のファイルは分割した。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{analysis_tool_flow}
-\caption[ピクセル解析ツールの処理の流れ]{ピクセル解析ツールの処理の流れ。ピクセル解析ツールは、図のように3つの実行ファイルにより構成される。getData.py(Python)にてデータベースから結果の取得を行い、makeTree(C++)にてTreeファイルの作成、analysis(C++)にてピクセル解析及び結果のプロットが出力される。}
-\label{analysis_tool_flow}
-\end{figure}
-
-\clearpage
 \section{デモンストレーションと機能確認}
-
 上述したピクセル解析ツールを含む読み出し試験用ソフトウェアの機能確認を目的として、生産時における流れのデモンストレーションを行なった。
 その詳細について以下に示す。
 
