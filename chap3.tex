@@ -95,7 +95,7 @@
 図\ref{pn_iv}に示すように、逆方向電圧では電流はほとんど流れないが、臨界電圧に達すると急激に増大する。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=14cm]{sensor_IV_result}
+\includegraphics[width=7cm]{sensor_IV_result}
 \caption[センサー電流-電圧特性結果の例]{センサー電流-電圧特性結果の例。}
 \label{sensor_IV_result}
 \end{figure}
@@ -106,36 +106,203 @@ FEチップに対して電圧をかけ、電流-電圧特性をみる。
 抵抗として振る舞うため、電流、電圧間の関係は図\ref{SLDO_VI_result}のように線形性を持つ。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=14cm]{SLDO_VI_result}
+\includegraphics[width=7cm]{SLDO_VI_result}
 \caption[FEチップ電流-電圧特性試験結果の例。]{FEチップ電流-電圧特性試験結果の例。}
 \label{SLDO_VI_result}
 \end{figure}
 
 \clearpage
 \subsection{読み出し試験}
+読み出し試験はシリコンセンサーに入射した荷電粒子の信号を読み出すことを目的とした試験である。
+信号は多くの処理を経てPCで計測される。その過程が正常に機能するかを確認する。
 
 \subsubsection{汎用読み出しシステムYARR}
+\textbf{YARR(Yet Another Rapid Readout)}システム\cite{3-3}は、ピクセルモジュール用に開発された、PCI Express(PCIe)接続を用いた読み出しシステムである。
+ファームウェア、ソフトウェアから構成される。YARRではファームウェア上で行う処理はデータ通信等の最低限に抑え、その他多くの処理をソフトウェアで担うという特徴がある。
 
-\subsubsection{レジスタ書き換え(Chip Configuration)}
+\subsubsection{読み出し試験に使用するファイルと変数}
+YARRで扱う全てのファイルは\textbf{JSON(JavaScript Object Notation)}と呼ばれる形式で記述される。
 
-\subsubsection{試験項目詳細}
+YARRを用いた読み出し試験では以下の設定ファイルが要求される。
 \begin{itemize}
-  \item レジスタ読み出し(Register test)
-  \item デジタル回路読み出し(Digital scan)
-  \item アナログ回路読み出し(Analog scan)
-  \item Threshold測定(Threshold scan)
-  \item Thresholdグローバルレジスタ調整(Global threshold tuning)
-  \item Thresholdピクセルレジスタ調整、再調整、精密調整(Pixel threshold tuning)
-  \item ToTグローバルレジスタ調整(ToT tuning)
-  \item ノイズ占有率測定(Noise scan)
-  \item スタックピクセル測定(Stuck pixel scan)
-  \item クロストーク測定(Crosstalk scan)
-  \item バンプ接続確認測定(Disconnected bump scan)
-  \item 外部トリガーを用いた測定(External trriger)
+  \item 試験設定ファイル
+  \begin{itemize}
+    \item 読み出し試験の初期設定や解析手法を記述する。
+  \end{itemize}
+  \item ハードウェア設置ファイル
+  \begin{itemize}
+    \item 試験に用いるハードウェアの指定や設定を記述する。
+  \end{itemize}
+  \item 接続設定ファイル
+  \begin{itemize}
+    \item 読み出しを行うFEチップの種類やチャンネルを記述する。
+  \end{itemize}  
+  \item FEチップ設定ファイル.
+  \begin{itemize}
+    \item 各FEチップ毎に出力され、全ピクセルに共通な試験の設定値、各ピクセル固有の設定値を記述する。
+  \end{itemize}  
 \end{itemize}
-ここから１つ１つの詳細について説明する。
+
+また試験1項目ごとに以下のファイルが、1つのディレクトリに生成される。
+\begin{itemize}
+  \item 試験結果ファイル.
+  \begin{itemize}
+    \item 各ピクセルのOccupancy等、読み出し試験の結果値を記述する。
+  \end{itemize}
+  \item 試験設定ファイル
+  \item FEチップ設定ファイル.
+  \begin{itemize}
+    \item 試験の中で変更が加えられるため、各FEチップにつき試験前後の2つのファイルが出力される。
+  \end{itemize}
+  \item 試験ログ
+  \begin{itemize}
+    \item 試験情報を記録する。
+  \end{itemize}
+\end{itemize}
+
+後述するローカルデータベースシステムにおいてはさらに以下の設定ファイルを用いる。
+\begin{itemize}
+  \item データベース設定ファイル.
+  \item 試験者設定ファイル. 
+  \item 試験場所設定ファイル.
+\end{itemize}
+
+読み出し試験項目において以下の$Occupancy$という量が定義される。
+試験用電荷の入射数や発行トリガーの数等、期待される信号数を$n_i$回、実際に取得された信号数を$n_0$としたとき、
+\bbb
+\label{occupancy}
+Occupancy = \frac{n_0}{n_i} \times 100
+\eee
+と定義する。
+各試験において$Occupancy$が100付近となるピクセルは、正常に機能しているとみなす。
+
+\subsubsection{読み出し試験項目}
+以下に読み出し試験項目の一覧を示す。
+\begin{description}
+  \item[レジスタの読み書き]\mbox{}\\
+グローバル及びピクセルレジスタの読み書きが正常にできるのかを確認する試験.
+  \item[デジタル回路読み出し]\mbox{} \\
+各ピクセルのデジタル回路部に試験用電荷を入射し、信号の応答数を確認する試験. デジタル回路部の性能確認に用いる.
+  \item[アナログ回路読み出し]\mbox{}\\
+各ピクセルのアナログ回路部に試験用電荷を入射し、信号の応答数を確認する試験. アナログ回路部の性能確認に用いる.
+  \item[Threshold測定]\mbox{}\\
+各ピクセルのThreshold値を測定する試験.
+  \item[Thresholdグローバルレジスタ調整]\mbox{}\\
+全ピクセルに共通なレジスタの変更、基準となるThresholdに近づけるための調整.
+  \item[Thresholdピクセルレジスタ調整、再調整、精密調整]\mbox{}\\
+各ピクセル固有のレジスタの変更、基準となるThresholdに近づけるための調整.
+  \item[ToTグローバルレジスタ調整]\mbox{}\\
+全ピクセルに共通なレジスタの変更、基準となるToTに近づけるための調整.
+  \item[ノイズ占有率測定]\mbox{}\\
+各ピクセルのノイズの頻度を確認する試験.
+  \item[スタックピクセル測定]\mbox{}\\
+入力電荷の有無にかかわらず、常に信号を出力するピクセルを確認する試験.
+  \item[クロストーク測定]\mbox{}\\
+各ピクセルのクロストークの有無を確認する試験.
+  \item[バンプ接続確認測定]\mbox{}\\
+各ピクセルのバンプ接合が正常かを確認する試験.
+  \item[外部トリガーを用いた測定]\mbox{}\\
+外部トリガーを用いて信号の取得を行う試験.放射線源を用いた測定に使用.
+\end{description}
+
+\clearpage
+主な試験項目の詳細について以下で説明する。
+
+\subsubsection{デジタル回路読み出し}
+各ピクセルのデジタル回路部に一定量の試験用電荷を入射し、信号を取得する。
+$Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$で定義される。
+
+この試験の結果として出力されるファイルを以下に示す。
+\begin{description}
+  \item [OccupancyMap] 各ピクセルの$Occupancy$を記す.
+  \item [Enmask] $Occupancy=100$のピクセルを1、それ以外を0とした値を記す.
+  \item [L1Dist] 信号取得タイミングの分布を記す.
+\end{description}
+
+\subsubsection{アナログ回路読み出し}
+各ピクセルのアナログ回路部に一定量の試験用電荷を入射し、信号を取得する。
+デジタル回路読み出しと同様、$Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$で定義される。
+試験結果として出力されるファイルはデジタル回路読み出しと同じである。
+
+\subsubsection{Threshold測定}
+各ピクセルのアナログ回路部に試験用電荷を入射し、入射電荷数$n_i$と取得信号数$n_0$より$Occupancy$を測定する。
+これを入射電荷量を増加させて繰り返し行う。
+あるピクセルにおけるこの処理の例を図\ref{threshold_scurve}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{figure}
+\caption[Threshold SCurve]{Threshold SCurve}
+\label{threshold_scurve}
+\end{figure}
+
+この分布を以下の式でフィッティングする。フィッテングの形に由来し、これをSカーブフィッティングと呼ぶ。
+\bbb
+f(x) = 0.5 \times \left[ 2-g\left( \left\{ \frac{x-Q_{th}}{\sigma_n \times \sqrt{2}}  \right\} \right) \right] \times p\\
+g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp(-t^2)} {\rm d}t
+\eee
+
+
+得られた$Q_th$、$\sigma_n$がそれぞれピクセルのThreshold値、ノイズに相当する。
+あるFEチップにおける$Q_{th}$、$\sigma_n$の分布の例を図\ref{threshold_mean_sigma}に示す。
+
+\begin{figure}[bpt]\centering
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=60mm]{figure}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=65mm]{figure}
+    \end{center}
+  \end{minipage}
+  \caption[Thresholdの平均値と幅]{Thresholdの平均値と幅}
+  \label{threshold_mean_sigma}
+\end{figure}
+
+
+全ピクセルに対しての平均値$Q_{th,mean}、\sigma_{n,mean}$、幅$Q_{th,sigma}、\sigma_{n,sigma}$が得られる。
+
+出力される結果ファイルを以下に示す。
+\begin{description}
+  \item [ThresholdMap] 各ピクセルの$Q_{th}$を記す.
+  \item [ThresholdDist] $Q_{th}$の分布を記す.
+  \item [NoiseMap] 各ピクセルの$\sigma_n$を記す.
+  \item [NoiseDist] $\sigma_n$の分布を記す. 
+  \item [Chi2Map] 各ピクセルのSカーブフィッティングにおける$\chi^2$の値を記す.
+  \item [Chi2Dist] $\chi^2$の分布を記す.
+  \item [sCurve] あるピクセルの入射電荷量と$Occupancy$の関係を記す. いくつかのピクセルについて出力する.
+  \item [sCurveMap] 全てのピクセルのSCurveを重ね合わせた値を記す.
+\end{description}
+
+\subsubsection{ToT測定}
+各ピクセルのアナログ回路部に試験用電荷を入射し、ToTを測定する。
+複数回行い、平均値と幅を求める。
+出力される結果ファイルを以下に示す。
+\begin{description}
+  \item [MeanToTMap] 各ピクセルのToTの平均値を記す.
+  \item [MeanToTDist] ToT平均値の分布を記す. 
+  \item [SigmaToTMap] 各ピクセルのToTの分散を記す.
+  \item [SigmaToTDist] ToT分散の分布を記す.
+\end{description}
+
+\subsubsection{ノイズ占有率測定}
+試験用電荷を入射せずに、$t$[sec]の時間トリガーをかけ、取得信号数$n_i$を測定する
+$Occupancy$(式\ref{occupancy})は、トリガー数$n_i$と取得信号数$n_0$で定義される。
+また$NoiseOccupancy$を以下で定義する。
+\bbb
+NoiseOccupancy = \frac{n_i}{t} \times (25 \times 10^{-9})
+\eee
+$25 \times 10^{-9}$[sec]は1bumch crossing(1bc)と呼ばれる量であり、陽子バンチが衝突する間隔に対応する。
+
+出力される結果ファイルを以下に示す。
+\begin{description}
+  \item [OccupancyMap] 各ピクセルの$Occupancy$を記す.
+  \item [NoiseOccupancyMap] 各ピクセルの$NoiseOccupancy$を記す.
+  \item [NoiseMask] $NoiseOccupancy < 10^{-6}$のピクセルを1、それ以外を0とした値を記す.
+\end{description}
   
 \subsubsection{Threshold調整とピクセル解析}\label{sec:pixel_analysis}
+今後この論文では、この試験を読み出し試験と呼ぶ。
 以下の流れで読み出しを行う。
 \begin{itemize}
   \item デジタル回路読み出し
@@ -150,11 +317,6 @@ FEチップに対して電圧をかけ、電流-電圧特性をみる。
   \item クロストーク測定
 \end{itemize}
 
-digital scan
-・Explanation
-・Output files
-
-
 モジュール上のピクセルを解析し、各ピクセルが正常かどうかを判断する。
 以下の評価基準で解析をし、不良ピクセルには評価基準に応じた評価名が付けられる
 
@@ -163,22 +325,22 @@ digital scan
 \caption[ピクセル解析の評価基準]{ピクセル解析の評価基準\cite{3-1}}
 \label{pixel_analysis_criteria}
   \begin{tabular}{|lll|} \hline
-    評価名 & 読み出し項目 & 不良評価基準 \\ \hline
-    Digital Dead      & Digital scan           & Occupancy < 1 \\ \hline
-    Digital Bad       & Digital scan           & Occupancy < 98 or Occupancy > 102\\\hline 
-    Merged Bump       & Analog scan            & Occupancy < 98 or Occupancy > 102 \\ 
+    評価名 & 読み出し項目 & 評価基準 \\ \hline
+    Digital Dead      & Digital scan           & $Occupancy < 1$ \\ \hline
+    Digital Bad       & Digital scan           & $Occupancy < 98 :or :Occupancy > 102$ \\\hline 
+    Merged Bump       & Analog scan            & $Occupancy < 98 :or :Occupancy > 102$  \\ 
                       & Crosstalk scan         & High Crosstalk\\ \hline
-    Analog Dead       & Analog scan            & Occupancy < 1 \\ \hline
-    Analog Bad        & Analog scan            & Occupancy < 98 or Occupancy > 102 \\ \hline
-    Tuning Failed     & Threshold scan         & カイ二乗=0 \\ \hline
-    Tuning Bad        & Threshold scan         & $\pm5\sigma$\\ 
-                      & ToT scan               & 0 or 15 \\ \hline
-    High ENC          & Threshold scan         & $\pm3\sigma$ \\ \hline
-    Noisy             & Noise scan             & Occupancy > $10^{-6}$\\ \hline
-    Disconnected Bump & Disconnected bump scan & 未決定 \\ 
-                      & Source scan            & Occupancyが平均値の1$\%$ \\ \hline
-    High Crosstalk    & Crosstalk scan         & Occupancy>0 with 25e(sync)\\
-                      &                        & Occupancy>0 with 40e(lin and diff)\\ \hline 
+    Analog Dead       & Analog scan            & $Occupancy < 1$ \\ \hline
+    Analog Bad        & Analog scan            & $Occupancy < 98 :or :Occupancy > 102$ \\ \hline
+    Tuning Failed     & Threshold scan         & Sカーブフィット失敗(YARRでは$\chi^2=0$となる) \\ \hline
+    Tuning Bad        & Thresheld scan         & $|Q_{th}-Q_{th,mean}| > 5 \times Q_{th,sigma}$ \\ 
+                      & ToT scan               & ToT $ = 0 :or :15 $\\ \hline
+    High ENC          & Threshold scan         & $|\sigma_{n}-\sigma_{n,mean}| > 3 \times \sigma_{n,sigma}$\\ \hline
+    Noisy             & Noise scan             & $NoiseOccupancy > 10^{-6}$\\ \hline
+    Disconnected Bump & Disconnected bump scan & 現段階では未決定 \\ 
+                      & Source scan            & $Occupancy$がFEチップ全体平均の$1\%$ \\ \hline
+    High Crosstalk    & Crosstalk scan         & $Occupancy>0 :with :25{\rm ke}$ (sync FE)\\
+                      &                        & $Occupancy>0 :with :40{\rm ke}$ (lin and diff FE)\\ \hline 
   \end{tabular}
 \end{center}
 \end{table}
@@ -186,7 +348,7 @@ digital scan
 \subsubsection{簡易読み出し試験}
 簡易読み出し試験では以下の項目を扱う。
 \begin{itemize}
-  \item レジスタ読み出し
+  \item レジスタの読み書き
   \item デジタル回路読み出し
   \item アナログ回路読み出し
   \item Threshold読み出し
@@ -194,19 +356,32 @@ digital scan
   \item バンプ接続確認読み出し
 \end{itemize}
 
-\subsubsection{バンプ接合確認試験(Bump bond quality)}
+\subsubsection{バンプ接合確認試験}
 放射線源を用いてバンプ接合の確認を行う。
+以下の項目を扱う。
+\begin{itemize}
+  \item バンプ接合確認測定
+  \item ノイズ占有率測定測定
+  \item 外部トリガーを用いた測定
+\end{itemize}
 
 \subsection{各組み立て工程における品質試験}
 
 各組み立て工程と品質試験項目を図\ref{stage_test_flow}に示す。
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{figure}
+\includegraphics[width=10cm]{stage_test_flow}
 \caption[組み立て工程と対応する品質試験]{組み立て工程と対応する品質試験}
 \label{stage_test_flow}
 \end{figure}
 
-\section{検出器量産と品質試験データ管理に対する要求}
+\section{検出器量産におけるデータ管理}
+各組み立て機関で$O(100)-O(1000)$のモジュールを作る。
+そして上述したように、モジュールの組み立て及び品質試験の工程は数多くあり、特に読み出し試験については項目数、結果ファイル数も多様である。
+これらの情報は各組み立て機関で適切に管理し、後述する中央データベースに保存する必要がある。
 
-読み出し試験については特にデータ管理が大変。
+各組み立て機関でのモジュール情報及び品質試験のデータ管理を簡易化するため、ローカルデータベースシステムを開発している。
+本研究では、品質試験に特化したデータ管理のためのシステム開発とデータベース間の同期ツールの開発を行った。
+その詳細を4章で記述する。
+
+
 

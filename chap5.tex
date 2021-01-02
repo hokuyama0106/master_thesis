@@ -494,8 +494,9 @@ Quadモジュールにおける読み出し試験結果アップロード処理�
 添付する結果データファイル、設定ファイルの種類とデータ容量、添付処理実行結果、処理時間を表\ref{upload_status_to_pd}に示す。
 ここで、問題点2として4MBを超える容量のファイル添付は失敗していることがわかった。
 
+{ \scriptsize
 \begin{longtable}{|llllll|}
-  \caption[アップロード処理における結果、設定値ファイル添付実行結果と処理時間]{アップロード処理における結果、設定値ファイル添付実行結果と処理時間。図\ref{upload_process_detail_gragh}より、読み出し試験に対して出力される各ファイルのアップロード実行結果、データ容量と処理時間をまとめた。図よりファイルのデータ容量が大きいほど処理時間が長いことが分かる。std$\_$thresholdscanのようにファイル数が多い項目の場合、合計して大きい処理時間を要することが分かる。全項目において読み出しの設定ファイルにあたるbeforeCfg$\_$chipCfg.json、afterCfg$\_$chipCfg.jsonのアップロードは、中央データベースの容量制限により失敗していることが分かる。(texの技術的にcaptionが複数になってしまう。)}
+  \caption[アップロード処理における結果、設定値ファイル添付実行結果と処理時間]{アップロード処理における結果、設定値ファイル添付実行結果と処理時間。図\ref{upload_process_detail_result}より、読み出し試験に対して出力される各ファイルのアップロード実行結果、データ容量と処理時間をまとめた。図よりファイルのデータ容量が大きいほど処理時間が長いことが分かる。std$\_$thresholdscanのようにファイル数が多い項目の場合、合計して大きい処理時間を要することが分かる。全項目において読み出しの設定ファイルにあたるbeforeCfg$\_$chipCfg.json、afterCfg$\_$chipCfg.jsonのアップロードは、中央データベースの容量制限により失敗していることが分かる。(texの技術的にcaptionが複数になってしまう。)}
   \label{upload_status_to_pd}
   \endhead
   \hline
@@ -605,6 +606,7 @@ std$\_$noisescan & Occupancy.json & Ok & 1,300 & 4.0 $\pm$ 0.1 & 18$\pm$0\\
  & afterCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.5 $\pm$ 0.1 & \\
 \hline
 \end{longtable}
+}
 
 \newpage
 表\ref{upload_status_to_pd}より、データサイズの大きいものにアップロード時間がかかっていることがわかる。
@@ -626,6 +628,7 @@ std$\_$noisescan & Occupancy.json & Ok & 1,300 & 4.0 $\pm$ 0.1 & 18$\pm$0\\
   36 \pm 1 [{\rm sec}]
 \eee
 
+{\scriptsize
 \begin{longtable}{|llllll|}
   \caption[アップロード処理改善後における結果、設定値ファイル添付実行結果と処理時間]{アップロード処理改善後における結果、設定値ファイル添付実行結果と処理時間。各試験結果毎に結果ファイル、設定値ファイルをZipファイルにまとめアップロードする処理とした。これにより、ファイル数、容量の削減に成功し、アップロード時間が改善した。全てのファイルのアップロードに成功していることが分かる。}
   \label{upload_status_to_pd_zip}
@@ -649,6 +652,7 @@ std$\_$noisescan & Occupancy.json & Ok & 1,300 & 4.0 $\pm$ 0.1 & 18$\pm$0\\
  & std$\_$noisescan$\_$configfiles.zip & Ok & 190 & 1.1 $\pm$ 0.1 &\\
 \hline
 \end{longtable}
+}
 
 \subsubsection{生産時における見積もり}
 上記の見積もりと同様に、改善後のツールにおけるアップロード時間の見積もりを行った。
