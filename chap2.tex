@@ -1,93 +1,79 @@
-\chapter{ピクセル検出器}
+\chapter{ピクセルモジュール}
+この章ではピクセルモジュールの構成と各構成部品について説明する。
 
-\section{シリコン検出器}
-\subsection{半導体\cite{2-1}}
-固体は、絶縁体、半導体、導体の3つに大別できる。物質の電気伝導度に関して、絶縁体は非常に低い値、導体は高い値を持つ。
-半導体の電気伝導度はこれらの中間であり、温度、光、磁界および微量の不純物に対し非常に敏感である。この特徴のために半導体はエレクトロニクスにおける最も重要な材料の1つになっている。
-半導体は元素半導体と化合物半導体に分けられ、多くの物質がその候補となる。
-元素半導体の中で代表的なものとして$\rm{Si}$があげられ、ATLASピクセル検出器に使われる半導体は$\rm{Si}$がベースとなっている。
-不純物が入っていない、全ての原子が$\rm{Si}$の半導体を真性半導体と呼ぶ。真性半導体中の$\rm{Si}$は4つの$\rm{Si}$と共有結合を構成し、結晶を作る。(図\ref{pure_silicon})
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=8cm]{pure_silicon}
-\caption[真性半導体中のシリコン]{真性半導体中のシリコン\cite{2-1}}
-\label{pure_silicon}
-\end{figure}
-
-真性半導体に対し、$\rm{As}$などの最外殻電子を5つもつ原子を不純物としてドープしたものを$\rm{n}$型半導体、$\rm{B}$などの3つのものをドープしたものを$\rm{p}$型半導体と呼ぶ。
-それぞれキャリアとして電子、ホールを持つことになり、キャリア移動の特性を組み合わせて様々なデバイスに応用することができる。
-
-\subsection{pn接合}
-$\rm{n}$型半導体と$\rm{p}$型半導体を接合し、その接合部を$\rm{pn}$接合と呼ぶ。この接合は各種半導体素子で様々な形で応用されており、ピクセル検出器にも用いられている。
-
-$\rm{pn}$接合の最も重要な特徴は特定の方向にだけ電流が流れやすい整流性である。図\ref{pn_iv}に示すように正電圧をかけると電流は急速に増加する。
-逆方向にかけた場合、始めのうちは電流はほとんど流れない。ある臨界電圧に達すると電流は急激に増大する。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{pn_iv}
-\caption[$\rm{pn}$接合の電流$-$電圧特性]{$\rm{pn}$接合の電流$-$電圧特性\cite{2-1}}
-\label{pn_iv}
-\end{figure}
-
-逆方向電圧をかけた場合、図\ref{depletion_field}に示すように$\rm{pn}$接合付近はキャリアが存在しない空乏層領域が形成される。
-この時、それぞれの半導体のエネルギー準位に差が生じている状態となっている。
-印加電圧$V$と空乏層幅$W$は以下のような関係がある。
-\bbb
-W \propto \sqrt{V}
-\eee
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{depletion_field}
-\caption[空乏層]{空乏層\cite{2-1}}
-\label{depletion_field}
-\end{figure}
-
-\subsection{検出原理}
-荷電粒子が物質中を通過するとき、以下のBethe$-$Blochの公式によってエネルギーを損失する\cite{2-3}。
-\bbb
--\left<\frac{\rm{d}E}{\rm{d}x}\right> &=& Kz^2\frac{Z}{A}\frac{1}{\beta^2}\left(\frac{1}{2}\rm{ln}\frac{2m_ec^2\beta^2\gamma^2T_{max}}{I^2}-\beta^2+\cdots\right)\\
-\frac{\rm{d}E}{\rm{d}x}&:& 荷電粒子のエネルギー損失量[\rm{eV\cdot g^{-1}\cdot cm^2}] \\\nonumber
-K&:& 4\pi N_Ar_e^2m_ec^2 = 0.307075 [\rm{MeVcm^2}] \\\nonumber
-z&:& 荷電粒子の電荷量                          \\\nonumber   
-Z&:& 物質の原子番号(\rm{Si} 14)                 \\\nonumber
-A&:& 物質の原子量(\rm{Si} 28)\\\nonumber
-m_ec^2&:& 電子の静止エネルギー(\rm{0.511MeV}) \\\nonumber
-\beta&:& 光速を1とした入射粒子の速度 \\\nonumber
-\gamma&:&ローレンツ因子 1/\sqrt{1-\beta^2} \\\nonumber
-I&:& 励起エネルギーの期待値(シリコン 137\rm{eV}) \\\nonumber
-\eee
-また$T_max$は質量$M$の入射粒子による1つの電子への最大運動エネルギー移行であり、以下の式で書ける。
-\bbb
-T_{{\rm max}} = \frac{2m_ec^2\beta^2\gamma^2}{1+2\gamma m_e/M+\left(m_e/M\right)^2}
-\eee
-
-荷電粒子が半導体を通過したとき、そのエネルギー損失量に応じて電子・ホール対が生成し、その量を測定することができる。
-
-\section{新型ピクセルモジュール}
-
-新型ピクセルモジュールの構成と、各部品についての説明を以下で述べる。
-\subsection{モジュールの構成}
+\section{ピクセルモジュールの構成と信号伝達}
 モジュールの構成を図\ref{module_configuration}に示す。
 また、モジュールの信号伝達の様子を模式的に表したものを図\ref{module_electric_overview}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{module_configuration}
+\includegraphics[width=14cm]{module_configuration}
 \caption[ピクセルモジュールの構成]{ピクセルモジュールの構成}
 \label{module_configuration}
 \end{figure}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{module_electric_overview}
-\caption[信号伝達]{信号伝達}
+\includegraphics[width=8cm]{module_electric_overview}
+\caption[ピクセルモジュールにおける信号伝達の様子]{ピクセルモジュールにおける信号伝達の様子}
 \label{module_electric_overview}
 \end{figure}
 
-\subsubsection{モジュールの種類}
-Quad, tripletなど
+\section{ピクセルモジュールの構成部品}
+\subsection{シリコンセンサー}
+ピクセルモジュールに搭載するセンサーはシリコン半導体を用いている。
+センサー内部にはpn接合\cite{2-1}を持つ。センサーに逆バイアス電極をかけ、空乏層\cite{2-1}を広げた状態で用いる。
+この空乏層領域に荷電粒子が通過すると、Bethe-Blochの式\cite{2-1}に従い粒子はエネルギーを損失する。
+このエネルギー損失量に従い、電子・ホール対が生成、これを収集することで荷電粒子の通過信号をアナログ信号として読み出すことができる。
 
-\subsubsection{シリコンセンサー}
+新型ピクセルモジュールに搭載するセンサーでは、$n^+$ - in - p型を持つ。
+模式図を図\ref{sensor_image}に示す。$n^+$電極で電子を収集し、信号取得を行う。
+現行のセンサーに比べ、型変換を起こす可能性がなくなり安定した運転が見込まれる。\cite{1-3}
 
-\subsubsection{読み出しFEチップ}
+\begin{figure}[bpt]\centering
+\includegraphics[width=8cm]{sensor_image}
+\caption[センサーのイメージ]{センサーのイメージ}
+\label{sensor_image}
+\end{figure}
+
+\subsection{読み出しFEチップ}
+読み出しFEチップはシリコン半導体を用いて作られた集積回路である。
+読み出しFEチップの主な役割は、シリコンセンサーで発生し受け取ったアナログ信号を整形、増幅したのちAD変換し、後段に転送することである。
+AD変換について、アナログ信号がThresholdを超えた時間幅を測定し、デジタル信号に変換する。この信号の値を\textbf{Time over Threshold(ToT)}と呼ぶ。
+
+このAD変換の流れのイメージを図\ref{tot_algorithm}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{tot_algorithm}
+\caption[ToTの概念図]{ToTの概念図}
+\label{tot_algorithm}
+\end{figure}
+
+
+
+\subsubsection{RD53A}
+RD53A\cite{2-1}は、新型ピクセルモジュールの研究、開発のために作られたプロトタイプの読み出しFEチップである。
+RD53Aの性能を表\ref{rd53a_spec}に示す。
+チップサイズ、ピクセル数はITkに搭載するモジュールの半分となっている。
+
+\begin{table}[tbp]
+\begin{center}
+\caption[RD53Aの性能]{RD53Aの性能}
+\label{rd53a_spec}
+  \begin{tabular}{|ll|} \hline
+    チップサイズ[mm$^2$] & $20.0\times 11.6$ \\ 
+    ピクセルサイズ[$\mu$m$^2$] & $50.0\times 50.0$ \\ 
+    ピクセル数[行$\times$列] & $400\times 192$ \\ 
+    トリガーレート[kHz] & $1000$ \\ 
+    データレート[Mbps] & $1280\times4$ \\ \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+FEチップ上の各ピクセルはアナログ回路部とデジタル回路部を持つ。
+RD53Aでは図\ref{fechip_rd53a}に示すように、3つの領域があり、それぞれの領域でピクセルのアナログ回路部が異なる。
+左から順にsynchronous、linier、differrentialと呼ぶ。
+研究開発用に3つの領域が設けられており、ITkに搭載するモジュールにはDifferrentialフロントエンドを用いることが決定している。
+なお、デジタル回路部は全てのピクセルにおいて共通である。
+それぞれの回路図を付録\ref{chap:rd53a_circit}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{fechip_rd53a}
@@ -95,36 +81,18 @@ Quad, tripletなど
 \label{fechip_rd53a}
 \end{figure}
 
-\begin{figure}[bpt]
-  \begin{center}
-  \begin{minipage}{0.33\hsize}
-    \includegraphics[width=6cm]{diff_fe}
-  \end{minipage}
-  \begin{minipage}{0.33\hsize}
-    \includegraphics[width=6cm]{lin_fe}
-  \end{minipage}
-  \begin{minipage}{0.33\hsize}
-    \includegraphics[width=6cm]{syn_fe}
-  \end{minipage}
-  \caption[アナログフロントエンド]{アナログフロントエンド\cite{2-1}}
-  \label{analog_fe}
-  \end{center}
-\end{figure}
+\subsection{フレキシブル基板}
+フレキシブル基板は、基板上に電子部品が搭載されたものである。
+FEチップからのデジタル信号を後段の回路へ転送する他、FEチップ、センサーへの電圧印加制御の役割も担う。
 
-\begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{digital_fe}
-\caption[デジタルフロントエンド]{デジタルフロントエンド\cite{2-1}}
-\label{digital_fe}
-\end{figure}
+\section{新型モジュールの種類}
+現在、ITkに搭載するモジュールとして以下の3つのモジュールを予定している。
+\begin{itemize}
+  \item ステーブ用Tripletモジュール
+  \item リング用Tripletモジュール
+  \item Quadモジュール
+\end{itemize}
 
-\subsubsection{フレキシブル基板}
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{pcb}
-\caption[フレキシブル基板]{フレキシブル基板}
-\label{pcb}
-\end{figure}
-
-\subsubsection{モジュールキャリア}
-
+Triplet、QuadモジュールはそれぞれFEチップを3、4枚搭載するモジュールである。
+それぞれのモジュールの図及び検出器上における位置の一例を図\ref{module_geom}に示す。
 

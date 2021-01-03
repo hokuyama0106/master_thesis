@@ -1,12 +1,12 @@
 \chapter{序論}
-欧州原子力研究機構(CERN)に設置されている大型ハドロン衝突型加速器(LHC)では、現在、素粒子物理の基礎となっている標準模型の精密測定や標準模型を超える物理現象の探索が行われている。ATLAS実験はLHC上にある1つの衝突点で行われている実験であり、設置しているATLAS検出器を用いて崩壊粒子の測定が行われている。LHCでは加速器のアップグレード(HL$-$LHC)を予定しており、これに向けてATLAS検出器のアップグレードを行う。この章ではLHC$-$ATLAS実験とそのアップグレード計画について説明する。
+欧州原子力研究機構(CERN)に設置されている大型ハドロン衝突型加速器(LHC)では、現在、素粒子物理の基礎となっている標準模型の精密測定や標準模型を超える物理現象の探索が行われている。ATLAS実験はLHC上にある1つの衝突点で行われている実験であり、設置しているATLAS検出器を用いて崩壊粒子の測定が行われている。LHCでは加速器のアップグレード(HL-LHC)を予定しており、これに向けてATLAS検出器のアップグレードを行う。この章ではLHC-ATLAS実験とそのアップグレード計画について説明する。
 
 \section{LHCについて}
 LHCはCERNの地下およそ100 $\rm{m}$に設置されている周長26.7 $\rm{km}$の大型ハドロン衝突型加速器である。
 バンチと呼ばれる陽子のかたまりを7 $\rm{TeV}$まで加速し、衝突させる。世界最大エネルギーの加速器である。
 
 陽子ビームの加速は4つの前段加速器を用いて行う。始めに水素ガス中の水素原子から電子を分離することで陽子を生成する。
-その後最初の線形加速器(Linear Accelarator: LINAC)で50 $\rm{MeV}$まで加速し、陽子シンクロトロンブースター(Proton Synchrotron Booster: PSB)で1.4 $\rm{GeV}$、陽子シンクロトロン(Proton Synchrotron: PS)で25 $\rm{GeV}$、スーパー陽子シンクロトロン(Super Proton Synchrotron)で450 $\rm{GeV}$まで加速されたのちLHCに入射する。CERNにある加速器の概要を図\ref{LHC_overview}に示す。
+その後最初の線形加速器(Linear Accelarator: LINAC)、陽子シンクロトロンブースター(Proton Synchrotron Booster: PSB)、陽子シンクロトロン(Proton Synchrotron: PS)、スーパー陽子シンクロトロン(Super Proton Synchrotron)で加速されたのちLHCに入射する。CERNにある加速器の概要を図\ref{LHC_overview}に示す。
 LHCには4つの衝突点があり、それぞれALICE(A Large Ion Collider Experiment)、LHCb、CMS(Compact Muon Solenoid)、ATLAS(A
 Troidal LHC Apparatus)実験が行われている。それぞれの衝突点には崩壊粒子の飛跡やエネルギーを測定するための検出器が設置されており、それら検出器で取得したデータを元に多様な物理解析が行われている。
 
@@ -26,8 +26,9 @@ $x$軸方向は原点からみてLHCリングの中心に向かう方向であ�
 
 
 \subsection{ATLAS検出器}
-ATLAS検出器の全体図を図\ref{atlas_detector}に示す。
+ATLAS検出器は複数の検出器から構成され、陽子の衝突によって生成された粒子の運動量、エネルギーを測定することができる。
 最内装に内部飛跡検出器が設置されていて、次に超電導ソレノイド磁石、カロリメータ、トレノイド磁石、ミューオン検出器の順に設置されている。ビームパイプ以外をほとんど検出器で覆うようなデザインとなっている。
+ATLAS検出器の全体図を図\ref{atlas_detector}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{atlas_detector}
@@ -42,8 +43,12 @@ ATLAS検出器の全体図を図\ref{atlas_detector}に示す。
 %\end{figure}
 
 \subsection{内部飛跡検出器}
+ATLAS検出器の最内層に位置する検出器である。
+内部飛跡検出器は粒子の飛跡を測定するための検出器であり、その曲がり具合から粒子の運動量を計算できる。
+半径$1.15 \rm{m}$、長さ$7 \rm{m}$の円柱形であり、$|\eta|\leq 2.5$の領域を覆っている。超伝導ソレノイド磁石で2 $\rm{T}$の磁場が$z$方向にかけられる。この検出器はさらに3つの検出器で構成され、内側からピクセル検出器、ストリップ検出器、遷移放射検出器の順に設置されている。
+ピクセル、ストリップ検出器は階層構造になっており、粒子は複数の検出器を通過する。通過位置をつなぎ合わせることで粒子の軌跡を計算することができる。
+
 内部飛跡検出器の全体図を図\ref{inner_detector}に示す。
-内部飛跡検出器は半径$1.15 \rm{m}$、長さ$7 \rm{m}$の円柱形であり、$|\eta|\leq 2.5$の領域を覆っている。超伝導ソレノイド磁石で2 $\rm{T}$の磁場が$z$方向にかけられる。この検出器はさらに3つの検出器で構成され、内側からピクセル検出器、ストリップ検出器、遷移放射検出器の順に設置されている。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{inner_detector}
@@ -52,26 +57,30 @@ ATLAS検出器の全体図を図\ref{atlas_detector}に示す。
 \end{figure}
 
 
-検出器は$\eta$の範囲によってバレル部とエンドキャップ部に分かれる。図\ref{inner_cross_section}にビーム軸方向の端面図を示す。
+%検出器は$\eta$の範囲によってバレル部とエンドキャップ部に分かれる。図\ref{inner_cross_section}にビーム軸方向の端面図を示す。
+%
+%\begin{figure}[bpt]\centering
+%\includegraphics[width=12cm]{inner_cross_section}
+%\caption[内部飛跡検出器]{内部飛跡検出器\cite{1-4}}
+%\label{inner_cross_section}
+%\end{figure}
 
-\begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{inner_cross_section}
-\caption[内部飛跡検出器]{内部飛跡検出器\cite{1-4}}
-\label{inner_cross_section}
-\end{figure}
-
+\clearpage
 \subsubsection{ピクセル検出器}
 
-ピクセル検出器の全体図を図\ref{pixel_detector_overview}に示す。
-ピクセル検出器はバレル層が4層、エンドキャップ層が6層で構成される。バレル部の最内層はIBL(Insertable B-Layer)と呼ばれ、順にB-Layer、Layer-1、Layer-2となっている。
+内部飛跡検出器の最内層に位置する検出器である。
+ピクセル検出器はバレル層が4層、Diskと呼ばれるエンドキャップ層が6層で構成される。
+バレル部の最内層はIBL(Insertable B-Layer)と呼ばれ、順にB-Layer、Layer-1、Layer-2となっている。
 
+ピクセル検出器の全体図を図\ref{pixel_detector_overview}に示す。
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{pixel_detector_overview}
 \caption[ピクセル検出器全体]{ピクセル検出器全体\cite{1-5}}
 \label{pixel_detector_overview}
 \end{figure}
 
-ピクセル検出器は、モジュール構造を持つ検出器の集合である。モジュールを図\ref{pixel_detector}に示す。
+ピクセル検出器の各層は、モジュールと呼ばれる最小単位の検出器をいくつも搭載している。
+ピクセルモジュールを図\ref{pixel_detector}に示す。
 このピクセルモジュールの詳細については2章で述べる。
 \begin{figure}[bpt]\centering
 \includegraphics[width=8cm]{pixel_detector}
@@ -84,7 +93,7 @@ ATLAS検出器の全体図を図\ref{atlas_detector}に示す。
 \section{HL-LHC実験アップグレード計画}
 上述したように、LHCでは加速器のアップグレードを予定しており、これをHL-LHCアップグレード計画と呼ぶ。詳細を以下に示す。
 \subsection{概要}
-HL-LHCではルミノシティ呼ばれる陽子バンチ密度を上げることで、衝突確率を大きくし、取得統計数を増やす目的がある。
+HL-LHCではルミノシティ呼ばれる陽子バンチの密度を上げることで、衝突確率を大きくし、取得統計数を増やす目的がある。
 LHCとHL$-$LHCの比較を表\ref{compare_lhc}に示す。
 
 \begin{table}[tbp]
@@ -117,7 +126,7 @@ LHCの運転計画を表\ref{hllhc_plan}に示す。
   \item 検出器の細密化
 \end{itemize}
 
-HL$-$LHCに向けてATLAS内部飛跡検出器はアップグレードを予定しており、上記の要求を満たすように日々開発を進めている。
+HL-LHCに向けてATLAS内部飛跡検出器はアップグレードを予定しており、上記の要求を満たすように開発を進めている。
 アップグレード後の検出器をITk(Inner Tracker)と呼ぶ。イメージを図\ref{itk_image}に示す。
 
 \begin{figure}[bpt]\centering
@@ -126,6 +135,7 @@ HL$-$LHCに向けてATLAS内部飛跡検出器はアップグレードを予定�
 \label{itk_image}
 \end{figure}
 
+\clearpage
 \subsubsection{ITkの構成と現行との比較}
 図\ref{itk_cross_section}にITkのビーム軸方向の断面図を示す。
 ITkはピクセル検出器とストリップ検出器で構成される。
@@ -172,5 +182,39 @@ ITkはピクセル検出器とストリップ検出器で構成される。
 \end{table}
 
 \subsection{期待される物理}
-\subsubsection{ヒッグス粒子の測定}
+ITkは現行ピクセル検出器に比べカバーする$\eta$の範囲が大きい。
+そのため前方方向に大きな運動量を持つ粒子が生じるような物理現象に対する感度が向上する。
 
+このような物理現象の例として、ボゾン粒子結合によるヒッグス粒子生成過程(Vector boson fusion higgs production, \textbf{VBF})をあげる。
+この過程のファインマン図及びイベントディスプレイを図\ref{VBF_image}に示す。
+この衝突により生じる2つのクオークジェットは前方方向に大きい運動量を持つ。
+ITkではこれらのジェットを正確に捉えることができ、VBFイベントの測定精度を向上することができる。
+この測定における系統誤差は表\ref{VBF_uncertainty}のように見積もられる\cite{1-3}。
+
+\begin{figure}[bpt]
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=60mm]{VBF_fainman}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \begin{center}
+    \includegraphics[width=60mm]{VBF_event_display}
+    \end{center}
+  \end{minipage}
+  \caption[VBFイベントの図]{VBFイベントの図}
+  \label{VBF_image}
+\end{figure}
+
+\begin{table}[tbp]
+\begin{center}
+\caption[VBFの測定における系統誤差の見積もり]{VBFの測定における系統誤差の見積もり}
+\label{compare_itk_pixel}
+  \begin{tabular}{|lll|} \hline
+    使用範囲 & $|\eta| <2.7 $ & $|\eta| < 4.0 $ \\ \hline
+    & 22$\%$ & 12$\%$ \\ \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+その他広い$\eta$による利点として、bタグ精度の向上、主崩壊イベント由来のジェットの選別精度の向上、$\tau$レプトン識別精度の向上が見込まれ、多くの物理現象において測定精度の向上が見込まれている。

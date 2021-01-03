@@ -41,7 +41,7 @@
 \section{品質試験}
 各組み立て工程に対して、いくつかの品質試験を行う。行う品質試験の代表的なものを以下に示す。
 
-\subsection{外観検査(Visual Inspection)}
+\subsection{外観検査}
 モジュールの外観写真を撮り、モジュールに以下のような欠陥がないかを確認する。
 また外観検査の様子を図\ref{VI_ovewview}に示す。
 \begin{itemize}
@@ -66,10 +66,10 @@
   \label{VI_overview}
 \end{figure}
 
-\subsection{質量測定(Mass Measurement)}
-モジュールの質量を測定。
+\subsection{質量測定}
+モジュールの質量を測定する試験である。
 
-\subsection{平坦性測定(Metrology)}
+\subsection{平坦性測定}
 モジュール上の位置座標を相対的に何点か測定し、モジュールの平坦度、厚さ、歪み具合等を測定する。
 測定の様子と解析の例を図\ref{Metrology_overview}に示す。
 
@@ -88,11 +88,12 @@
   \label{Metrology_overview}
 \end{figure}
 
-\subsection{センサー電流-電圧特性確認(Sensor IV)}
+\subsection{センサー電流-電圧特性確認}
 モジュールのシリコンセンサーに逆バイアス電圧をかけ、電流-電圧特性をみる。
 印加電圧を段階的に変化させて測定点をとり、電流と電圧の関係を確認する。
 この試験の結果の例を図\ref{sensor_IV_result}に示す。
-図\ref{pn_iv}に示すように、逆方向電圧では電流はほとんど流れないが、臨界電圧に達すると急激に増大する。
+逆方向電圧では電流はほとんど流れないが、臨界電圧に達すると急激に増大する。
+これはpn接合の特性\cite{2-1}であり、正常であればこの振る舞いを確認することができる。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=7cm]{sensor_IV_result}
@@ -100,7 +101,7 @@
 \label{sensor_IV_result}
 \end{figure}
 
-\subsection{FEチップ電流-電圧特性確認(SLDO VI)}
+\subsection{FEチップ電流-電圧特性確認}
 FEチップに対して電圧をかけ、電流-電圧特性をみる。
 センサーに対してと同様に、印加電圧を段階的に変化させて測定点をとり、電流と電圧の関係を確認する。
 抵抗として振る舞うため、電流、電圧間の関係は図\ref{SLDO_VI_result}のように線形性を持つ。
@@ -212,6 +213,13 @@ Occupancy = \frac{n_0}{n_i} \times 100
 各ピクセルのデジタル回路部に一定量の試験用電荷を入射し、信号を取得する。
 $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$で定義される。
 
+デジタル回路読み出しにおける$Occupancy$の二次元分布の例を図\ref{dig_occ}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=8cm]{dig_occ}
+\caption[dicocc]{digocc}
+\label{threshold_scurve}
+\end{figure}
+
 この試験の結果として出力されるファイルを以下に示す。
 \begin{description}
   \item [OccupancyMap] 各ピクセルの$Occupancy$を記す.
@@ -229,7 +237,7 @@ $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$
 これを入射電荷量を増加させて繰り返し行う。
 あるピクセルにおけるこの処理の例を図\ref{threshold_scurve}に示す。
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{figure}
+\includegraphics[width=8cm]{threshold_scurve}
 \caption[Threshold SCurve]{Threshold SCurve}
 \label{threshold_scurve}
 \end{figure}
@@ -237,22 +245,22 @@ $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$
 この分布を以下の式でフィッティングする。フィッテングの形に由来し、これをSカーブフィッティングと呼ぶ。
 \bbb
 f(x) = 0.5 \times \left[ 2-g\left( \left\{ \frac{x-Q_{th}}{\sigma_n \times \sqrt{2}}  \right\} \right) \right] \times p\\
-g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp(-t^2)} {\rm d}t
+g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp}(-t^2) {\rm d}t
 \eee
 
 
-得られた$Q_th$、$\sigma_n$がそれぞれピクセルのThreshold値、ノイズに相当する。
+得られた$Q_{th}$、$\sigma_n$がそれぞれピクセルのThreshold値、ノイズに相当する。
 あるFEチップにおける$Q_{th}$、$\sigma_n$の分布の例を図\ref{threshold_mean_sigma}に示す。
 
 \begin{figure}[bpt]\centering
-  \begin{minipage}{0.4\hsize}
+  \begin{minipage}{0.5\hsize}
     \begin{center}
-    \includegraphics[width=60mm]{figure}
+    \includegraphics[width=50mm,angle=270]{Threshold_mean_dist}
     \end{center}
   \end{minipage}
-  \begin{minipage}{0.4\hsize}
+  \begin{minipage}{0.5\hsize}
     \begin{center}
-    \includegraphics[width=65mm]{figure}
+    \includegraphics[width=50mm,angle=270]{Threshold_noise_dist}
     \end{center}
   \end{minipage}
   \caption[Thresholdの平均値と幅]{Thresholdの平均値と幅}
@@ -294,6 +302,15 @@ NoiseOccupancy = \frac{n_i}{t} \times (25 \times 10^{-9})
 \eee
 $25 \times 10^{-9}$[sec]は1bumch crossing(1bc)と呼ばれる量であり、陽子バンチが衝突する間隔に対応する。
 
+$NoiseOccupancy$の分布の例を図\ref{noise_occ}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=8cm]{noise_occ}
+\caption[noiseocc]{noiseocc}
+\label{threshold_scurve}
+\end{figure}
+
+
+
 出力される結果ファイルを以下に示す。
 \begin{description}
   \item [OccupancyMap] 各ピクセルの$Occupancy$を記す.
@@ -327,20 +344,20 @@ $25 \times 10^{-9}$[sec]は1bumch crossing(1bc)と呼ばれる量であり、陽
   \begin{tabular}{|lll|} \hline
     評価名 & 読み出し項目 & 評価基準 \\ \hline
     Digital Dead      & Digital scan           & $Occupancy < 1$ \\ \hline
-    Digital Bad       & Digital scan           & $Occupancy < 98 :or :Occupancy > 102$ \\\hline 
-    Merged Bump       & Analog scan            & $Occupancy < 98 :or :Occupancy > 102$  \\ 
+    Digital Bad       & Digital scan           & $Occupancy < 98 \: or \: Occupancy > 102$ \\\hline 
+    Merged Bump       & Analog scan            & $Occupancy < 98 \: or \: Occupancy > 102$  \\ 
                       & Crosstalk scan         & High Crosstalk\\ \hline
     Analog Dead       & Analog scan            & $Occupancy < 1$ \\ \hline
-    Analog Bad        & Analog scan            & $Occupancy < 98 :or :Occupancy > 102$ \\ \hline
+    Analog Bad        & Analog scan            & $Occupancy < 98 \: or \: Occupancy > 102$ \\ \hline
     Tuning Failed     & Threshold scan         & Sカーブフィット失敗(YARRでは$\chi^2=0$となる) \\ \hline
     Tuning Bad        & Thresheld scan         & $|Q_{th}-Q_{th,mean}| > 5 \times Q_{th,sigma}$ \\ 
-                      & ToT scan               & ToT $ = 0 :or :15 $\\ \hline
+                      & ToT scan               & ToT $ = 0 \: or \: 15 $\\ \hline
     High ENC          & Threshold scan         & $|\sigma_{n}-\sigma_{n,mean}| > 3 \times \sigma_{n,sigma}$\\ \hline
     Noisy             & Noise scan             & $NoiseOccupancy > 10^{-6}$\\ \hline
     Disconnected Bump & Disconnected bump scan & 現段階では未決定 \\ 
                       & Source scan            & $Occupancy$がFEチップ全体平均の$1\%$ \\ \hline
-    High Crosstalk    & Crosstalk scan         & $Occupancy>0 :with :25{\rm ke}$ (sync FE)\\
-                      &                        & $Occupancy>0 :with :40{\rm ke}$ (lin and diff FE)\\ \hline 
+    High Crosstalk    & Crosstalk scan         & $Occupancy>0 \: with \: 25{\rm ke}$ (sync FE)\\
+                      &                        & $Occupancy>0 \: with \: 40{\rm ke}$ (lin and diff FE)\\ \hline 
   \end{tabular}
 \end{center}
 \end{table}
