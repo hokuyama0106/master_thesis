@@ -1,5 +1,6 @@
 \chapter{序論}
-欧州原子力研究機構(CERN)に設置されている大型ハドロン衝突型加速器(LHC)では、現在、素粒子物理の基礎となっている標準模型の精密測定や標準模型を超える物理現象の探索が行われている。ATLAS実験はLHC上にある1つの衝突点で行われている実験であり、設置しているATLAS検出器を用いて崩壊粒子の測定が行われている。LHCでは加速器のアップグレード(HL-LHC)を予定しており、これに向けてATLAS検出器のアップグレードを行う。この章ではLHC-ATLAS実験とそのアップグレード計画について説明する。
+欧州原子力研究機構(CERN)に設置されている大型ハドロン衝突型加速器(LHC)では、現在、素粒子物理学の基礎となっている標準模型の精密測定や標準模型を超える物理現象の探索が行われている。
+ATLAS実験はLHC上にある1つの衝突点で行われている実験であり、ATLAS検出器を用いて崩壊粒子の測定が行われている。LHCでは加速器のアップグレード(HL-LHC)を予定しており、これに向けてATLAS検出器のアップグレードを行う。この章ではLHC-ATLAS実験とそのアップグレード計画について説明する。
 
 \section{LHCについて}
 LHCはCERNの地下およそ100 $\rm{m}$に設置されている周長26.7 $\rm{km}$の大型ハドロン衝突型加速器である。
@@ -12,7 +13,7 @@ Troidal LHC Apparatus)実験が行われている。それぞれの衝突点に�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{LHC_overview}
-\caption[LHCの全体像]{LHCの全体像\cite{1-1}}
+\caption[加速器の全体像]{加速器の全体像\cite{1-1}。図はCERNに設置されている加速器の全体像を示す。陽子はいくつかの前段加速器で段階的に加速されLHCに入射する。LHC上には4つの衝突点が存在し、それぞれALICE、LHCb、CMS、ATLAS実験が行われている。}
 \label{LHC_overview}
 \end{figure}
 
@@ -27,12 +28,12 @@ $x$軸方向は原点からみてLHCリングの中心に向かう方向であ�
 
 \subsection{ATLAS検出器}
 ATLAS検出器は複数の検出器から構成され、陽子の衝突によって生成された粒子の運動量、エネルギーを測定することができる。
-最内装に内部飛跡検出器が設置されていて、次に超電導ソレノイド磁石、カロリメータ、トレノイド磁石、ミューオン検出器の順に設置されている。ビームパイプ以外をほとんど検出器で覆うようなデザインとなっている。
+最内装に内部飛跡検出器が設置されていて、次に超電導ソレノイド磁石、カロリメータ、トレノイド磁石、ミューオン検出器の順に設置されている。ビームパイプ以外をほとんど検出器で覆うような設計となっている。
 ATLAS検出器の全体図を図\ref{atlas_detector}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{atlas_detector}
-\caption[ATLAS検出器]{ATLAS検出器\cite{1-2}}
+\caption[ATLAS検出器の全体像]{ATLAS検出器の全体像\cite{1-2}。内側から内部飛跡検出器、ソレノイド磁石、カロリメータ、トレノイド磁石、ミューオン検出器が設置されている。}
 \label{atlas_detector}
 \end{figure}
 
@@ -45,14 +46,16 @@ ATLAS検出器の全体図を図\ref{atlas_detector}に示す。
 \subsection{内部飛跡検出器}
 ATLAS検出器の最内層に位置する検出器である。
 内部飛跡検出器は粒子の飛跡を測定するための検出器であり、その曲がり具合から粒子の運動量を計算できる。
-半径$1.15 \rm{m}$、長さ$7 \rm{m}$の円柱形であり、$|\eta|\leq 2.5$の領域を覆っている。超伝導ソレノイド磁石で2 $\rm{T}$の磁場が$z$方向にかけられる。この検出器はさらに3つの検出器で構成され、内側からピクセル検出器、ストリップ検出器、遷移放射検出器の順に設置されている。
+外側には超伝導ソレノイド磁石が設置されており、2 $\rm{T}$の磁場が$z$方向にかけられる。これにより荷電粒子はローレンツ力を受け、軌跡が曲がる。
+
+内部飛跡検出器は3つの検出器で構成され、内側からピクセル検出器、ストリップ検出器、遷移放射検出器の順に設置されている。
 ピクセル、ストリップ検出器は階層構造になっており、粒子は複数の検出器を通過する。通過位置をつなぎ合わせることで粒子の軌跡を計算することができる。
 
 内部飛跡検出器の全体図を図\ref{inner_detector}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{inner_detector}
-\caption[内部飛跡検出器]{内部飛跡検出器\cite{1-2}}
+\caption[内部飛跡検出器の全体像]{内部飛跡検出器の全体像\cite{1-2}。内側からピクセル検出器、ストリップ検出器、遷移放射検出器が設置されている。また円筒状のバレル層とディスク上のエンドキャップ層を構造として持つ。}
 \label{inner_detector}
 \end{figure}
 
@@ -65,7 +68,6 @@ ATLAS検出器の最内層に位置する検出器である。
 %\label{inner_cross_section}
 %\end{figure}
 
-\clearpage
 \subsubsection{ピクセル検出器}
 
 内部飛跡検出器の最内層に位置する検出器である。
@@ -74,8 +76,8 @@ ATLAS検出器の最内層に位置する検出器である。
 
 ピクセル検出器の全体図を図\ref{pixel_detector_overview}に示す。
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{pixel_detector_overview}
-\caption[ピクセル検出器全体]{ピクセル検出器全体\cite{1-5}}
+\includegraphics[width=8cm]{pixel_detector_overview}
+\caption[ピクセル検出器の全体像]{ピクセル検出器の全体像\cite{1-5}。上図はピクセル検出器の全体を模式的に表したものであり、下図はビーム軸方向から見たピクセル検出器バレル部の断面図である。バレル部の4層は内側からIBL、B-Layer、Layer-1、Layer-2と呼ぶ。}
 \label{pixel_detector_overview}
 \end{figure}
 
@@ -83,29 +85,29 @@ ATLAS検出器の最内層に位置する検出器である。
 ピクセルモジュールを図\ref{pixel_detector}に示す。
 このピクセルモジュールの詳細については2章で述べる。
 \begin{figure}[bpt]\centering
-\includegraphics[width=8cm]{pixel_detector}
-\caption[ピクセルモジュール]{ピクセルモジュール\cite{1-2}}
+\includegraphics[width=6cm]{pixel_detector}
+\caption[ピクセルモジュールの全体像。]{ピクセルモジュールの全体像\cite{1-2}。ピクセル検出器は、最小単位としてモジュールと呼ばれる構造を持ち、図にモジュールの全体像を示している。モジュールは、荷電粒子が通過し、信号を生成するセンサー部、AD変換を行うFEチップ部、データ転送を行うフレキシブル基板から構成される。}
 \label{pixel_detector}
 \end{figure}
 
 
 \clearpage
 \section{HL-LHC実験アップグレード計画}
-上述したように、LHCでは加速器のアップグレードを予定しており、これをHL-LHCアップグレード計画と呼ぶ。詳細を以下に示す。
+LHCでは加速器のアップグレードを予定しており、これをHL-LHCアップグレード計画と呼ぶ。詳細を以下に示す。
 \subsection{概要}
 HL-LHCではルミノシティ呼ばれる陽子バンチの密度を上げることで、衝突確率を大きくし、取得統計数を増やす目的がある。
 LHCとHL$-$LHCの比較を表\ref{compare_lhc}に示す。
 
 \begin{table}[tbp]
 \begin{center}
-\caption[LHCの比較]{LHCの比較\cite{1-6}}
+\caption[LHCの比較]{LHCの比較\cite{1-6}。表はRun2時点でのLHCとHL-LHCとの比較を示している。瞬間ルミノシティは7倍、積分ルミノシティは10倍になることが見積もられており、取得統計数の増加が期待できる。}
 \label{compare_lhc}
   \begin{tabular}{|lll|} \hline
     & LHC & HL$-$LHC \\ \hline
     重心系エネルギー & 14 & 14 \\
     瞬間ルミノシティ[$\rm{cm^{-2}s^{-1}}$] & $1\times 10^{34}$ & $7\times10^{34}$ \\
     積分ルミノシティ[$\rm{fb^{-1}}$] & $300$ & $3,000$ \\
-    1衝突あたりのイベント数 & $23$ & $138$ \\ \hline 
+    1陽子衝突あたりのイベント数 & $23$ & $138$ \\ \hline 
   \end{tabular}
 \end{center}
 \end{table}
@@ -114,7 +116,7 @@ LHCの運転計画を表\ref{hllhc_plan}に示す。
 2020年8月地点の計画では、2025年の初めよりHL-LHCの導入が始まり、2027年の途中からHL-LHC運転開始の予定となっている。
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{hllhc_plan}
-\caption[HL-LHC運転計画]{HL-LHC運転計画\cite{1-7}}
+\caption[HL-LHC運転計画]{HL-LHC運転計画\cite{1-7}。2025年の初めよりHL-LHCの導入、2027年の途中より本運転が始まる。}
 \label{hllhc_plan}
 \end{figure}
 
@@ -127,24 +129,23 @@ LHCの運転計画を表\ref{hllhc_plan}に示す。
 \end{itemize}
 
 HL-LHCに向けてATLAS内部飛跡検出器はアップグレードを予定しており、上記の要求を満たすように開発を進めている。
-アップグレード後の検出器をITk(Inner Tracker)と呼ぶ。イメージを図\ref{itk_image}に示す。
+アップグレード後の検出器をInner Tracker(\textbf{ITk})と呼ぶ。イメージを図\ref{itk_image}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{itk_image}
-\caption[ITkのイメージ]{ITkのイメージ\cite{1-3}}
+\caption[ITkの全体像]{ITkの全体像\cite{1-3}。図はITk全体の模式図を示している。ITkはピクセル検出器(緑の領域)とストリップ検出器(青の領域)から構成される。}
 \label{itk_image}
 \end{figure}
 
-\clearpage
-\subsubsection{ITkの構成と現行との比較}
+\subsubsection{ITkの構成と現行ピクセル検出器との比較}
 図\ref{itk_cross_section}にITkのビーム軸方向の断面図を示す。
 ITkはピクセル検出器とストリップ検出器で構成される。
 ピクセル検出器はバレル、インクラインド、エンドキャップ部で構成され、バレル部は5層となっている。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{itk_cross_section}
-\includegraphics[width=10cm]{itk_pixel_cross_section}
-\caption[ITkの断面図]{ITkの断面図\cite{1-3}}
+\includegraphics[width=12cm]{itk_cross_section}
+%\includegraphics[width=10cm]{itk_pixel_cross_section}
+\caption[ITkの断面図]{ITkの断面図\cite{1-3}。ITkはピクセル検出器とストリップ検出器から構成され、バレル部はそれぞれ5、4層の構造を持つ。ピクセル検出器はバレル部、インクラインド部、エンドキャップ部に分かれ、このエンドキャップ部の設計により$|\eta|<4.0$までの範囲をカバーし、粒子の飛跡測定をすることができる。}
 \label{itk_cross_section}
 \end{figure}
 
@@ -153,20 +154,20 @@ ITkはピクセル検出器とストリップ検出器で構成される。
 
 \begin{table}[tbp]
 \begin{center}
-\caption[ピクセル検出器配置の比較]{ピクセル検出器配置の比較}
+\caption[ピクセル検出器設置領域の比較]{ピクセル検出器設置領域の比較。表は現行とITkにおけるピクセル検出器設置領域の比較を示す。ITkでは遷移放射検出器を使用しないため、ピクセル検出器の半径方向のカバー領域が増え、層の数は4から5となる。また前方方向に生じる粒子測定を行うために、$\eta$の領域も拡大している。}
 \label{compare_itk_pixel}
   \begin{tabular}{|lll|} \hline
     & 現行 & ITk \\ \hline
-    $r[\rm{mm}]$ & $33~129$ & $39~279$ \\ 
-    $|\eta|$ & $<2.5$ & $<4$ \\ 
-    層の数 & 4 & 5 \\ \hline
+    $r[\rm{mm}]$ & $33\tilde129$ & $39\tilde279$ \\ 
+    層の数(バレル部) & 4 & 5 \\ 
+    $|\eta|$ & $<2.5$ & $<4$ \\ \hline
   \end{tabular}
 \end{center}
 \end{table}
 
 \begin{table}[tbp]
 \begin{center}
-\caption[ピクセルモジュール数の比較]{ピクセルモジュール数の比較}
+\caption[搭載するピクセルモジュール数の比較]{搭載するピクセルモジュール数の比較。表は現行とITkのピクセル検出器において、各構造における搭載ピクセルモジュールの数を示している。ITkではバレル部で現行の約2倍になっているのに加え、インクラインド部、エンドキャップ部に多くのモジュールを搭載する設計となっていることが分かる。}
 \label{compare_itk_modules}
   \begin{tabular}{|l||ll|ll|ll|} \hline
           & バレル部 &            & インクラインド部 & & エンドキャップ部 & \\ \hline 
@@ -181,9 +182,9 @@ ITkはピクセル検出器とストリップ検出器で構成される。
 \end{center}
 \end{table}
 
-\subsection{期待される物理}
-ITkは現行ピクセル検出器に比べカバーする$\eta$の範囲が大きい。
-そのため前方方向に大きな運動量を持つ粒子が生じるような物理現象に対する感度が向上する。
+\subsection{物理測定に及ぼす影響}
+ITkのピクセル検出器では現行に比べカバーする$\eta$の範囲が大きい。
+この特徴が生む利点として、前方方向に大きな運動量を持つ粒子を含む物理現象の測定精度向上があげられる。
 
 このような物理現象の例として、ボゾン粒子結合によるヒッグス粒子生成過程(Vector boson fusion higgs production, \textbf{VBF})をあげる。
 この過程のファインマン図及びイベントディスプレイを図\ref{VBF_image}に示す。
@@ -192,29 +193,29 @@ ITkではこれらのジェットを正確に捉えることができ、VBFイ�
 この測定における系統誤差は表\ref{VBF_uncertainty}のように見積もられる\cite{1-3}。
 
 \begin{figure}[bpt]
-  \begin{minipage}{0.4\hsize}
+  \begin{minipage}{0.5\hsize}
     \begin{center}
     \includegraphics[width=60mm]{VBF_fainman}
     \end{center}
   \end{minipage}
-  \begin{minipage}{0.4\hsize}
+  \begin{minipage}{0.5\hsize}
     \begin{center}
     \includegraphics[width=60mm]{VBF_event_display}
     \end{center}
   \end{minipage}
-  \caption[VBFイベントの図]{VBFイベントの図}
+  \caption[VBFイベントの図]{VBFイベントの図。クオーク対が相互作用をし、2つのボゾン粒子が結合、ヒッグスボソンを生成する過程(VBF)を示している。左図はファインマン図、右図はそのイベントディスプレイを表す。このイベントにおいて、初めに相互作用したクオーク対は、それぞれ崩壊を繰り返しジェットと呼ばれる粒子群となる。このときこれらのジェットは前方方向に大きな運動量を持つ。ITkではピクセル検出器で$|\eta|<4.0$の範囲をカバーしており、このような前方方向に生じるジェットを捉えることができ、測定精度が向上する。}
   \label{VBF_image}
 \end{figure}
 
 \begin{table}[tbp]
 \begin{center}
-\caption[VBFの測定における系統誤差の見積もり]{VBFの測定における系統誤差の見積もり}
-\label{compare_itk_pixel}
+\caption[VBFの測定における系統誤差の見積もり]{VBFの測定における系統誤差の見積もり。表は$|\eta| <2.7$、$|\eta| <4.0$の領域を使用した場合のVBFイベント測定における系統誤差の見積もりを示している。$|\eta| <4.0$のことで測定精度が向上する見積もりであることが分かる。}
+\label{VBF_uncertainty}
   \begin{tabular}{|lll|} \hline
-    使用範囲 & $|\eta| <2.7 $ & $|\eta| < 4.0 $ \\ \hline
-    & 22$\%$ & 12$\%$ \\ \hline
+    検出器の使用範囲 & $|\eta| <2.7 $ & $|\eta| < 4.0 $ \\ \hline
+    測定精度 & 22$\%$ & 12$\%$ \\ \hline
   \end{tabular}
 \end{center}
 \end{table}
 
-その他広い$\eta$による利点として、bタグ精度の向上、主崩壊イベント由来のジェットの選別精度の向上、$\tau$レプトン識別精度の向上が見込まれ、多くの物理現象において測定精度の向上が見込まれている。
+広い$\eta$範囲を検出できることによる利点として、他にも$b$タグ精度の向上、主崩壊イベント由来のジェットの選別精度の向上、$\tau$レプトン識別精度の向上が見込まれ、多くの物理現象において測定精度の向上が見込まれている。
