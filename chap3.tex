@@ -11,11 +11,11 @@
   \end{itemize}
   \item ワイヤー配線
   \begin{itemize}
-    \item FEチップとフレキシブル基板を電気的に接続する。
+    \item ワイヤー配線を行い、FEチップとフレキシブル基板を電気的に接続する。
   \end{itemize}
   \item ワイヤー保護
   \begin{itemize}
-    \item ワイヤーが損傷があり断線が起きると、そのワイヤーに対するピクセルの読み出しができなくなるため、モジュールに屋根型の物質を取り付け、ワイヤーを物理的に保護する。
+    \item ワイヤーが損傷があり断線が起きると、そのワイヤーに接続されているピクセルの読み出しができなくなる。これを防ぐため、モジュールに屋根型の物質を取り付け、ワイヤーを物理的に保護する。
   \end{itemize}
   \item パリレンコーティング
   \begin{itemize}
@@ -84,7 +84,7 @@
     \includegraphics[width=65mm]{Metrology_analysis}
     \end{center}
   \end{minipage}
-  \caption[平坦性測定の様子。]{平坦性測定の様子。図は日本で実際に行われた平坦性測定における測定の様子(左図)と解析結果(右図)である。専用の装置を用いてモジュール上の位置座標を測定する。得られた測定点は右図のように図示を行い、平面でフィッティングを行う。フィット平面からのズレの分布や、モジュールの厚みを計算する。}
+  \caption[平坦性測定の様子。]{平坦性測定の様子。図は日本で実際に行われた平坦性測定における測定の様子(左図)と解析結果(右図)である。専用の装置を用いてモジュールの位置座標を何点か測定する。得られた測定点は右図のように図示し、平面でフィッティングを行う。フィット平面からのズレの分布や、モジュールの厚みを計算する。}
   \label{Metrology_overview}
 \end{figure}
 
@@ -98,7 +98,7 @@
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=7cm]{sensor_IV_result}
-\caption[センサー電流-電圧特性結果の例]{センサー電流-電圧特性結果の例\cite{3-4}。横軸にセンサーに対する印加電圧[V]、縦軸に電流[$\mu$A]を示す。逆バイアス電圧を印加しており、電流が0Vから60V付近までは電流がほとんど流れていないが、70V付近から電流が急激に増加していることが分かる。}
+\caption[センサー電流-電圧特性結果の例]{センサー電流-電圧特性結果の例\cite{3-4}。横軸にセンサーに対する印加電圧[V]、縦軸に電流[$\mu$A]を示す。逆バイアス電圧を印加しているため、電流が0Vから60V付近までは電流がほとんど流れていないが、70V付近から電流が急激に増加していることが分かる。}
 \label{sensor_IV_result}
 \end{figure}
 
@@ -115,12 +115,12 @@ FEチップに対して電圧をかけ、電流-電圧特性をみる。
 
 \clearpage
 \subsection{読み出し試験}
-読み出し試験はシリコンセンサーに入射した荷電粒子の信号を読み出すことを目的とした試験である。
+読み出し試験では、読み出し回路が正常に機能するのかを確認する。
 読み出し試験の様子を図\ref{readout_overview}に示す。モジュールに読み出しケーブルを配線し、PCと通信を行い、データを取得する。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=7cm]{readout_overview}
-\caption[読み出し試験の様子]{読み出し試験の様子\cite{3-4}。図は日本で実際に行われた読み出し試験の様子である。図の右側に見えるように、モジュールにケーブルを配線し、PCとの通信を行うことでデータ取得をする。また図の左側では抵抗値を測定しており、これはモジュールに付属しているサーミスタの抵抗値である。}
+\caption[読み出し試験の様子]{読み出し試験の様子\cite{3-4}。図は日本で実際に行われた読み出し試験の様子である。図の右側に見えるように、モジュールにケーブルを配線し、PCとの通信を行うことでデータ取得をする。また図の左側では抵抗値を測定している。これはモジュールに付属しているサーミスタの抵抗値を確認することで、温度情報を取得するためのものである。}
 \label{readout_overview}
 \end{figure}
 
@@ -176,14 +176,14 @@ YARRを用いた読み出し試験では以下の設定ファイルが要求さ�
 \end{itemize}
 
 読み出し試験項目において以下の$Occupancy$という量が定義される。
-試験用電荷の入射数や発行トリガーの数等、期待される信号数を$n_i$回、実際に取得された信号数を$n_0$としたとき、
+試験用電荷の入射数や発行トリガーの数等、発行した信号数を$n_i$回、取得信号数を$n_0$としたとき、
 \bbb
 \label{occupancy}
 Occupancy = \frac{n_0}{n_i} \times 100
 \eee
 と定義する。
-各試験において$Occupancy$が100付近となるピクセルは、正常に機能しているとみなす。
 
+\clearpage
 \subsubsection{読み出し試験項目}
 以下に読み出し試験項目の一覧を示す。
 \begin{description}
@@ -216,14 +216,14 @@ Occupancy = \frac{n_0}{n_i} \times 100
 主な試験項目の詳細について以下で説明する。
 
 \subsubsection{デジタル回路読み出し}
-各ピクセルのデジタル回路部に一定量の試験用電荷を入射し、信号を取得する。
+各ピクセルのデジタル回路部に試験用電荷を入射し、信号を取得する。
 $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$で定義される。
 
 デジタル回路読み出しにおける$Occupancy$の二次元分布の例を図\ref{dig_occ}に示す。
 \begin{figure}[bpt]\centering
 \includegraphics[width=8cm]{dig_occ}
 \caption[デジタル回路読み出しにおける$Occupancy$分布の例。]{デジタル回路読み出しにおける$Occupancy$分布の例。図はRD53Aを用いたデジタル回路読み出しの結果であり、横軸、縦軸はそれぞれピクセルの列(400)、行(192)に対応する。z軸は各ピクセルにおける$Occupancy$の値を示している。正常なピクセルは100付近になることが期待され、図では全てのピクセルで100であるとが分かる。}
-\label{threshold_scurve}
+\label{dig_occ}
 \end{figure}
 
 この試験の結果として出力されるファイルを以下に示す。
@@ -234,14 +234,14 @@ $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$
 \end{description}
 
 \subsubsection{アナログ回路読み出し}
-各ピクセルのアナログ回路部に一定量の試験用電荷を入射し、信号を取得する。
+各ピクセルのアナログ回路部に試験用電荷を入射し、信号を取得する。
 デジタル回路読み出しと同様、$Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$で定義される。
 試験結果として出力されるファイルはデジタル回路読み出しと同じである。
 
 \subsubsection{Threshold測定}
 各ピクセルのアナログ回路部に試験用電荷を入射し、入射電荷数$n_i$と取得信号数$n_0$より$Occupancy$を測定する。
 これを入射電荷量を増加させて繰り返し行う。
-あるピクセルにおけるこの処理の例を図\ref{threshold_scurve}に示す。
+あるピクセルにおけるこの処理結果の例を図\ref{threshold_scurve}に示す。
 \begin{figure}[bpt]\centering
 \includegraphics[width=8cm]{threshold_scurve}
 \caption[入射電荷量と$Occupancy$の関係]{入射電荷量と$Occupancy$の関係。横軸はピクセルに対する入射電荷量[e]、縦軸は$Occupancy$を示す。入射電荷量の単位eは、電荷量Cを素電化$1.6\times 10^{-19}$で割ったものである。Threshold測定の際にはこのように入射電荷量を増加させながら$Occupancy$の値を測定する。測定結果を後述する式(\ref{scurve_function})フィットし、 Thresholdとノイズの値を得る。}
@@ -258,6 +258,7 @@ g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp}(-t^2) {\rm d}t
 
 得られた$Q_{\rm th}$、$\sigma_{\rm n}$がそれぞれピクセルのThreshold値、ノイズに相当する。
 あるFEチップにおける$Q_{\rm th}$、$\sigma_{\rm n}$の分布の例を図\ref{threshold_mean_sigma}に示す。
+この分布をガウス関数でフィットすることで、全ピクセルに対するThreshold、ノイズの平均値$Q_{\rm th,mean}、\sigma_{\rm n,mean}$、幅$Q_{\rm th,sigma}、\sigma_{\rm n,sigma}$が得られる。
 
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.45\hsize}
@@ -266,14 +267,11 @@ g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp}(-t^2) {\rm d}t
   \begin{minipage}{0.45\hsize}
     \includegraphics[width=50mm,angle=270]{Threshold_noise_dist}
   \end{minipage}
-  \caption[Threshold値($Q_{\rm th}$)とノイズ($\sigma_{\rm n}$)の分布。]{Threshold値($Q_{\rm th}$)とノイズ($\sigma_{\rm n}$)の分布。図はあるFEチップ上のピクセルにおけるThreshold値($Q_{\rm th}$, 左図)とノイズ($\sigma_{\rm n}$,右図)の分布を示している。また赤線はガウス関数によるフィット関数を示しており、このようにしてそれぞれの分布における平均値と幅を取得する。}
+  \caption[Threshold値($Q_{\rm th}$)とノイズ($\sigma_{\rm n}$)の分布。]{Threshold値($Q_{\rm th}$)とノイズ($\sigma_{\rm n}$)の分布。図はあるFEチップ上のピクセルにおけるThreshold値($Q_{\rm th}$, 左図)とノイズ($\sigma_{\rm n}$,右図)の分布を示している。また赤線はガウス関数によるフィット関数を示しており、これにより平均値と幅を取得する。}
   \label{threshold_mean_sigma}
 \end{figure}
 
-
-全ピクセルに対しての平均値$Q_{\rm th,mean}、\sigma_{\rm n,mean}$、幅$Q_{\rm th,sigma}、\sigma_{\rm n,sigma}$が得られる。
-
-出力される結果ファイルを以下に示す。
+この試験において、出力される結果ファイルを以下に示す。
 \begin{description}
   \item [ThresholdMap] 各ピクセルの$Q_{\rm th}$を記す.
   \item [ThresholdDist] $Q_{\rm th}$の分布を記す.
@@ -297,19 +295,20 @@ g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp}(-t^2) {\rm d}t
 \end{description}
 
 \subsubsection{ノイズ占有率測定}
-試験用電荷を入射せずに、$t$[sec]の時間トリガーをかけ、取得信号数$n_i$を測定する
-$Occupancy$(式\ref{occupancy})は、トリガー数$n_i$と取得信号数$n_0$で定義される。
+試験用電荷を入射せずに、$t$[sec]の時間トリガーをかけ、取得信号数$n_i$を測定する。
+$Occupancy$(式\ref{occupancy})は、発行したトリガー数$n_i$と取得信号数$n_0$で定義される。
+
 また$NoiseOccupancy$を以下で定義する。
+$NoiseOccupancy$の分布の例を図\ref{noise_occ}に示す。
 \bbb
 NoiseOccupancy = \frac{n_i}{t} \times (25 \times 10^{-9})
 \eee
-$25 \times 10^{-9}$[sec]は1bumch crossing(1bc)と呼ばれる量であり、陽子バンチが衝突する間隔に対応する。
+$25 \times 10^{-9}[{\rm sec}]=25[{\rm nsec}]$は1~b.c.である。
 
-$NoiseOccupancy$の分布の例を図\ref{noise_occ}に示す。
 \begin{figure}[bpt]\centering
 \includegraphics[width=8cm]{noise_occ}
 \caption[ノイズ占有率測定における$NoiseOccupancy$分布の例。]{ノイズ占有率測定における$NoiseOccupancy$分布の例。図はRD53Aを用いたデジタル回路読み出しの結果であり、横軸、縦軸はそれぞれピクセルの列(400)、行(192)に対応する。z軸は各ピクセルにおける$NoiseOccupancy$の値を示している。正常なピクセルでは限りなく0に近い値になることが期待され、図ではほとんどのピクセルが0となっていが、列番号が0から120付近の領域で値を大きく持つピクセルが存在する。}
-\label{threshold_scurve}
+\label{noise_occ}
 \end{figure}
 
 出力される結果ファイルを以下に示す。
@@ -335,12 +334,12 @@ $NoiseOccupancy$の分布の例を図\ref{noise_occ}に示す。
   \item クロストーク測定
 \end{itemize}
 
-モジュール上のピクセルを解析し、各ピクセルが正常かどうかを判断する。
-以下の評価基準で解析をし、不良ピクセルには評価基準に応じた評価名が付けられる
+測定後、試験結果の解析を行い、モジュール上の各ピクセルが正常かどうかを判断する。
+設定されている評価基準を表\ref{pixel_analysis_criteria}に示す。不良ピクセルには評価基準に応じた評価名が付けられる。
 
 \begin{table}[tbp]
 \begin{center}
-\caption[ピクセル解析の評価基準一覧]{ピクセル解析の評価基準一覧\cite{3-1}。読み出し試験において各ピクセルが正常に機能しているかを判断するためにピクセル解析を行う必要があり、それの判断基準が表のように定義されている。この基準一覧は不良評価であり、全ての基準に当てはまらないピクセルが健康なピクセルとなる。不良ピクセルの数や分布は、モジュールの品質を決定する1つの要素となり、ITkに搭載するモジュールや配置の決定に用いられる。}
+\caption[ピクセル解析の評価基準一覧]{ピクセル解析の評価基準一覧\cite{3-1}。読み出し試験において各ピクセルが正常に機能しているかを判断するためにピクセル解析を行う必要があり、それの判断基準が表のように定義されている。この基準一覧は不良評価であり、全ての基準に当てはまらないピクセルが健康と判断される。不良ピクセルの数や分布は、モジュールの品質を決定する1つの要素となり、ITkに搭載するモジュールや配置の決定に用いられる。}
 \label{pixel_analysis_criteria}
   \scriptsize
   \begin{tabular}{|lll|} \hline
@@ -398,8 +397,8 @@ $NoiseOccupancy$の分布の例を図\ref{noise_occ}に示す。
 \section{検出器量産におけるデータ管理}
 各組み立て機関で$O(100)-O(1,000)$のモジュールを作る。
 そして上述したように、モジュールの組み立て及び品質試験の工程は数多くあり、特に読み出し試験については項目数、結果ファイル数も多様である。
-これらの情報は最終的に後述する共通のデータベースに保存する必要があり、各組み立て機関で適切に管理する必要がある。
+これらの情報は最終的に共通のデータベースに保存する必要があり、各組み立て機関で適切に管理する必要がある。
 
-本研究では各組み立て機関におけるモジュール情報及び品質試験のデータ管理を簡易化するためのデータベースシステムの構築を行った。
+本研究では各組み立て機関におけるモジュール情報及び品質試験のデータ管理を簡易化することを目的として、データベースシステムの構築を行った。
 このシステムについて\ref{chap:dbsystem}章で記述する。
 
