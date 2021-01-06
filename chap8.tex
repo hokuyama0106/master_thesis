@@ -71,7 +71,7 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 \begin{figure}[bpt]
   \begin{center}
     \includegraphics[width=12cm]{search_python_testRun}
-  \caption[検索処理時間のボトルネックとなっているデータ構造]{検索処理時間のボトルネックとなっているデータ構造の図。表\ref{localdb_structure}より、各試験結果情報を保存するtestRun、componentとtestRunの関係性を保持するcomponentTestRunという構造が存在する。試験結果数を$n$とすると、testRunのドキュメント数は$n$、componentTestRunの数は試験数とcomponentの数の積となるため$O(n)$となる。結果的に検索処理に$O(n^2)$の時間がかかってしまう。}
+  \caption[検索処理時間のボトルネックとなっているデータ構造]{検索処理時間のボトルネックとなっているデータ構造の図。読み出し試験におけるデータ構造(図\ref{localdb_structure_detail})の1つに、各試験結果情報を保存するtestRun、componentとtestRunの関係性を保持するcomponentTestRunという構造が存在する。試験結果数を$n$とすると、testRunのドキュメント数は$n$、componentTestRunの数は試験数とcomponentの数の積となるため$O(n)$となる。結果的に検索処理に$O(n^2)$の時間がかかってしまう。}
   \label{search_python_testRun}
   \end{center}
 \end{figure}

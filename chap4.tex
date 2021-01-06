@@ -42,7 +42,8 @@ ITkは、ピクセル検出機とストリップ検出機にから構成され�
 システムの概要図を図\ref{localdb_overview}に示す。オープンソースのサービスであるMongoDB\cite{4-1}と、
 PythonのウェブフレームワークであるFlask\cite{4-3}を使用し、開発を行なっているローカルデータベース用ウェブアプリケーションを併用することで、データ管理や中央データベースとの同期を行うシステムとなっている。
 
-具体的にローカルデータベースは以下のような利点を持つ。
+ローカルデータベースシステムには以下のような利点を持ち得る。
+これらの利点を持つシステムの開発、実装を行うことが開発課題となっている。
 
 \begin{itemize}
   \item ローカルにデータベースサーバーを立てるためアクセス速度が早く、円滑にデータ管理を行うことができる。
@@ -52,12 +53,55 @@ PythonのウェブフレームワークであるFlask\cite{4-3}を使用し、�
 \end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=13cm]{localdb_overview}
+\includegraphics[width=12cm]{localdb_overview}
 \caption[ローカルデータベースシステムの概要]{ローカルデータベースシステムの概要。各組み立て機関でMongoDBとローカルデータベース用ウェブアプリケーションの立ち上げを行い、独自にデータ管理をするシステムとなっている。品質試験者は図のようにいくつかのソフトウェアを用いて試験結果をMongoDBに保存する。保存された結果はウェブアプリケーションによって閲覧することができる。また結果は中央データベースに集める必要があるため、同期ツールを用いて試験結果の共有を行う。}
 \label{localdb_overview}
 \end{figure}
 
-\clearpage
+\subsection{先行研究と開発課題}
+先行研究で開発された領域と、本研究で取り組んだ開発課題を以下に示す。
+
+\subsubsection{先行研究}
+先行研究\cite{4-6}においてデータベースシステムの設計と開発がなされ、図\ref{localdb_overview}におけるいくつかの項目が開発された。
+以下に実装項目を記す。
+\begin{enumerate}
+  \item 読み出し試験結果保存のためのMongoDB内部構造の設計.
+  \item 1の構造を用いてYARRからMongoDBへの読み出し試験結果アップロード機能.
+  \item 試験結果のソート及び閲覧が可能な、Flaskを用いたウェブアプリケーション. 
+\end{enumerate}
+
+モジュールの生産、品質試験に向けたデータ管理、そしてローカルデータベースが上述した利点を持つことを達成するには以下のような開発課題が残されていた。
+\begin{itemize}
+  \item 中央データベースの内部構造の実装.
+  \item 中央データベースとローカルデータベース間の同期ツールの開発.
+  \item ローカルデータベースにおける品質試験に特化したデータ管理と機能提供.
+  \item 量産時におけるデータベース操作の流れの確立.
+\end{itemize}
+
+これらの開発課題に対して、本研究で取り組んだ項目を以下に挙げる。
+なお先行研究で開発したデータ構造やアプリケーションといった項目は既に複数の機関で試験運用されていたため、本研究ではその構造やソフトウェアを大きく変更せずに、拡張する形で開発を行なった。
+
+\subsubsection{中央データベースの内部構造の実装}
+モジュール及び品質試験の結果を中央データベースに登録するために、モジュールの種類や品質試験項目など中央データベースにおける内部構造の実装する必要がある。本研究ではこういった量産時において必要となるデータ構造の実装を行なった。
+
+\subsubsection{中央データベースとローカルデータベース間の同期ツールの開発}
+ローカルデータベースを各組み立て機関に設置し、データ管理を行う。
+中央データベースに必要な情報が全て保存されるためにはデータベース間の同期が必要である。
+これを達成するために中央データベースとローカルデータベースの同期を行うツール開発を行なった。
+
+\subsubsection{ローカルデータベースにおける品質試験に特化したデータ管理と機能提供}
+ローカルデータベースにおける利点の１つである「品質試験に特化したデータ管理と機能提供」を達成するために以下の機能を実装した。
+\begin{itemize}
+  \item 品質試験者及びシステムユーザ管理機能及びコメント付加等の各種機能.
+  \item 品質試験結果の登録と組み立て工程の自動更新.
+  \item 読み出し試験におけるピクセル解析ツールの開発.
+  \item 読み出し試験結果の検索機能.
+\end{itemize}
+
+\subsubsection{量産時におけるデータベース操作の流れの確立}
+先行研究では品質試験の際に、登録、同期といったデータベース操作の流れが確立されていなかった。
+本研究では上述した機能開発と併せて、品質試験におけるデータ管理の流れを確立した。
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -68,6 +112,13 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 情報を保持している一枚のJSONインスタンスを「\textbf{ドキュメント}」と呼び、「\textbf{コレクション}」と呼ばれる枠に複数のドキュメントが格納されている。
 各ドキュメントは「\textbf{ID}」と呼ばれるハッシュ値を持っていて、異なるコレクションにおけるドキュメント間の紐付けはこのIDを用いて行う。
 
+\begin{figure}[bpt]\centering
+\includegraphics[width=12cm]{mongodb_schema}
+\caption[MongoDBの構造の例\cite{4-2}]{MongoDBの構造の例\cite{4-2}。図のようにMongoDBではJSON形式でデータを格納する。1枚のJSONインスタンスをドキュメントと呼び、複数のドキュメントが格納されている枠組みをコレクションと呼ぶ。ドキュメントの構造及びコレクション間の関係等を決めることでデータベースの構造を定義する。ドキュメント間の紐付けは、各ドキュメント内部にIDを持つことで可能となる。図の例では試験結果のドキュメントが$\{$``モジュール$\_$id":2001$\}$の情報を持っており、これがモジュールに保存されているドキュメントの1枚目のIDに対応する。}
+\label{mongodb_schema}
+\end{figure}
+
+
 ローカルデータベースシステムにおいて、MongoDBを使用する主な利点を以下に示す。
 
 \begin{itemize}
@@ -76,18 +127,12 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
   \item データのキャッシュをメモリ上に置き処理を実行するため、高速な読み書きが可能。
 \end{itemize}
 
-モジュール及び品質試験に用いる主なコレクションと内部情報を表\ref{localdb_structure}に示す。
+モジュール及び品質試験に用いる主なコレクションを表\ref{localdb_structure}に示す。
+また先行研究で設計された読み出し試験に関する内部構造の詳細と関係性を図\ref{localdb_structure_detail}に示す。
 
-\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{mongodb_schema}
-\caption[MongoDBの構造の例\cite{4-2}]{MongoDBの構造の例\cite{4-2}。図のようにMongoDBではJSON形式でデータを格納する。1枚のJSONインスタンスをドキュメントと呼び、複数のドキュメントが格納されている枠組みをコレクションと呼ぶ。ドキュメントの構造及びコレクション間の関係等を決めることでデータベースの構造を定義する。}
-\label{mongodb_schema}
-\end{figure}
-
 \begin{table}[btp]
 \begin{center}
 \caption[品質試験に用いる主なコレクション]{品質試験に用いる主なコレクション。ローカルデータベースシステムにおいて、MongoDB内に2つのデータベースを設置し、使用する。}
@@ -111,6 +156,12 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
   \end{tabular}
 \end{center}
 \end{table}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=12cm]{localdb_structure_detail}
+\caption[先行研究により設計された読み出し試験結果のMongoDB内部構造]{先行研究により設計された読み出し試験結果のMongoDB内部構造\cite{4-6}。それぞれの四角はコレクション、直線はIDによるドキュメント間のリンクを示している。直線が十字になっている場合はドキュメント間が一対一対応であることを示し、分岐しているものは複数のドキュメントと対応していることを示す。また直線状の白丸は対応するドキュメントが存在しない場合があることを示している。}
+\label{localdb_structure_detail}
+\end{figure}
 
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,31 +199,10 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 
 \clearpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{先行研究と開発課題}
-先行研究で開発された領域と、本研究で取り組んだ開発課題を以下に示す。
-
-\subsubsection{中央データベースの内部構造}
-\subsubsection{中央データベースとローカルデータベース間の同期ツールの開発}
-\subsubsection{ローカルデータベースにおける品質試験に特化したデータ管理と機能提供}
-以下の項目を実装した。
-\begin{itemize}
-  \item ユーザ管理機能及び各種機能
-  \item 品質試験結果の登録と組み立て工程の自動更新
-  \item 読み出し試験におけるピクセル解析ツールの開発
-  \item 読み出し試験結果の検索機能
-\end{itemize}
-
-\subsubsection{量産時におけるデータベース操作の流れの確立}
-チュートリアル、demo、documentとか書いたよ。
-
-\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{本研究における開発項目}
+\section{本研究における開発項目の詳細}
 以下は本研究で開発した項目である。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -183,54 +213,60 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 モジュール及びその品質試験に関する情報を中央データベースに情報を保存するために、情報構造の定義、実装を行う必要がある。
 以下の項目について、中央データベースが提供しているAPIを用いて内部データ構造の定義を行った。
 \begin{enumerate}
-  \item モジュールの種類とその構成部品(表\ref{pd_module_structure}).
+  \item モジュールの種類とその構成部品(図\ref{pd_module_structure}).
   \item モジュール組み立て工程と付随する品質試験(表\ref{pd_stage_structure}).
 \end{enumerate}
 
 また項目1に関して、Quadモジュールに関する例を図\ref{example_module_structure}に示す。
 
-\begin{table}[b]
-\begin{center}
-\caption[中央データベースにおけるモジュールの種類と構造一覧]{中央データベースにおけるモジュールの種類と構造一覧。中央データベースにモジュールを登録するときの情報として、モジュールの種類、構成部品を表のように実装した。Triplet、Quadというように、モジュールの種類ごとに登録できるシステムとなっており、PCB(フレキシブル基板)などの対応する構成部品の紐付けも同時に行うことができる。}
+%\begin{table}[b]
+%\begin{center}
+%\caption[中央データベースにおけるモジュールの種類と構造一覧]{中央データベースにおけるモジュールの種類と構造一覧。中央データベースにモジュールを登録するときの情報として、モジュールの種類、構成部品を表のように実装した。Triplet、Quadというように、モジュールの種類ごとに登録できるシステムとなっており、PCB(フレキシブル基板)などの対応する構成部品の紐付けも同時に行うことができる。}
+%\label{pd_module_structure}
+%  \scriptsize
+%  \begin{tabular}{|ll|} \hline
+%    種類 & 構成する部品(数) \\ \hline
+%    Triplet L0 stave module   &  Single bare module(3) \\
+%                              &  Triplet stave PCB(1) \\\hline
+%    Triplet L0 Ring0 module   &  Single bare module(3) \\
+%                              &  Triplet R0 PCB(1) \\\hline
+%    Triplet L0 Ring0.5 module &  Single bare module(3) \\
+%                              &  Triplet R0.5 PCB(1) \\\hline
+%    L1 quad module            &  Quad bare module(1) \\
+%                              &  Quad PCB(1) \\\hline
+%    Outer system quad moudle  &  Quad bare module(1) \\
+%                              &  Quad PCB(1) \\\hline
+%    Outer system quad moudle  &  Dual bare module(1) \\
+%                              &  Dual PCB(1) \\\hline
+%    Digital triplet L0 stave module   &  Digital single bare module(3) \\
+%                                      &  Triplet stave PCB(1) \\\hline
+%    Digital triplet L0 Ring0 module   &  Digital single bare module(3) \\
+%                                      &  Triplet R0 PCB(1) \\\hline
+%    Digital triplet L0 Ring0.5 module &  Digital single bare module(3) \\
+%                                      &  Triplet R0.5 PCB(1) \\\hline
+%    Digital quad module       &  Digital quad bare module(1) \\
+%                              &  Quad PCB(1) \\\hline
+%    Digital L1 quad moudle    &  Digital quad bare module(1) \\
+%                              &  Quad PCB(1) \\\hline
+%    Dummy triplet L0 stave module   &  Dummy single bare module(3) \\
+%                                    &  Triplet stave PCB(1) \\\hline
+%    Dummy triplet L0 Ring0 module   &  Dummy single bare module(3) \\
+%                                    &  Triplet R0 PCB(1) \\\hline
+%    Dummy triplet L0 Ring0.5 module &  Dummy single bare module(3) \\
+%                                    &  Triplet R0.5 PCB(1) \\\hline
+%    Dummy quad module       &  Dummy quad bare module(1) \\
+%                            &  Quad PCB(1) \\\hline
+%    Dummy L1 quad moudle    &  Dummyl quad bare module(1) \\
+%                            &  Quad PCB(1) \\ \hline
+%  \end{tabular}
+%\end{center}
+%\end{table}
+
+\begin{figure}[b]\centering
+\includegraphics[width=12cm]{pd_module_structure}
+\caption[中央データベースにおけるモジュールの種類と構造]{中央データベースにおけるモジュールの種類と構造。中央データベースにモジュールを登録するときの情報として、モジュールの種類、構成部品を図のように実装した。図の左側に実装したモジュールの種類を示しており、Triplet、Quadというように、モジュールの種類ごとに登録できるシステムとなっている。また矢印は構成部品を指しており、各モジュールは対応するBare Module(ベアモジュール)とPCB(フレキシブル基板)を持つ。DBの中でモジュールと構成部品の紐付けも同時に行うことができる。}
 \label{pd_module_structure}
-  \scriptsize
-  \begin{tabular}{|ll|} \hline
-    種類 & 構成する部品(数) \\ \hline
-    Triplet L0 stave module   &  Single bare module(3) \\
-                              &  Triplet stave PCB(1) \\\hline
-    Triplet L0 Ring0 module   &  Single bare module(3) \\
-                              &  Triplet R0 PCB(1) \\\hline
-    Triplet L0 Ring0.5 module &  Single bare module(3) \\
-                              &  Triplet R0.5 PCB(1) \\\hline
-    L1 quad module            &  Quad bare module(1) \\
-                              &  Quad PCB(1) \\\hline
-    Outer system quad moudle  &  Quad bare module(1) \\
-                              &  Quad PCB(1) \\\hline
-    Outer system quad moudle  &  Dual bare module(1) \\
-                              &  Dual PCB(1) \\\hline
-    Digital triplet L0 stave module   &  Digital single bare module(3) \\
-                                      &  Triplet stave PCB(1) \\\hline
-    Digital triplet L0 Ring0 module   &  Digital single bare module(3) \\
-                                      &  Triplet R0 PCB(1) \\\hline
-    Digital triplet L0 Ring0.5 module &  Digital single bare module(3) \\
-                                      &  Triplet R0.5 PCB(1) \\\hline
-    Digital quad module       &  Digital quad bare module(1) \\
-                              &  Quad PCB(1) \\\hline
-    Digital L1 quad moudle    &  Digital quad bare module(1) \\
-                              &  Quad PCB(1) \\\hline
-    Dummy triplet L0 stave module   &  Dummy single bare module(3) \\
-                                    &  Triplet stave PCB(1) \\\hline
-    Dummy triplet L0 Ring0 module   &  Dummy single bare module(3) \\
-                                    &  Triplet R0 PCB(1) \\\hline
-    Dummy triplet L0 Ring0.5 module &  Dummy single bare module(3) \\
-                                    &  Triplet R0.5 PCB(1) \\\hline
-    Dummy quad module       &  Dummy quad bare module(1) \\
-                            &  Quad PCB(1) \\\hline
-    Dummy L1 quad moudle    &  Dummyl quad bare module(1) \\
-                            &  Quad PCB(1) \\ \hline
-  \end{tabular}
-\end{center}
-\end{table}
+\end{figure}
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=6cm]{example_module_structure}
@@ -438,6 +474,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 	]
 }
 \end{lstlisting}
+
 \begin{lstlisting}[basicstyle=\scriptsize,caption=ウェブアプリケーションで扱うユーザ情報を持つドキュメントの例。リスト\ref{user_doc_1}で示したものとは別に、ウェブアプリケーション内でユーザ情報を扱うためにこのドキュメントを保持する必要がある。ウェブにおいてログインはこのドキュメントの存在確認をもってなされる。パスワードはhash化して保存している。,label=user_doc_2]
 {
 	"_id" : ObjectId("5f0bbe84ef87af2628865de7"),
@@ -696,6 +733,11 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 
 全組み立て工程が終了すると、モジュールの情報及び品質試験結果が全て中央データベースへ同期されている状態となる。
 
-データベース操作の流れにおいて、開発項目を含め各機能が正常に動くのかの確認として、デモンストレーションを行った。
+
+この品質試験におけるデータベース操作の流れの確立に向けて、2月にCERNに行なったシステムチュートリアルで操作の流れを試験した。ユーザに対する操作の流れの周知と機能確認を行うことができた。チュートリアルの概要は付録\ref{cap:appA}に記す。
+またシステムのドキュメント\cite{4-7}を作成し、その中に具体的なデータベース操作の流れを記述している。量産時に各機関が適切な流れでデータ管理をできるようにした。
+
+
+データベース操作の流れの試験として、実際に品質試験のデモンストレーションを行い、各機能が正常に動作するのかの確認を行なった。
 詳細を5章で述べる。
 
