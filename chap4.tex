@@ -141,7 +141,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{figure}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=14cm]{viewer_result}
+\includegraphics[width=15cm]{demo_view_scan_result}
 \caption[品質試験結果ページの例]{品質試験結果ページの例。図は品質試験項目であるデジタル回路読み出しの結果を表している。図の上部に試験情報や設定値、下部に結果のグラフが表示されているのを確認できる。}
 \label{viewer_result}
 \end{figure}
@@ -189,9 +189,9 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 また項目1に関して、Quadモジュールに関する例を図\ref{example_module_structure}に示す。
 
-\begin{table}[btp]
+\begin{table}[b]
 \begin{center}
-\caption[中央データベースにおけるモジュールの種類と構造一覧]{中央データベースにおけるモジュールの種類と構造一覧。中央データベースにモジュールを登録するときの情報として、モジュールの種類、構成部品を表のように実装した。Triplet、Quadというように、モジュールの種類ごとに登録できるシステムとなっており、PCB(フレキスブル基板)などの対応する構成部品の紐付けも同時に行うことができる。}
+\caption[中央データベースにおけるモジュールの種類と構造一覧]{中央データベースにおけるモジュールの種類と構造一覧。中央データベースにモジュールを登録するときの情報として、モジュールの種類、構成部品を表のように実装した。Triplet、Quadというように、モジュールの種類ごとに登録できるシステムとなっており、PCB(フレキシブル基板)などの対応する構成部品の紐付けも同時に行うことができる。}
 \label{pd_module_structure}
   \scriptsize
   \begin{tabular}{|ll|} \hline
@@ -469,12 +469,11 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 あるモジュール、組み立て工程に対して結果を選択する様子を図\ref{webapp_sign_off}に示す。組み立て工程も自動更新されていることがわかる。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{webapp_sign_off}
+\includegraphics[width=14cm]{webapp_sign_off}
 \caption[結果選択画面及び組み立て工程表示の例]{結果選択画面及び組み立て工程表示の例。図の上部で組み立て工程が"MODULETOPCB"である。この段階において結果を選択する処理を行うとローカルデータベース内で選択された結果にタグ付けがなされる。図の中部においてその処理を行なっており、この図では"OPTICAL"と"MASS"の結果を選択している。選択した結果は中央データベースと同期される。また結果選択後は組み立て工程が自動的に更新される。図の下部では"MODULEWIREBONDING"になっていることが分かる。}
 \label{webapp_sign_off}
 \end{figure}
 
-\newpage
 \subsubsection{仕組み}
 リスト\ref{qc_status}、\ref{qc_module_status}のようなドキュメントを作成、保存する。
 リスト\ref{qc_status}は全てのモジュールに対して共通のドキュメントであり、組み立て工程と各工程における品質試験項目を記録する。
@@ -655,6 +654,7 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 確認したいモジュール情報や試験結果を迅速に取得し、閲覧できることを目的としている。検索機能を使用している様子を図\ref{webapp_search_function}に示す。
 
 キーワードを入力し、検索することができる仕組みとなっていて、一般的なウェブページの検索エンジンのように扱うことができる。
+生産に向けて、検索にかかる処理時間測定を行った。検索機能実装方法の詳細と処理時間についての詳細は、6章で述べる。
 現在は単一キーワード検索の他に、以下の機能を実装している。
 \begin{itemize}
   \item 完全一致、部分一致検索
@@ -662,12 +662,11 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 \end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=9cm]{webapp_search_function}
+\includegraphics[width=10.5cm]{webapp_search_function}
 \caption[ウェブアプリケーションにおける検索機能の様子]{ウェブアプリケーションにおける検索機能の様子。図は検索結果一覧表示のページである。図の上部に入力欄があり(赤破線)、ここにキーワードを入力し検索を実行する。図の例では"QU-13"と入力しており、検索結果にはモジュール名QU-13の試験結果が一覧表示されていることが分かる。}
 \label{webapp_search_function}
 \end{figure}
 
-また生産に向けて、検索にかかる処理時間測定を行った。検索機能の詳しい実装方法と処理時間についての詳細は、6章で述べる。
 
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

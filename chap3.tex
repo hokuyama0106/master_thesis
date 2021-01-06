@@ -251,11 +251,11 @@ $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$
 この分布を以下の式でフィッティングする。フィッテングの形に由来し、これを「Sカーブフィッティング」と呼ぶ。
 \bbb
 \label{scurve_function}
-f(x) = 0.5 \times \left[ 2-{\rm erfc}\left( \left\{ \frac{x-Q_{\rm th}}{\sigma_{\rm n} \times \sqrt{2}}  \right\} \right) \right] \times p\\
-{\rm erfc}(x) = 1 - {\rm erf}(x)
+f(x) &=& 0.5 \times \left[ 2-{\rm erfc}\left( \left\{ \frac{x-Q_{\rm th}}{\sigma_{\rm n} \times \sqrt{2}}  \right\} \right) \right] \times p\\
+{\rm erfc}(x) &=& 1 - {\rm erf}(x)
 %g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp}(-t^2) {\rm d}t
 \eee
-ここで${\rm erf(x)}$はガウスの誤差関数である\cite{3-5}。
+ここで${\rm erf}(x)$はガウスの誤差関数である\cite{3-5}。
 
 得られた$Q_{\rm th}$、$\sigma_{\rm n}$がそれぞれピクセルのThreshold値、ノイズに相当する。
 あるFEチップにおける$Q_{\rm th}$、$\sigma_{\rm n}$の分布の例を図\ref{threshold_mean_sigma}に示す。

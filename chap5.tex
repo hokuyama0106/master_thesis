@@ -26,9 +26,9 @@
   \begin{tabular}{|l|llll|l|l|} \hline
     設置機関 & CPU & & & & Memory & Disk \\
      & Type & Core & Thread & Clock speed[GHz]& [GB] & [GB] \\ \hline 
-    KEK(日本) & Intel(R) Core(TM) i7-9700K & 8 & 16 & 3.6 & 32,66 & 1800 + 1800\\
-    LBL(アメリカ) & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32,63 & 233\\
-    CERN(スイス) & Intel(R) Core(TM) i7-4790 & 4 & 8 & 3.6 & 32,69 & 238.5 + 3700 + 3700\\ \hline
+    KEK(日本) & Intel(R) Core(TM) i7-9700K & 8 & 16 & 3.6 & 32.66 & 1800 + 1800\\
+    LBL(アメリカ) & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32.63 & 233\\
+    CERN(スイス) & Intel(R) Core(TM) i7-4790 & 4 & 8 & 3.6 & 32.69 & 238.5 + 3700 + 3700\\ \hline
   \end{tabular}
 }
 \end{table}
@@ -124,6 +124,7 @@
 \begin{center}
 \caption[ダウンロード機能を用いて保存する情報一覧。]{ダウンロード機能を用いて保存する情報一覧。ダウンロード機能を用いて中央データベースからローカルデータベースに保存する情報の一覧を示している。保存の際にはモジュール、FEチップにそれぞれ分かれたドキュメントに保存される。}
 \label{download_information}
+  \small
   \begin{tabular}{|ll|} \hline
     部品 & 情報 \\ \hline
     モジュール & シリアルナンバー \\ 
@@ -203,7 +204,7 @@ KEKで組み立てられた6台のQuadモジュールを中央データベース
 \end{figure}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{registerd_kek_module_viewer}
+\includegraphics[width=14cm]{registerd_kek_module_viewer}
 \caption[登録したQuadモジュールのダウンロードの様子]{登録したQuadモジュールのダウンロードの様子。上図が中央データベースのウェブページを表しており、下図がローカルデータベースのものである。上図で登録したモジュール一覧を確認でき、赤枠で囲っているところでシリアルナンバーを見ることができる。ダウンロード実行後は下図のようにローカルデータベースで対応するモジュールを確認することができる。ローカルデータベースではモジュール情報に加えてFEチップの情報も取得するため、下図の表ではこれらのシリアルナンバーも確認できる。}
 \label{registered_kek_module_viewer}
 \end{figure}

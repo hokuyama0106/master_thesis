@@ -7,7 +7,7 @@
 上述したピクセル解析ツールを含む読み出し試験用ソフトウェアの機能確認を目的として、生産時における流れのデモンストレーションを行なった。
 その詳細について以下に示す。
 
-\subsection{用いたソフトウェアの概要}
+\subsection{用いたソフトウェア}
 
 試験で用いたソフトウェアをいかに示す。
 また、これらソフトウェアの概要を図\ref{readout_SW_overview}に示す。
@@ -59,7 +59,7 @@ FEチップ付近にはNTCサーミスタを搭載していて、ボード上の
 \end{figure}
 
 \subsubsection{モジュールサーミスタ温度読み出しシステム}
-モジュール付属のサーミスタ、ADC、Raspberry Piを用いた温度読み出しシステムを作成した。
+モジュール付属サーミスタの抵抗値を取得し温度を測定するために、ADC、Raspberry Piを用いた温度読み出しシステムを作成した。
 このシステムの中で扱った装置を表\ref{demo_temp_device}に、回路図、実際に配線した様子を図\ref{demo_temp_circit_pic}に示す。
 スクリプト上でサーミスタの抵抗値に対応するADC値を温度に変換することで読み出しを行っている。
 ADC値はGPIO通信\cite{5-9}により取得している。
@@ -68,6 +68,7 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 \begin{center}
 \caption[温度読み出しシステムに使用した装置一覧]{温度読み出しシステムに使用した装置一覧。}
 \label{demo_temp_device}
+  \small
   \begin{tabular}{|ll|} \hline
     装置 & 機種 \\ \hline
     10$\rm{k\Omega}$抵抗 & - \\
@@ -89,7 +90,7 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 \end{figure}
 
 \subsubsection{電源}
-モジュールの電圧供給にKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}(図\ref{demo_power_supply})を用いた。
+モジュールのFEチップに対する電圧供給にKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}(図\ref{demo_power_supply})を用いた。
 \begin{figure}[h]\centering
 \includegraphics[width=6cm]{power_supply}
 \caption[用いた電源]{用いた電源。 FEチップ電圧供給のための電源としてKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}を用いた。}
@@ -97,10 +98,12 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 \end{figure}
 
 \subsubsection{FPGAボード}
-FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示す。
+FPGAボードにXpressK7\cite{5-2}を用いて、YARRファームウェアをFEGA上にプログラムし通信を行なった。
+XpressK7を図\ref{demo_fpga_board}に示す。
 
 \subsubsection{FMC-DisplayPort変換カード}
-使用したFMC-DisplayPort変換カード(オハイオカード)を図\ref{demo_ohio}に示す。
+FPGAボードにはFMC端子がついていて、これをモジュールを接続するためにはFMC-DisplayPort変換カードが必要となる。
+使用した変換カード(オハイオカード)を図\ref{demo_ohio}に示す。
 
 \begin{figure}[htbp]
  \begin{minipage}{0.5\hsize}
@@ -120,7 +123,7 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 \end{figure}
 
 \subsubsection{PC}
-今回用いたPCの性能を表\ref{daq_machine_spec}に示す。
+YARRソフトウェアをインストールし、読み出しを行なったPCの性能を表\ref{daq_machine_spec}に示す。
 \begin{table}[tbp]
 \begin{center}
 \caption[読み出しに使用したPCの性能]{読み出しに使用したPCの性能。研究室で所有するPCを使用した。OSはcentOS7である。}
@@ -184,7 +187,7 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存される。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=14cm]{demo_download_SCC}
+\includegraphics[width=16cm]{demo_download_SCC.pdf}
 \caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面。図の表において、今回登録した20UPGR00000001のIDを持つモジュールがローカルデータベースのウェブ上で確認できていることが分かる。また対応するFEチップのIDも確認することができる。}
 \label{demo_download_SCC}
 \end{figure}
@@ -217,7 +220,7 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 その値をGrafanaを使って監視をした。その様子を図\ref{demo_monitor_dcs}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{demo_monitor_dcs}
+\includegraphics[width=15cm]{demo_monitor_dcs}
 \caption[DCS情報のモニタリングの様子]{DCS情報のモニタリングの様子。図において全て横軸は時間であり、縦軸は上から温度(青)、電流(緑)、電圧(黄)を示す。それぞれのデータの監視が行えていることが分かる。温度に関して、電源オン、オフの付近で変化が大きいことが分かる。電流に関して、読み出し(チューニング)を行っている途中にも微小変化していることが分かる。}
 \label{demo_monitor_dcs}
 \end{figure}
@@ -228,10 +231,11 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 \subsubsection{検索機能}
 
 検索機能の確認を行い、正常に使用できることを確認した。
+検索機能実行の様子を図\ref{demo_search_function}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{demo_search_function}
-\caption[検索機能確認の様子]{検索機能確認の様子。図は検索実行前の試験結果一覧(上図)と実行後(下図)を示す。図に例では"hokuyama std$\_$totscan"で検索を行っており、実行後は対応する試験結果1つが表示されていることが分かる。この試験結果について試験実施者は"hokuyyama"、試験項目は"std$\_$totscan"であるため、検索機能が正常に動いていることが分かる。}
+\includegraphics[width=13cm]{demo_search_function}
+\caption[検索機能確認の様子]{検索機能確認の様子。図は検索実行前の試験結果一覧(上図)と実行後(下図)を示す。図の例では"hokuyama std$\_$totscan"の2つのキーワードで検索を行っており、実行後は対応する試験結果1つが表示されていることが分かる。この試験結果について試験実施者は"hokuyama"、試験項目は"std$\_$totscan"であるため、検索機能が正常に動いていることが分かる。}
 \label{demo_search_function}
 \end{figure}
 
@@ -241,14 +245,14 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 \subsubsection{試験結果閲覧}
 ウェブアプリケーションを用いて、試験結果を閲覧した。その様子を図\ref{demo_view_result}に示す。
 \begin{figure}[bpt]\centering
-  \begin{minipage}{0.4\hsize}
+  \begin{minipage}{0.45\hsize}
     \begin{center}
-    \includegraphics[width=60mm]{demo_view_scan_result}
+    \includegraphics[width=65mm]{demo_view_scan_result.pdf}
     \end{center}
   \end{minipage}
-  \begin{minipage}{0.4\hsize}
+  \begin{minipage}{0.45\hsize}
     \begin{center}
-    \includegraphics[width=65mm]{demo_view_dcs}
+    \includegraphics[width=70mm]{demo_view_dcs.pdf}
     \end{center}
   \end{minipage}
   \caption[試験結果の閲覧]{試験結果の閲覧。図は試験結果(左図)と試験におけるDCSデータのグラフ(右図)を示しており、上から温度、電圧、電流となっている。図は\texttt{std$\_$digitalscan}の結果であり、試験情報及び結果のグラフが確認できる。また右図よりDCSデータも正常にローカルデータベース上に保存され、表示されていることが分かる。}
@@ -262,15 +266,6 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 \subsubsection{結果選択とピクセル解析}
 読み出し結果を選択し、ピクセル解析を行なった。
 結果選択画面を図\ref{demo_select_scans}に示す。
-
-\begin{figure}[bpt]\centering
-  \begin{center}
-    \includegraphics[width=9cm]{demo_select_scans}
-  \caption[読み出し試験結果の選択]{読み出し試験結果の選択。図は読み出し試験結果選択画面を表す。読み出し試験実施後、ピクセル解析と中央データベースとの同期を実行するために試験結果を選択する必要がある。図では\texttt{std$\_$digitalscan}、\texttt{std$\_$analogscan}、\texttt{std$\_$thresholdscan}、\texttt{std$\_$totscan}、\texttt{std$\_$noisescan}の5項目を選択している。}
-  \label{demo_select_scans}
-  \end{center}
-\end{figure}
-
 このデモンストレーションにおける不良評価基準は3章に述べた表\ref{pixel_analysis_criteria}の中から、現時点でシステムに実装している以下の項目を抜粋した。
 \begin{enumerate}
   \item Digital Dead 
@@ -287,6 +282,14 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 解析結果を図\ref{pixel_analysis_result}、それぞれの評価基準における不良ピクセルの分布を図\ref{pixel_analysis_result_dist}に示す。
 
 \begin{figure}[bpt]\centering
+  \begin{center}
+    \includegraphics[width=15cm]{demo_select_scans.pdf}
+  \caption[読み出し試験結果の選択]{読み出し試験結果の選択。図は読み出し試験結果選択画面を表す。読み出し試験実施後、ピクセル解析と中央データベースとの同期を実行するために試験結果を選択する必要がある。図では\texttt{std$\_$digitalscan}、\texttt{std$\_$analogscan}、\texttt{std$\_$thresholdscan}、\texttt{std$\_$totscan}、\texttt{std$\_$noisescan}の5項目を選択している。}
+  \label{demo_select_scans}
+  \end{center}
+\end{figure}
+
+\begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{./data/analysis_result/Bad_Pixels.png}
 \caption[ピクセル解析結果]{ピクセル解析結果。図において横軸は評価基準、縦軸は該当するピクセル数を表す。analog$\_$dead、analog$\_$badの割合が多いため、アナログ回路読み出しに失敗しているピクセルが多いことが読み取れる。}
 \label{pixel_analysis_result}
@@ -294,30 +297,30 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/digital_dead.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/digital_dead.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/digital_bad.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/digital_bad.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/analog_dead.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/analog_dead.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/analog_bad.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/analog_bad.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/tuning_failed.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/tuning_failed.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/tuning_bad_threshold.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/tuning_bad_threshold.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/tuning_bad_tot.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/tuning_bad_tot.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=6.5cm]{./data/analysis_result/high_enc.png}
+    \includegraphics[width=6.0cm]{./data/analysis_result/high_enc.png}
   \end{minipage}
-  \includegraphics[width=6.5cm]{./data/analysis_result/noisy.png}
+  \includegraphics[width=6.0cm]{./data/analysis_result/noisy.png}
 
 \caption[各評価基準における不良ピクセルの分布]{各評価基準における不良ピクセルの分布。各図は二次元ヒストグラムであり、横軸がFEチップにおける各ピクセルの列番号、縦軸が行番号を示しており、赤い領域が不良ピクセルを表している。図\ref{pixel_analysis_result}においてアナログ回路読み出しに失敗しているピクセルが多いことがわかったが、その不良ピクセルはsynchronousフロントエンド上に存在していることが分かる。またThreshold調整に失敗しているピクセル(tuning$\_$bad$\_$threshold)は全体的に分布していることが分かる。}
 \label{pixel_analysis_result_dist}
@@ -325,15 +328,13 @@ FPGAボードにXpressK7\cite{5-2}を用いた。図\ref{demo_fpga_board}に示�
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
 \subsubsection{試験結果アップロード}
 読み出し試験の結果を中央データベースにアップロードし、情報が正しくアップロードされていることを確認した。
 図\ref{demo_upload_to_pd}に中央データベースのウェブページを示す。結果ファイルや解析結果が正しくアップロードされていることが分かる。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=15cm]{pixel_test_result.png}
-\caption[中央データベースにおける読み出し試験及びピクセル解析結果画面]{中央データベースにおける読み出し試験及びピクセル解析結果画面。読み出し試験及びピクセル解析結果を中央データベースにアップロードした。図は中央データベースのウェブページを示しており、アップロードされた試験結果画面である。赤線の領域に各評価基準における不良ピクセルの数、青線の領域に各試験項目ごとの結果ファイルをまとめたZipファイルが表示されていることが分かる。試験結果のアップロードが正常に完了し、中央データベース上で結果を確認できることが分かる。}
+\includegraphics[width=10cm]{pixel_test_result.pdf}
+\caption[中央データベースにおける読み出し試験及びピクセル解析結果画面]{中央データベースにおける読み出し試験及びピクセル解析結果画面。読み出し試験及びピクセル解析結果を中央データベースにアップロードした。図は中央データベースのウェブページを示しており、アップロードされた試験結果画面である。図の中央部に各評価基準における不良ピクセルの数、下部に各試験項目ごとの結果ファイルをまとめたZipファイルが表示されていることが分かる。試験結果のアップロードが正常に完了し、中央データベース上で結果を確認できることが分かる。}
 \label{demo_upload_to_pd}
 \end{figure}
-
 
