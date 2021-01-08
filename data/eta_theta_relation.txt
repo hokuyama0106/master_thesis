@@ -1,0 +1,13 @@
+set xrange [0:3.3]
+set yrange [-5:5]
+set xlabel '{/Symbol q}' enhanced
+set ylabel '{/Symbol h}' enhanced
+set xlabel font "Arial,30"
+set ylabel font "Arial,30"
+set tics font "Arial,20"
+set key font"Arial,20"
+set xlabel offset 0,-1
+set ylabel offset -3,0
+set lmargin 10
+set bmargin 5
+plot -log(tan(x/2))

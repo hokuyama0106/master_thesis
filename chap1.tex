@@ -24,10 +24,17 @@ Troidal LHC Apparatus)実験が行われている。それぞれの衝突点に�
 初めにATLAS実験に用いる座標系と用語について説明する。まず衝突点を原点として定義しており、ビーム軸を$z$軸、これに対して垂直な平面を$x-y$平面とする。
 $x$軸方向は原点からみてLHCリングの中心に向かう方向であり、$y$軸は上に向かう方向である。
 方位角$\phi$は$z$軸周りの角度であり、極角$\theta$は$z$軸とのなす角である。ATLAS実験では、極角$\theta$は以下のように擬ラピディティ$\eta$で表される。
+また極角$\theta$と擬ラピディティ$\eta$の関係図を図\ref{eta_theta_graph}に示す。
 \bbb
 \eta = -\rm{ln \left( tan\left(\frac{\theta}{2}\right) \right) }
+\label{eta_theta}
 \eee
 
+\begin{figure}[bpt]\centering
+\includegraphics[width=6cm]{./data/eta_theta_relation.pdf}
+\caption[極角$\theta$と擬ラピディティ$\eta$の関係図]{極角$\theta$と擬ラピディティ$\eta$の関係図。横軸は式\ref{eta_theta}における極角$\theta (0\leq\theta\leq\pi)$、縦軸は擬ラピディティ$\eta$を表している。図のように、$\eta$への変換により定義域が実数全体に広がる。}
+\label{eta_theta_graph}
+\end{figure}
 
 \subsection{ATLAS検出器}
 ATLAS検出器は複数の検出器から構成され、陽子の衝突によって生成された粒子の運動量、エネルギーを測定することができる。
@@ -104,14 +111,14 @@ LHCとHL$-$LHCの比較を表\ref{compare_lhc}に示す。
 
 \begin{table}[tbp]
 \begin{center}
-\caption[LHCの比較]{LHCの比較\cite{1-6}。表はRun2時点でのLHCとHL-LHCとの比較を示している。瞬間ルミノシティは7倍、積分ルミノシティは10倍になることが見積もられており、取得統計数の増加が期待できる。}
+\caption[現行LHCとHL-LHCの比較]{現行LHCとHL-LHCの比較\cite{1-6}。瞬間ルミノシティは7倍、積分ルミノシティは10倍になることが見積もられており、取得統計数の増加が期待できる。}
 \label{compare_lhc}
   \begin{tabular}{|lll|} \hline
     & LHC & HL$-$LHC \\ \hline
     重心系エネルギー & 14 & 14 \\
     瞬間ルミノシティ[$\rm{cm^{-2}s^{-1}}$] & $1\times 10^{34}$ & $7\times10^{34}$ \\
     積分ルミノシティ[$\rm{fb^{-1}}$] & $300$ & $3,000$ \\
-    1陽子衝突あたりのイベント数 & $23$ & $138$ \\ \hline 
+    1陽子衝突あたりのイベント数 & $27$ & $140$ \\ \hline 
   \end{tabular}
 \end{center}
 \end{table}
@@ -133,7 +140,7 @@ LHCの運転計画を表\ref{hllhc_plan}に示す。
 \end{itemize}
 
 HL-LHCに向けてATLAS内部飛跡検出器はアップグレードを予定しており、検出器の総入れ替えを行う。
-アップグレード後の検出器をInner Tracker(\textbf{ITk})と呼ぶ。模式図を図\ref{itk_image}に示す。
+アップグレード後の検出器を\textbf{Inner Tracker(ITk)}と呼ぶ。模式図を図\ref{itk_image}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{itk_image}
@@ -159,13 +166,13 @@ ITkでは現行に比べ、$\eta$が大きい領域まで検出器を設置す�
 
 \begin{table}[tbp]
 \begin{center}
-\caption[ピクセル検出器設置領域の比較]{ピクセル検出器設置領域の比較。表は現行とITkにおけるピクセル検出器設置領域の比較を示す。ITkでは遷移放射検出器を使用しないため、ピクセル検出器の半径方向のカバー領域が増え、層の数は4から5となる。また前方方向に生じる粒子測定を行うために、$\eta$の領域も拡大している。}
+\caption[ピクセル検出器設置領域の比較]{ピクセル検出器設置領域の比較。表は現行とITkにおけるピクセル検出器設置領域の比較を示す。$\eta$の範囲に関して、括弧内は度数法における対応する値を示す。ITkでは遷移放射検出器を使用しないため、ピクセル検出器の半径方向のカバー領域が増え、層の数は4から5となる。また前方方向に生じる粒子測定を行うために、$\eta$の領域も拡大している。}
 \label{compare_itk_pixel}
   \begin{tabular}{|lll|} \hline
     & 現行 & ITk \\ \hline
     $r[\rm{mm}]$ & $33〜129$ & $39〜279$ \\ 
     層の数(バレル部) & 4 & 5 \\ 
-    $|\eta|$ & $<2.5$ & $<4$ \\ \hline
+    $|\eta|$ & $<2.5~(<19^\circ)$ & $<4~(<4.2^\circ)$ \\ \hline
   \end{tabular}
 \end{center}
 \end{table}
@@ -207,17 +214,17 @@ ITkではこれらのジェットを正確に捉えることができ、VBFイ�
     \includegraphics[width=60mm]{VBF_event_display}
     \end{center}
   \end{minipage}
-  \caption[VBFイベントの図]{VBFイベントの図。クオーク対が相互作用をし、2つのボゾン粒子が結合、ヒッグスボソンを生成する過程(VBF)を示している。左図はファインマン図、右図はそのイベントディスプレイを表す。このイベントにおいて、初めに相互作用したクオーク対は、それぞれ崩壊を繰り返しジェットと呼ばれる粒子群となる。このときこれらのジェットは前方方向に大きな運動量を持つ。ITkでは$|\eta|<4.0$の範囲をカバーしており、このようなジェットを捉えることができるため、測定精度が向上する。}
+  \caption[VBFイベントの図]{VBFイベントの図。図はVBFイベントの一つである$H\rightarrow WW$崩壊チャンネルを示している。左図はファインマン図、右図はそのイベントディスプレイを表す。このイベントにおいて、初めに相互作用したクオーク対は、それぞれ崩壊を繰り返しジェットと呼ばれる粒子群となる。このときこれらのジェットは前方方向に大きな運動量を持つ。ITkでは$|\eta|<4.0$の範囲をカバーしており、このようなジェットを捉えることができるため、測定精度が向上する。}
   \label{VBF_image}
 \end{figure}
 
 \begin{table}[tbp]
 \begin{center}
-\caption[VBFの測定における系統誤差の見積もり]{VBFの測定における系統誤差の見積もり。表は$|\eta| <2.7$、$|\eta| <4.0$の領域を使用した場合のVBFイベント測定における系統誤差の見積もりを示している。$|\eta| <4.0$の領域を使用することで測定精度が向上する見積もりであることが分かる。}
+\caption[VBF~$H\rightarrow WW$の測定における系統誤差の見積もり]{VBF~$H\rightarrow WW$の測定における系統誤差の見積もり。表は統計数3000$\rm{fb^{-1}}$において、$|\eta| <2.7$、$|\eta| <4.0$の領域を使用した場合のVBF~$H\rightarrow WW$イベント測定における系統誤差の見積もりを示している。$|\eta| <4.0$の領域を使用することで系統誤差が向上する見積もりであることが分かる。ここでは統計誤差は考慮にいれていない。}
 \label{VBF_uncertainty}
   \begin{tabular}{|lll|} \hline
     検出器の使用範囲 & $|\eta| <2.7 $ & $|\eta| < 4.0 $ \\ \hline
-    測定精度 & 22$\%$ & 12$\%$ \\ \hline
+    系統誤差 & 22$\%$ & 12$\%$ \\ \hline
   \end{tabular}
 \end{center}
 \end{table}

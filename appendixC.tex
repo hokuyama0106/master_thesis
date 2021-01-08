@@ -1,11 +1,20 @@
-\chapter{ファイル送信時におけるデータ容量と処理時間の関係について}
+\chapter{ファイル送信時におけるデータ容量と処理時間の関係について} \label{chap:data_time_detail}
 
-(時間があればもっとちゃんと書きます。)
-KEKとLBLにおいてなぜ差が出るのかを考察する。
-ファイル送信時におけるデータ容量と処理時間の関係は、線形性を示さない。
+処理速度遅延の原因として以下をあげる。
+\begin{itemize}
+  \item サーバーの読み書き速度.
+  \item サーバーのファイル転送アルゴリズム.
+  \item サーバーのファイル転送時におけるパケットサイズ.
+  \item サーバー間のネットワーク上の距離.
+  \item サーバー間ネットワークの処理性能.
+\end{itemize}
+
+KEKとLBLに設置されているサーバーにおいて、中央データベースへのファイル送信処理時間に差が出る理由について考察する。
+
+初めに、ファイル送信時におけるデータ容量と処理時間の関係は、線形性を示さない。
 図\ref{datasize_vs_time_scp}はKEKからLBLのサーバーにscpコマンドを用いてファイル送信を行い、データ容量と処理時間の関係を取得したものである。
-赤線が線形フィットであるが、測定点は優位にずれていることが分かる。
-これはTCP通信においてパケットの送信に輻輳制御と呼ばれる技術が使われており、データ送信量を変化させながら情報通信を行っている。
+赤線が線形フィットであるが、測定点は優位にずれている。
+これはTCP通信においてパケットの送信に輻輳制御と呼ばれる技術が使われており、データ送信量を変化させながら情報通信を行っているためである。
 
 \begin{figure}[bpt]\centering
   \begin{center}
@@ -15,11 +24,27 @@ KEKとLBLにおいてなぜ差が出るのかを考察する。
   \end{center}
 \end{figure}
 
-scpによるファイル送信をKEK->LBL、LBL->KEKの場合に対しておこなった。図\ref{datasize_vs_time_kek_lbl}のように差異が見られた。
-Serverのspecは同程度。読み書き速度も変わらなかった。
-輻輳制御アルゴリズム(Cubic)、Window sizeとping(111msec)は変わらなかった。
-一般的には上りより下りの方が太いと考えると、KEKの上りnetworkはLBL上りと比べての方が細いと考えられる。
-\begin{figure}[bpt]\centering
+scpによるファイル送信を以下の2つの場合に対して行い、ファイル容量と処理時間の関係を取得した。
+
+\begin{enumerate}
+  \item KEKからLBL
+  \item LBLからKEK
+\end{enumerate}
+
+結果を図\ref{datasize_vs_time_kek_lbl}に示す。
+ここで処理時間に差が生まれる原因について調査したものを以下に示す。
+\begin{itemize}
+  \item 読み書き速度を測定したところ同程度であった。
+  \item 輻輳制御アルゴリズムはCubicをどちらも使用していた。
+  \item パケットサイズは変わらなかった。
+  \item ping(111msec)は変わらなかった。
+\end{itemize}
+
+よってサーバ間ネットワークに差異があると考えられる。
+一般的には上りより下りの方が太いと考えると、KEKローカルの上りネットワークの性能が、LBLローカルの上りネットワークと比べて悪いと考えられる。
+これにより、ファイル送信時間に差が生まれている。
+
+\begin{figure}[bpt]\centerin
   \begin{center}
     \includegraphics[width=7cm,angle=270]{scp_kek_lbl.pdf}
   \caption[KEK、LBL間のファイル送信]{KEK、LBL間のファイル送信}
@@ -27,9 +52,17 @@ Serverのspecは同程度。読み書き速度も変わらなかった。
   \end{center}
 \end{figure}
 
-scpファイル送信、KEK-Lxplus、LBL->Lxplus
-上述したようにKEKの上りネットワークは細い。
-加えてpingによる反応時間がKEKは170msec程度なのに対し、LBLは150msec程度。ネットワーク上の距離差も処理速度影響していると考えられる。
+次に、下の2つの場合に対して行い、ファイル容量と処理時間の関係を取得した。
+\begin{enumerate}
+  \item KEKからCERN(Lxplus)
+  \item LBLからCERN(Lxplus)
+\end{enumerate}
+
+KEKローカルの上りネットワークは細いため、処理時間に差が生まれる。
+加えてこの場合はサーバ間の距離による遅延も含まれていると考えられる。
+pingによる反応時間が測定1では170msec程度なのに対し、測定2は150msec程度であった。
+そのためこれも処理速度遅延に影響していると考えられる。
+
 \begin{figure}[bpt]\centering
   \begin{center}
     \includegraphics[width=7cm,angle=270]{scp_to_cern.pdf}
@@ -38,9 +71,9 @@ scpファイル送信、KEK-Lxplus、LBL->Lxplus
   \end{center}
 \end{figure}
 
-CERNと中央DBでは条件が違うが、上述したことをまとめるとKEKとLBLの間で処理時間の際が生まれる要因は以下であると考えた。
+CERNと中央データベースが地理的に近い距離であることを考慮し、上述したことをまとめるとKEKとLBLの間で処理時間の差が生まれる要因は以下であると考えた。
 \begin{itemize}
-  \item KEKの上りネットワークが遅い
-  \item ネットワーク上の距離差があり、KEKの方が差が大きい。
+  \item ローカルネットワークの性能.
+  \item ネットワーク上の距離差.
 \end{itemize}
 

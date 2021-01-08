@@ -222,6 +222,7 @@ Occupancy = \frac{n_0}{n_i} \times 100~[\%]
 \subsubsection{デジタル回路読み出し}
 各ピクセルのデジタル回路部に試験用電荷を入射し、信号を取得する。
 $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$で定義される。
+YARRのデフォルトでは$n_i=100$となっている。
 
 デジタル回路読み出しにおける$Occupancy$の二次元分布の例を図\ref{dig_occ}に示す。
 \begin{figure}[bpt]\centering
@@ -255,33 +256,33 @@ $Occupancy$(式\ref{occupancy})は、入射電荷数$n_i$と取得信号数$n_0$
 この分布を以下の式でフィッティングする。フィッテングの形に由来し、これを「Sカーブフィッティング」と呼ぶ。
 \bbb
 \label{scurve_function}
-f(x) &=& 0.5 \times \left[ 2-{\rm erfc}\left( \left\{ \frac{x-Q_{\rm th}}{\sigma_{\rm n} \times \sqrt{2}}  \right\} \right) \right] \times p\\
+f(x) &=& 0.5 \times \left[ 2-{\rm erfc}\left( \left\{ \frac{x-Q}{\sigma \times \sqrt{2}}  \right\} \right) \right] \times p\\
 {\rm erfc}(x) &=& 1 - {\rm erf}(x)
 %g(x) = \frac{2}{\sqrt{\pi}} \int_x^\infty {\rm exp}(-t^2) {\rm d}t
 \eee
 ここで${\rm erf}(x)$はガウスの誤差関数である\cite{3-5}。
 
-得られた$Q_{\rm th}$、$\sigma_{\rm n}$がそれぞれピクセルのThreshold値、ノイズに相当する。
-あるFEチップにおける$Q_{\rm th}$、$\sigma_{\rm n}$の分布の例を図\ref{threshold_mean_sigma}に示す。
-この分布をガウス関数でフィットすることで、全ピクセルに対するThreshold、ノイズの平均値$Q_{\rm th,mean}、\sigma_{\rm n,mean}$、幅$Q_{\rm th,sigma}、\sigma_{\rm n,sigma}$が得られる。
+得られた$Q$、$\sigma$がそれぞれピクセルのThreshold値、ノイズに相当する。
+あるFEチップにおけるThreshold値、ノイズの分布の例を図\ref{threshold_mean_sigma}に示す。
+この分布をガウス関数でフィットすることで、全ピクセルに対するThreshold、ノイズの平均値と幅が得られる。
 
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=50mm,angle=270]{Threshold_mean_dist}
+    \includegraphics[width=7cm]{./data/analysis_result/Threshold_mean_dist}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=50mm,angle=270]{Threshold_noise_dist}
+    \includegraphics[width=7cm]{./data/analysis_result/Threshold_noise_dist}
   \end{minipage}
-  \caption[Threshold値($Q_{\rm th}$)とノイズ($\sigma_{\rm n}$)の分布。]{Threshold値($Q_{\rm th}$)とノイズ($\sigma_{\rm n}$)の分布。図はあるFEチップ上のピクセルにおけるThreshold値($Q_{\rm th}$, 左図)とノイズ($\sigma_{\rm n}$,右図)の分布を示している。また赤線はガウス関数によるフィット関数を示しており、これにより平均値と幅を取得する。}
+  \caption[Threshold値とノイズの分布。]{Threshold値とノイズの分布。図はあるFEチップ上のピクセルにおけるThreshold値(左図)とノイズ(右図)の分布を示している。また赤線はガウス関数によるフィット関数を示しており、これにより平均値と幅を取得する。}
   \label{threshold_mean_sigma}
 \end{figure}
 
 この試験において、出力される結果ファイルを以下に示す。
 \begin{description}
-  \item [ThresholdMap] 各ピクセルの$Q_{\rm th}$を記す.
-  \item [ThresholdDist] $Q_{\rm th}$の分布を記す.
-  \item [NoiseMap] 各ピクセルの$\sigma_{\rm n}$を記す.
-  \item [NoiseDist] $\sigma_{\rm n}$の分布を記す. 
+  \item [ThresholdMap] 各ピクセルのThreshold値を記す.
+  \item [ThresholdDist] Threshold値の分布を記す.
+  \item [NoiseMap] 各ピクセルのノイズを記す.
+  \item [NoiseDist] ノイズの分布を記す. 
   \item [Chi2Map] 各ピクセルのSカーブフィッティングにおける$\chi^2$の値を記す.
   \item [Chi2Dist] $\chi^2$の分布を記す.
   \item [sCurve] あるピクセルの入射電荷量と$Occupancy$の関係を記す. いくつかのピクセルについて出力する.
@@ -290,7 +291,7 @@ f(x) &=& 0.5 \times \left[ 2-{\rm erfc}\left( \left\{ \frac{x-Q_{\rm th}}{\sigma
 
 \subsubsection{ToT測定}
 各ピクセルのアナログ回路部に試験用電荷を入射し、ToTを測定する。
-複数回行い、平均値と幅を求める。
+この操作を複数回(デフォルトでは100回)行い、平均値と幅を求める。
 出力される結果ファイルを以下に示す。
 \begin{description}
   \item [MeanToTMap] 各ピクセルのToTの平均値を記す.
@@ -300,13 +301,14 @@ f(x) &=& 0.5 \times \left[ 2-{\rm erfc}\left( \left\{ \frac{x-Q_{\rm th}}{\sigma
 \end{description}
 
 \subsubsection{ノイズ占有率測定}
-試験用電荷を入射せずに、$t$[sec]の時間トリガーをかけ、取得信号数$n_i$を測定する。
-$Occupancy$(式\ref{occupancy})は、発行したトリガー数$n_i$と取得信号数$n_0$で定義される。
+試験用電荷を入射せずに、周波数$f[{\rm Hz}]$、時間$t$[sec]のトリガーをかけ、取得信号数$n_0$を測定する。
+YARRのデフォルトでは$f=5000、t=300$である。
+$Occupancy$(式\ref{occupancy})は、発行したトリガー数$n_i=f \times t$と取得信号数$n_0$で定義される。
 
 また$NoiseOccupancy$を以下で定義する。
 $NoiseOccupancy$の分布の例を図\ref{noise_occ}に示す。
 \bbb
-NoiseOccupancy = \frac{n_i}{t} \times (25 \times 10^{-9})
+NoiseOccupancy = \frac{n_0}{t} \times (25 \times 10^{-9})
 \eee
 $25 \times 10^{-9}[{\rm sec}]=25[{\rm nsec}]$は1~b.c.である。
 
@@ -346,7 +348,7 @@ $25 \times 10^{-9}[{\rm sec}]=25[{\rm nsec}]$は1~b.c.である。
 \begin{center}
 \caption[ピクセル解析の評価基準一覧]{ピクセル解析の評価基準一覧\cite{3-1}。読み出し試験において各ピクセルが正常に機能しているかを判断するためにピクセル解析を行う必要があり、それの判断基準が表のように定義されている。この基準一覧は不良評価であり、全ての基準に当てはまらないピクセルが健康と判断される。不良ピクセルの数や分布は、モジュールの品質を決定する1つの要素となり、ITkに搭載するモジュールや配置の決定に用いられる。}
 \label{pixel_analysis_criteria}
-  \scriptsize
+  \small
   \begin{tabular}{|lll|} \hline
     評価名 & 読み出し項目 & 評価基準 \\ \hline
     Digital Dead      & Digital scan           & $Occupancy < 1$ \\ \hline
@@ -356,9 +358,9 @@ $25 \times 10^{-9}[{\rm sec}]=25[{\rm nsec}]$は1~b.c.である。
     Analog Dead       & Analog scan            & $Occupancy < 1$ \\ \hline
     Analog Bad        & Analog scan            & $Occupancy < 98 \: or \: Occupancy > 102$ \\ \hline
     Tuning Failed     & Threshold scan         & Sカーブフィット失敗(YARRでは$\chi^2=0$となる) \\ \hline
-    Tuning Bad        & Thresheld scan         & $|Q_{\rm th}-Q_{\rm th,mean}| > 5 \times Q_{\rm th,sigma}$ \\ 
+    Tuning Bad        & Thresheld scan         & $|{\rm Threshold}-{\rm Threshold}_{\rm 平均}| > 5 \times {\rm Threshold}_{\rm 幅}$ \\ 
                       & ToT scan               & ToT $ = 0 \: or \: 15 $\\ \hline
-    High ENC          & Threshold scan         & $|\sigma_{\rm n}-\sigma_{\rm n,mean}| > 3 \times \sigma_{\rm n,sigma}$\\ \hline
+    High ENC          & Threshold scan         & $|ノイズ-ノイズ_{\rm 平均}| > 3 \times ノイズ_{\rm 幅}$\\ \hline
     Noisy             & Noise scan             & $NoiseOccupancy > 10^{-6}$\\ \hline
     Disconnected Bump & Disconnected bump scan & 現段階では未決定 \\ 
                       & Source scan            & $Occupancy$がFEチップ全体平均の$1\%$ \\ \hline
