@@ -14,11 +14,11 @@ KEKとLBLに設置されているサーバーにおいて、中央データベ�
 初めに、ファイル送信時におけるデータ容量と処理時間の関係は、線形性を示さない。
 図\ref{datasize_vs_time_scp}はKEKからLBLのサーバーにscpコマンドを用いてファイル送信を行い、データ容量と処理時間の関係を取得したものである。
 赤線が線形フィットであるが、測定点は優位にずれている。
-これはTCP通信においてパケットの送信に輻輳制御と呼ばれる技術が使われており、データ送信量を変化させながら情報通信を行っているためである。
+これはTCP通信においてパケットの送信に輻輳制御\cite{e-1}と呼ばれる技術が使われており、データ送信量を変化させながら情報通信を行っているためである。
 
 \begin{figure}[bpt]\centering
   \begin{center}
-    \includegraphics[width=7cm,angle=270]{datasize_vs_time_scp.pdf}
+    \includegraphics[width=7cm,angle=270]{./datasize_vs_time_scp.pdf}
   \caption[添付するファイルサイズと処理時間の関係]{添付するファイルサイズと処理時間の関係}
   \label{datasize_vs_time_scp}
   \end{center}
@@ -46,7 +46,7 @@ scpによるファイル送信を以下の2つの場合に対して行い、フ�
 
 \begin{figure}[bpt]\centering
   \begin{center}
-    \includegraphics[width=7cm,angle=270]{scp_kek_lbl.pdf}
+    \includegraphics[width=7cm,angle=270]{./scp_kek_lbl.pdf}
   \caption[KEK、LBL間のファイル送信]{KEK、LBL間のファイル送信}
   \label{datasize_vs_time_kek_lbl}
   \end{center}
@@ -65,7 +65,7 @@ pingによる反応時間が測定1では170msec程度なのに対し、測定2�
 
 \begin{figure}[bpt]\centering
   \begin{center}
-    \includegraphics[width=7cm,angle=270]{scp_to_cern.pdf}
+    \includegraphics[width=7cm,angle=270]{./scp_to_cern.pdf}
   \caption[KEK、LBLとCERN間のファイル送信]{KEK、LBLとCERN間のファイル送信}
   \label{datasize_vs_time_cern}
   \end{center}

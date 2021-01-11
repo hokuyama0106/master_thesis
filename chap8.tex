@@ -45,8 +45,8 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_python_list}
-    \includegraphics[width=12cm]{search_python_list_flow}
+    \includegraphics[width=12cm]{./search_python_list.png}
+    \includegraphics[width=12cm]{./search_python_list_flow.png}
   \caption[検索機能実装方法1:Pythonリストを用いた場合]
 {検索機能実装方法1:Pythonリストを用いた場合の検索処理のイメージ図。上図は各コレクションと保存されている情報の例を示しており、下図は実際に検索を行った時の処理の流れを表している。上図中の赤枠で囲われた情報のように検索対象となる名前の情報は複数のコレクションにまたがって保存されている。各試験結果に対してこれらの情報を集めリスト内に保持し、各要素とキーワードとの一致を確認することで検索処理を行う。}
   \label{search_python_list}
@@ -61,7 +61,7 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 この実装方法について、ドキュメント数と処理時間の関係を測定したところ、図\ref{searching_time_python_list}のようになり、確かにドキュメント数に対して2次的に増加していることが分かる。測定の詳細については後述する。
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_python_list_problem}
+    \includegraphics[width=12cm]{./search_python_list_problem.png}
   \caption[検索機能実装方法1の問題点]
 {検索機能実装方法1の問題点のイメージ図。図\ref{search_python_list}でも述べたように、検索対象となる情報はこの図のように複数のコレクションにまたがって保存される。そのため、コレクションを超えて検索を行うような場合は試験結果の数以上に、処理に時間がかかってしまう。この図の例の場合、あるコレクション検索にかかる時間がドキュメント数に対して線形とすると、$O(n*(n_1+n_2+n_3))$の処理時間がかかると考えられる。}
   \label{search_python_list_problem}
@@ -70,7 +70,7 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_python_testRun}
+    \includegraphics[width=12cm]{./search_python_testRun.png}
   \caption[検索処理時間のボトルネックとなっているデータ構造]{検索処理時間のボトルネックとなっているデータ構造の図。読み出し試験におけるデータ構造(図\ref{localdb_structure_detail})の1つに、各試験結果情報を保存するtestRun、componentとtestRunの関係性を保持するcomponentTestRunという構造が存在する。試験結果数を$n$とすると、testRunのドキュメント数は$n$、componentTestRunの数は試験数とcomponentの数の積となるため$O(n)$となる。結果的に検索処理に$O(n^2)$の時間がかかってしまう。}
   \label{search_python_testRun}
   \end{center}
@@ -78,7 +78,7 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=8cm,angle=270]{result_python_list_search.pdf}
+    \includegraphics[width=8cm,angle=270]{./result_python_list_search.pdf}
   \caption[方法1における検索処理速度測定結果]{方法1における検索処理速度測定結果。横軸が試験結果のドキュメント数、縦軸が処理時間を表している。図\ref{search_python_testRun}で述べたように、方法1の検索処理では試験結果数$n$に対して$O(n^2)$の検索時間がかかため、試験結果のドキュメント数に対して処理時間は二次関数になっていることがわかる。近似関数や生産時における処理時間の見積もりに関しては後述する。}
   \label{searching_time_python_list}
   \end{center}
@@ -101,8 +101,8 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_mongo_collection}
-    \includegraphics[width=12cm]{search_mongo_collection_flow}
+    \includegraphics[width=12cm]{./search_mongo_collection.png}
+    \includegraphics[width=12cm]{./search_mongo_collection_flow.png}
   \caption[検索機能実装方法2:検索キーワード専用コレクションを用いた場合]{検索機能実装方法2:検索キーワード専用コレクションを用いた場合のイメージ図。上図は各コレクションと保存されている情報の例を示しており、下図は実際に検索を行った時の処理の流れを表している。方法2では上図の赤枠で囲っている検索情報のコレクションを新たに設け、これを参照することで検索処理を行う。このコレクション内には各試験結果に対応したドキュメントが1つ保存され、全検索情報と試験結果のIDを持つものとなっている。
 処理の流れとしては下図のように、検索情報のコレクションよりキーワードに対応する試験結果を抽出する処理と、表示の際に必要な情報を試験結果のコレクションから取得する処理の2つに分かれた構造となっている。
 このような処理をすることにより、各検索処理にかかる時間は試験結果数に対して$O(n)$になると考えられる。}
@@ -161,8 +161,7 @@ Pythonリストを使う実装の場合、以下のような流れで検索処�
 
 { \small
 \begin{lstlisting}
-curl "http://127.0.0.1:5000/localdb/scan?keywords=okuyama&match=partial" 
--o /dev/null -w "\%{time\_total}\n" 2> /dev/null -s
+curl "http://127.0.0.1:5000/localdb/scan?keywords=okuyama&match=partial" -o /dev/null -w "\%{time\_total}\n" 2> /dev/null -s
 \end{lstlisting}
 }
 
@@ -201,7 +200,7 @@ curl "http://127.0.0.1:5000/localdb/scan?keywords=okuyama&match=partial"
 
 \begin{figure}[bpt]
   \begin{center}
-  \includegraphics[width=8cm,angle=270]{result_mongo_collection_search.pdf}
+  \includegraphics[width=8cm,angle=270]{./result_mongo_collection_search.pdf}
   \caption[方法2における検索処理時間測定結果]{方法2における検索処理時間測定結果。横軸が試験結果のドキュメント数、縦軸が処理時間を表している。線形性を示していることが確認でき、検索実行時における処理時間は方法1に比べて優れている。}
   \label{searching_time}
   \end{center}
@@ -232,7 +231,7 @@ b &=& (8.9\pm 0.8)\times10^{-2} \nonumber
 この処理を前もって行なうことで、検索実行時の処理性能を上げている。
 \begin{figure}[bpt]
   \begin{center}
-  \includegraphics[width=8cm,angle=270]{creating_cache_time.pdf}
+  \includegraphics[width=8cm,angle=270]{./creating_cache_time.pdf}
   \caption[方法2における検索情報コレクションの生成時間測定結果]{方法2における検索情報コレクションの生成時間測定結果。検索情報コレクションの生成にかかる処理時間として、ドキュメント数に対するアプリケーションの起動時間を測定した。横軸が試験結果のドキュメント数、縦軸が時間を示している。検索情報コレクションの生成には、方法1と同様の処理を行なっているため$O(n^2)$となっているのが分かる。}
   \label{creating_cache_time}
   \end{center}
@@ -280,7 +279,7 @@ b &=& (8.9\pm 0.8)\times10^{-2} \nonumber
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_mongo_collection_details}
+    \includegraphics[width=12cm]{./search_mongo_collection_details.png}
   \caption[方法2の検索における詳細処理]{方法2の検索における詳細処理。図のように全体の流れにおけるアプリケーション内部での各処理、データベースから情報取得の各処理に1から5の番号をつけそれぞれにかかる処理時間を測定した。}
   \label{search_mongo_collection_details}
   \end{center}
@@ -293,7 +292,7 @@ b &=& (8.9\pm 0.8)\times10^{-2} \nonumber
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_mongo_collection_details_result}
+    \includegraphics[width=12cm]{./search_mongo_collection_details_result.png}
   \caption[方法2における詳細処理時間の測定結果]{方法2における詳細処理時間の測定結果。図\ref{search_mongo_collection_details}における5つの詳細処理にかかる時間の割合を表している。処理3、5にあたるコレクション検索実行後のアプリケーション内での処理に多く時間がかかっていることが分かる。}
   \label{search_mongo_collection_details_result}
   \end{center}
@@ -330,7 +329,7 @@ b &=& (8.9\pm 0.8)\times10^{-2} \nonumber
 方法2の検索処理については処理\ref{dominated_process}が支配的であることが分かった。
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=8cm,angle=270]{dominated_process_relation.pdf}
+    \includegraphics[width=8cm,angle=270]{./dominated_process_relation.pdf}
   \caption[ドキュメント数に対する型変換処理時間の関係]{ドキュメント数に対する型変換処理時間の関係。コレクション検索後の型変換に要する処理時間は、図のようにドキュメント数に対して線形となっていることが分かる。}
   \label{dominated_process_relation}
   \end{center}
@@ -359,7 +358,7 @@ b &=& (8.9\pm 0.8)\times10^{-2} \nonumber
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_summary_hash}
+    \includegraphics[width=12cm]{./search_summary_hash.png}
   \caption[検索機能実装方法3:検索情報と共に一覧表示に必要な情報を保持、参照]{検索機能実装方法3:検索情報と共に一覧表示に必要な情報を保持、参照。方法2では検索情報コレクションより、条件に一致する試験結果IDを取得し、実際の試験結果に対して再度検索をかける流れとなっていたが、この方法では一覧表示に必要な情報も全て検索情報のコレクション内で保持する。こうすることで検索機能において必要な情報の全てが1つのコレクションにまとまり、コレクション検索の処理が1回で済むため、処理時間が改善すると考えられる。}
   \label{search_summary_hash}
   \end{center}
@@ -367,7 +366,7 @@ b &=& (8.9\pm 0.8)\times10^{-2} \nonumber
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=12cm]{search_multi_thread}
+    \includegraphics[width=12cm]{./search_multi_thread.png}
   \caption[検索機能実装方法4:検索情報コレクションを分散、マルチスレッドを使用]{検索機能実装方法4:検索情報コレクションを分散、マルチスレッドを使用。方法3に加えて、検索情報コレクションを分散し、並列処理を行うことで、1つのコレクションあたりに含まれるドキュメント数を減らし、コレクション検索にかかる時間を削減できると考えられる。}
   \label{search_multi_thread}
   \end{center}
@@ -385,7 +384,7 @@ b &=& (8.9\pm 0.8)\times10^{-2} \nonumber
 
 \begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=8cm,angle=270]{searching_time_2.pdf}
+    \includegraphics[width=8cm,angle=270]{./searching_time_2.pdf}
   \caption[方法3、4に対する処理時間測定結果]{方法3、4に対する処理時間測定結果。横軸が試験結果のドキュメント数、縦軸が処理時間を表している。赤、青、緑がそれぞれ方法2、3、4を用いたものである。方法2に比べて3、4共に改善していることが分かる。方法3、4を比べると傾きが小さくなっていることが分かる。これよりドキュメント数が大きい場合に方法4は有効である。}
   \label{searching_time_2}
   \end{center}

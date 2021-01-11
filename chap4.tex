@@ -20,9 +20,12 @@ ITkは、ピクセル検出機とストリップ検出機にから構成され�
 \subsubsection{意義}
 中央データベースを扱う一番の目的は、ITkに用いるモジュールの選別とその配置の決定に用いることである。
 品質試験結果を解析、品質のいいモジュールを10,000台の中から選別、ITkに搭載する。
-また、モジュールの配置も品質を考慮して決定する。例として$|\eta|$が大きく、通過粒子密度が多い領域には不良ピクセルが少ないモジュールを搭載するといった位置決定がなされる。
-
-なんか物理っぽい議論ができればなあ。
+また、モジュールの配置も品質を考慮して決定する。
+例として以下の2つをあげる。
+\begin{itemize}
+  \item $|\eta|$が小さい領域には、不良ピクセルが少なく品質の良いモジュールを搭載する.
+  \item 不良ピクセルの領域が固まらないようにする.
+\end{itemize}
 
 次に中央データベースに保存された情報は、検出器運転時の参考値として扱われる。
 モジュールを例にだすと、品質試験で読み出し試験を行った際の最適な設定値を中央データベースに保存するため、実際の運転時に参照することができる。
@@ -53,7 +56,7 @@ PythonのウェブフレームワークであるFlask\cite{4-3}を使用し、�
 \end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{localdb_overview}
+\includegraphics[width=12cm]{./localdb_overview.png}
 \caption[ローカルデータベースシステムの概要]{ローカルデータベースシステムの概要。各組み立て機関でMongoDBとローカルデータベース用ウェブアプリケーションの立ち上げを行い、独自にデータ管理をするシステムとなっている。品質試験者は図のようにいくつかのソフトウェアを用いて試験結果をMongoDBに保存する。保存された結果はウェブアプリケーションによって閲覧することができる。また結果は中央データベースに集める必要があるため、同期ツールを用いて試験結果の共有を行う。}
 \label{localdb_overview}
 \end{figure}
@@ -113,7 +116,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 各ドキュメントは「\textbf{ID}」と呼ばれるハッシュ値を持っていて、異なるコレクションにおけるドキュメント間の紐付けはこのIDを用いて行う。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{mongodb_schema}
+\includegraphics[width=12cm]{./mongodb_schema.png}
 \caption[MongoDBの構造の例\cite{4-2}]{MongoDBの構造の例\cite{4-2}。図のようにMongoDBではJSON形式でデータを格納する。1枚のJSONインスタンスをドキュメントと呼び、複数のドキュメントが格納されている枠組みをコレクションと呼ぶ。ドキュメントの構造及びコレクション間の関係等を決めることでデータベースの構造を定義する。ドキュメント間の紐付けは、各ドキュメント内部にIDを持つことで可能となる。図の例では試験結果のドキュメントが$\{$``モジュール$\_$id":2001$\}$の情報を持っており、これがモジュールに保存されているドキュメントの1枚目のIDに対応する。}
 \label{mongodb_schema}
 \end{figure}
@@ -158,7 +161,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{table}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{localdb_structure_detail}
+\includegraphics[width=12cm]{./localdb_structure_detail.png}
 \caption[先行研究により設計された読み出し試験結果のMongoDB内部構造]{先行研究により設計された読み出し試験結果のMongoDB内部構造\cite{4-6}。それぞれの四角はコレクション、直線はIDによるドキュメント間のリンクを示している。直線が十字になっている場合はドキュメント間が一対一対応であることを示し、分岐しているものは複数のドキュメントと対応していることを示す。また直線状の白丸は対応するドキュメントが存在しない場合があることを示している。}
 \label{localdb_structure_detail}
 \end{figure}
@@ -186,13 +189,13 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=16cm]{webapp_process}
+\includegraphics[width=16cm]{./webapp_process.png}
 \caption[ウェブアプリケーション処理のイメージ]{ウェブアプリケーション処理のイメージ。ウェブアプリケーションではMongoDB通信API(PyMongo)を用いて、データベースのコレクションに検索をかけることで情報を取得する。取得した情報は整形されたのちブラウザに送信、中央データベースとの同期等の処理に用いられる。}
 \label{webapp_process}
 \end{figure}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=15cm]{demo_view_scan_result}
+\includegraphics[width=15cm]{./demo_view_scan_result.pdf}
 \caption[品質試験結果ページの例]{品質試験結果ページの例。図は品質試験項目であるデジタル回路読み出しの結果を表している。図の上部に試験情報や設定値、下部に結果のグラフが表示されているのを確認できる。}
 \label{viewer_result}
 \end{figure}
@@ -263,13 +266,13 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 %\end{table}
 
 \begin{figure}[b]\centering
-\includegraphics[width=12cm]{pd_module_structure}
+\includegraphics[width=12cm]{./pd_module_structure.png}
 \caption[中央データベースにおけるモジュールの種類と構造]{中央データベースにおけるモジュールの種類と構造。中央データベースにモジュールを登録するときの情報として、モジュールの種類、構成部品を図のように実装した。図の左側に実装したモジュールの種類を示しており、Triplet、Quadというように、モジュールの種類ごとに登録できるシステムとなっている。また矢印は構成部品を指しており、各モジュールは対応するBare Module(ベアモジュール)とPCB(フレキシブル基板)を持つ。DBの中でモジュールと構成部品の紐付けも同時に行うことができる。}
 \label{pd_module_structure}
 \end{figure}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=6cm]{example_module_structure}
+\includegraphics[width=6cm]{./example_module_structure.png}
 \caption[中央データベース内におけるモジュール構造の一例(Quadモジュール)]{中央データベース内におけるモジュール構造の一例(Quadモジュール)。例としてOuter system quad moduleの中央データベース内の構造を示している。この種類では構成要素としてそれぞれ対応する種類のModule carrier、Bare Module、PCBを持つことがわかる。さらにBare ModuleはFE chipを4、Sensorを1持つことが分かり、Quadモジュールの構造が正しく実装されていることが分かる。}
 \label{example_module_structure}
 \end{figure}
@@ -343,7 +346,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 同期ツールのデータ通信のイメージを図\ref{interfacing_tools_system}に示す。
 \begin{figure}[bpt]\centering
-\includegraphics[width=13cm]{interfacing_tools_system}
+\includegraphics[width=13cm]{./interfacing_tools_system.png}
 \caption[同期ツールのデータ通信のイメージ]{同期ツールのデータ通信のイメージ。本研究で開発を行っているのは図の赤線の領域に対応する同期ツールである。このツールはPythonを用いて開発しており、処理の中でローカルのMongoDBと通信するAPIと、中央データベースが開発、提供をしているAPIを用いることで、2つのデータベース間の同期を行っている。このとき、中央データベースとの通信はhttp通信で行われる。}
 \label{interfacing_tools_system}
 \end{figure}
@@ -358,7 +361,7 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 実装の詳細及び処理時間測定について8章で述べる。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=11cm]{interface_overview}
+\includegraphics[width=11cm]{./interface_overview.png}
 \caption[同期機能の概要]{同期機能の概要。本研究ではモジュール情報のダウンロードと読み出し試験結果のアップロード機能を実装した。図に示している情報を同期する機能となっている。}
 \label{interface_overview}
 \end{figure}
@@ -424,13 +427,13 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 \end{table}
 
 \begin{figure}[btp]\centering
-\includegraphics[width=12cm]{viewer_comment}
+\includegraphics[width=12cm]{./viewer_comment.png}
 \caption[ウェブアプリケーションにおけるコメント機能]{ウェブアプリケーションにおけるコメント機能。権限付きユーザ及び管理者はモジュールや試験結果に対してコメントをすることができる。図のようにページの右側にコメント欄があり、コメントをテキスト形式で記述することができる。}
 \label{webapp_comment}
 \end{figure}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{viewer_tag}
+\includegraphics[width=12cm]{./viewer_tag.png}
 \caption[ウェブアプリケーションにおけるタグ機能]{ウェブアプリケーションにおけるタグ機能。権限付きユーザ及び管理者はモジュールや試験結果に対してタグをつけることができる。図は試験結果の一覧ページであり、図の表において一番右の列がつけられたタグを示しており、図ではanomalyやgoodといったタグが付けられていることが分かる。}
 \label{webapp_tag}
 \end{figure}
@@ -504,12 +507,6 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 
 \subsubsection{概要}
 あるモジュール、組み立て工程に対して結果を選択する様子を図\ref{webapp_sign_off}に示す。組み立て工程も自動更新されていることがわかる。
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=14cm]{webapp_sign_off}
-\caption[結果選択画面及び組み立て工程表示の例]{結果選択画面及び組み立て工程表示の例。図の上部で組み立て工程が"MODULETOPCB"である。この段階において結果を選択する処理を行うとローカルデータベース内で選択された結果にタグ付けがなされる。図の中部においてその処理を行なっており、この図では"OPTICAL"と"MASS"の結果を選択している。選択した結果は中央データベースと同期される。また結果選択後は組み立て工程が自動的に更新される。図の下部では"MODULEWIREBONDING"になっていることが分かる。}
-\label{webapp_sign_off}
-\end{figure}
 
 \subsubsection{仕組み}
 リスト\ref{qc_status}、\ref{qc_module_status}のようなドキュメントを作成、保存する。
@@ -617,6 +614,12 @@ MongoDBの構造について簡単に表したものを図\ref{mongodb_schema}�
 }
 \end{lstlisting}
 
+\begin{figure}[bpt]\centering
+\includegraphics[width=14cm]{./webapp_sign_off.png}
+\caption[結果選択画面及び組み立て工程表示の例]{結果選択画面及び組み立て工程表示の例。図の上部で組み立て工程が"MODULETOPCB"である。この段階において結果を選択する処理を行うとローカルデータベース内で選択された結果にタグ付けがなされる。図の中部においてその処理を行なっており、この図では"OPTICAL"と"MASS"の結果を選択している。選択した結果は中央データベースと同期される。また結果選択後は組み立て工程が自動的に更新される。図の下部では"MODULEWIREBONDING"になっていることが分かる。}
+\label{webapp_sign_off}
+\end{figure}
+
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -637,7 +640,7 @@ YARRで読み出し試験を行った場合、結果ファイル及びディレ�
 このファイル統合処理のイメージを図\ref{analysis_tool_motivation}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{analysis_tool_motivation}
+\includegraphics[width=12cm]{./analysis_tool_motivation.png}
 \caption[ピクセル解析ツールにおけるファイル統合処理のイメージ]{ピクセル解析ツールにおけるファイル統合処理のイメージ。YARRの出力ファイル及びディレクトリは\texttt{std$\_$digitalscan}や\texttt{std$\_$thresholdscan}というように読み出し項目ごとである。ピクセル解析ツールでは、図のようにあるモジュールに関連する結果ファイルを統合し、ピクセルごとに行う解析処理を簡易化する狙いがある。}
 \label{analysis_tool_motivation}
 \end{figure}
@@ -647,12 +650,12 @@ YARRで読み出し試験を行った場合、結果ファイル及びディレ�
 \begin{figure}[bpt]
   \begin{minipage}{0.4\hsize}
     \begin{center}
-    \includegraphics[width=6cm]{analysis_tool_tree_file}
+    \includegraphics[width=6cm]{./analysis_tool_tree_file.png}
     \end{center}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
     \begin{center}
-    \includegraphics[width=8cm]{analysis_tool_tree_image}
+    \includegraphics[width=8cm]{./analysis_tool_tree_image.png}
     \end{center}
   \end{minipage}
   \caption[Treeファイルとそのデータ保持]{Treeファイルとそのデータ保持。実際にこのツールを用いて作ったTreeファイルの内部構造の様子(左)とそのデータ保持のイメージ(右図)を示す。Treeファイルでは、右図のように1つの表に試験結果をまとめている。各行が\texttt{std$\_$digitalscan}といった各読み出し項目に対応し、各列が1ピクセルに対応する。モジュール上の行列(Row、Col)の番号を表の上部に持っておくことで、モジュール上におけるピクセルの位置情報を保持する。}
@@ -677,7 +680,7 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 またピクセル解析以外の解析に対しても適応可能とするため、Tree作成部と解析処理部のファイルは分割した。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{analysis_tool_flow}
+\includegraphics[width=10cm]{./analysis_tool_flow.png}
 \caption[ピクセル解析ツールの処理の流れ]{ピクセル解析ツールの処理の流れ。ピクセル解析ツールは、図のように3つの実行ファイルにより構成される。getData.py(Python)にてデータベースから結果の取得を行い、makeTree(C++)にてTreeファイルの作成、analysis(C++)にてピクセル解析及び結果のプロットが出力される。}
 \label{analysis_tool_flow}
 \end{figure}
@@ -699,7 +702,7 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 \end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10.5cm]{webapp_search_function}
+\includegraphics[width=10.5cm]{./webapp_search_function.png}
 \caption[ウェブアプリケーションにおける検索機能の様子]{ウェブアプリケーションにおける検索機能の様子。図は検索結果一覧表示のページである。図の上部に入力欄があり(赤破線)、ここにキーワードを入力し検索を実行する。図の例では"QU-13"と入力しており、検索結果にはモジュール名QU-13の試験結果が一覧表示されていることが分かる。}
 \label{webapp_search_function}
 \end{figure}
@@ -722,10 +725,10 @@ Treeファイル作成やその後の解析処理のスクリプトは、ROOTを
 品質試験結果のアップロードは各組み立て工程毎に行う。ローカルデータベースで品質試験結果を組み立て工程毎にまとめて扱い、各モジュールの現組み立て工程を正確に管理する目的がある。
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.5\hsize}
-    \includegraphics[width=7cm]{dbsystem_flowchart}
+    \includegraphics[width=7cm]{./dbsystem_flowchart.png}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
-    \includegraphics[width=5cm]{dbsystem_flow_image}
+    \includegraphics[width=5cm]{./dbsystem_flow_image.png}
   \end{minipage}
 \caption[各モジュールにおけるデータベースシステム操作の流れ]{各モジュールにおけるデータベースシステム操作の流れ。モジュール組み立てにおけるデータベース操作の初めに、中央データベースにモジュール登録及びローカルデータベースへモジュール情報のダウンロードを行う(処理1)。その後、ダウンロードしたモジュールに対して組み立て工程に応じた試験結果を生成、ローカルデータベースに保存する(処理2)。各組み立て工程の終わりに試験結果の選択を行い、中央データベースに試験結果を同期する(処理3)。}
 \label{dbsystem_flow}

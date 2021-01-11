@@ -8,7 +8,7 @@
 モジュールの構成を図\ref{module_configuration}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=14cm]{module_configuration}
+\includegraphics[width=14cm]{./module_configuration.png}
 \caption[ピクセルモジュールの構成]{ピクセルモジュールの構成。図はQuadモジュールの構成を模式的に表したものである。モジュールは「\textbf{ベアモジュール}」と呼ばれる心臓部と「\textbf{フレキシブル基板}」を貼り付けることで作られる。ベアモジュールはセンサーとFEチップから成る。Quadモジュールの場合、1枚のセンサーに対しFEチップは4枚である。センサーとFEチップは「\textbf{バンプ}」と呼ばれる構造で電気的に接続しており、1ピクセルに対して1つのバンプ接合がなされている。FEチップとフレキシブル基板の接続には、ワイヤーが多数($O(100)$)配線される。}
 \label{module_configuration}
 \end{figure}
@@ -25,7 +25,7 @@
 現行のセンサーに比べ、型変換を起こす可能性がなくなるため安定した運転が見込まれる\cite{1-3}。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=8cm]{sensor_image}
+\includegraphics[width=8cm]{./sensor_image.png}
 \caption[新型ピクセルモジュールに搭載するシリコンセンサーの断面図]{新型ピクセルモジュールに搭載するシリコンセンサーの断面図。図は新型ピクセルモジュールに搭載するシリコンセンサー断面の模式図を示している。p型半導体にn${}^+$型電極を埋め込んだn${}^+$ - in - p型と呼ばれる構造を持つ。p${}^+$側にフレキシブル基板、n${}^+$側にFEチップが付く。逆バイアス電圧を印加するとn${}^+$電極側から空乏層が広がる。}
 \label{sensor_image}
 \end{figure}
@@ -38,7 +38,7 @@ AD変換について、アナログ信号がThresholdを超えた時間幅を測
 ToTの概念図を図\ref{tot_algorithm}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{tot_algorithm}
+\includegraphics[width=10cm]{./tot_algorithm.png}
 \caption[ToTの概念図]{ToTの概念図。FEチップで生成されるデジタル信号はToTと呼ばれる。図はその概念を模式的に表したものであり、FEチップで行われているAD変換である。ToTはアナログ信号がThreshold値を超えた時間幅に相当する。実際にはToT間のクロック数[b.c.]として取得さる。ここで1b.c.(25~ns)はLHCにおける陽子の衝突間隔に相当する。}
 \label{tot_algorithm}
 \end{figure}
@@ -72,7 +72,7 @@ RD53Aでは図\ref{fechip_rd53a}に示すように、3つの領域があり、�
 それぞれの回路図は付録\ref{chap:rd53a_circit}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{fechip_rd53a}
+\includegraphics[width=10cm]{./fechip_rd53a.png}
 \caption[RD53A]{RD53A\cite{2-1}。ピクセル数は400列$\times$192行となっている。図のようにRD53Aは3つの領域が設けられており、それぞれSynchronous FE、Linear FE、Differential FEと呼ぶ。各領域のピクセルが持つアナログ回路、AD変換回路が異なる。}
 \label{fechip_rd53a}
 \end{figure}
@@ -86,7 +86,7 @@ FEチップからのデジタル信号を後段の回路へ転送する他、FE�
 センサーで生成した信号はFEチップ、フレキシブル基板の順に送られ、PCでデータ取得できる。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=6cm]{module_electric_overview}
+\includegraphics[width=6cm]{./module_electric_overview.png}
 \caption[ピクセルモジュールにおける信号伝達の様子]{ピクセルモジュールにおける信号伝達の様子。図はピクセルモジュールにおける信号伝達の様子を模式的に表したものである。初めに、荷電粒子がセンサー部を通過し、エネルギー損失に応じた電子・ホール対を生成する。電子は電極により収集され、バンプを通してアナログ信号としてFEチップに送られる。FEチップでは信号を整形、増幅後、デジタル信号に変換する。その後ワイヤーを通してフレキシブル基板に転送、そしてPCに転送されデータを取得する。}
 \label{module_electric_overview}
 \end{figure}
@@ -104,7 +104,7 @@ Triplet、QuadモジュールはそれぞれFEチップを3、4枚搭載する�
 それぞれのモジュールの図及び検出器上における位置の一例を図\ref{module_geom}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{module_geom}
+\includegraphics[width=12cm]{./module_geom.png}
 \caption[搭載するモジュールのプロトタイプとITkにおける配置。]{搭載するモジュールのプロトタイプとITkにおける配置。2種類のTripletモジュールとQuadモジュールを搭載する予定となっている。Tripletモジュールは最内層のステーブ構造、リング構造の領域に使われる。それ以外の領域にはQuadモジュールが使われる。}
 \label{module_geom}
 \end{figure}

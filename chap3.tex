@@ -33,7 +33,7 @@
 
 流れと各組み立て工程のイメージを図\ref{assembly_flow}に示す。
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{assembly_flow}
+\includegraphics[width=12cm]{./assembly_flow.png}
 \caption[組み立て工程のイメージ図]{組み立て工程のイメージ図。モジュール組み立て機関はベアモジュール、フレキシブル基板を受け取り、それらの貼り付け、ワイヤー配線、ワイヤー保護、パリレンコーティング、温度サイクル試験、低温耐久試験の順に組み立てを行う。}
 \label{assembly_flow}
 \end{figure}
@@ -54,12 +54,12 @@
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.4\hsize}
     \begin{center}
-    \includegraphics[width=60mm]{VI_setup}
+    \includegraphics[width=60mm]{./VI_setup.png}
     \end{center}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
     \begin{center}
-    \includegraphics[width=65mm]{VI_analysis}
+    \includegraphics[width=65mm]{./VI_analysis.png}
     \end{center}
   \end{minipage}
   \caption[外観検査の様子]{外観検査の様子。図は日本で実際に行われた外観検査における写真撮影の様子(左図)と撮影写真の確認画面(右図)である。左図のように、写真撮影は光量を制御するため暗箱の中で行っている。またモジュールに損傷や断線がないかを確認するために、右図のように撮影した写真と良好なモジュールの写真を見比べ、電子部品の損傷、回路の断線などの何らかの所見があった場合には記録をする。}
@@ -76,12 +76,12 @@
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.4\hsize}
     \begin{center}
-    \includegraphics[width=60mm]{Metrology_setup}
+    \includegraphics[width=60mm]{./Metrology_setup.png}
     \end{center}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
     \begin{center}
-    \includegraphics[width=65mm]{Metrology_analysis}
+    \includegraphics[width=65mm]{./Metrology_analysis.png}
     \end{center}
   \end{minipage}
   \caption[平坦性測定の様子。]{平坦性測定の様子。図は日本で実際に行われた平坦性測定における測定の様子(左図)と解析結果(右図)である。専用の装置を用いてモジュールの位置座標を何点か測定する。得られた測定点は右図のように図示し、平面でフィッティングを行う。フィット平面からのズレの分布や、モジュールの厚みを計算する。}
@@ -97,7 +97,7 @@
 これはpn接合の特性\cite{2-1}であり、正常であればこの振る舞いを確認することができる。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=7cm]{sensor_IV_result}
+\includegraphics[width=7cm]{./sensor_IV_result.png}
 \caption[センサー電流-電圧特性結果の例]{センサー電流-電圧特性結果の例\cite{3-4}。横軸にセンサーに対する印加電圧[V]、縦軸に電流[$\mu$A]を示す。逆バイアス電圧を印加しているため、電流が0Vから60V付近までは電流がほとんど流れていないが、70V付近から電流が急激に増加していることが分かる。}
 \label{sensor_IV_result}
 \end{figure}
@@ -108,7 +108,7 @@ FEチップに対して電圧をかけ、電流-電圧特性をみる。
 抵抗として振る舞うため、電流、電圧間の関係は図\ref{SLDO_VI_result}のように線形性を持つ。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=7cm]{SLDO_VI_result}
+\includegraphics[width=7cm]{./SLDO_VI_result.png}
 \caption[FEチップ電流-電圧特性試験結果の例。]{FEチップ電流-電圧特性試験結果の例\cite{3-4}。横軸にFEチップに対する設定電流、縦軸は測定した実際にFEチップにかかる電圧値を示している。1.5V付近に急激に電圧が増大しており、この段階でFEチップが機能するようになる。それ以降は線形になっているのが分かる。}
 \label{SLDO_VI_result}
 \end{figure}
@@ -120,7 +120,7 @@ FEチップに対して電圧をかけ、電流-電圧特性をみる。
 また試験において温度、FEチップやセンサーに与える電圧、電流といった検出器の操作、環境関わる情報取得を同時に行い、異常がないかを確認する。これらの情報は「\textbf{Detector Control System, DCS}」と呼ぶ。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=7cm]{readout_overview}
+\includegraphics[width=7cm]{./readout_overview.png}
 \caption[読み出し試験の様子]{読み出し試験の様子\cite{3-4}。図は日本で実際に行われた読み出し試験の様子である。図の右側に見えるように、モジュールにケーブルを配線し、PCとの通信を行うことでデータ取得をする。また図の左側では抵抗値を測定している。これはモジュールに付属しているサーミスタの抵抗値を確認することで、温度情報を取得するためのものである。}
 \label{readout_overview}
 \end{figure}
@@ -226,7 +226,7 @@ YARRのデフォルトでは$n_i=100$となっている。
 
 デジタル回路読み出しにおける$Occupancy$の二次元分布の例を図\ref{dig_occ}に示す。
 \begin{figure}[bpt]\centering
-\includegraphics[width=8cm]{dig_occ}
+\includegraphics[width=8cm]{./dig_occ.png}
 \caption[デジタル回路読み出しにおける$Occupancy$分布の例。]{デジタル回路読み出しにおける$Occupancy$分布の例。図はRD53Aを用いたデジタル回路読み出しの結果であり、横軸、縦軸はそれぞれピクセルの列(400)、行(192)に対応する。z軸は各ピクセルにおける$Occupancy$の値を示している。正常なピクセルは100付近になることが期待され、図では全てのピクセルで100であるとが分かる。}
 \label{dig_occ}
 \end{figure}
@@ -248,7 +248,7 @@ YARRのデフォルトでは$n_i=100$となっている。
 これを入射電荷量を増加させて繰り返し行う。
 あるピクセルにおけるこの処理結果の例を図\ref{threshold_scurve}に示す。
 \begin{figure}[bpt]\centering
-\includegraphics[width=8cm]{threshold_scurve}
+\includegraphics[width=8cm]{./threshold_scurve.png}
 \caption[入射電荷量と$Occupancy$の関係]{入射電荷量と$Occupancy$の関係。横軸はピクセルに対する入射電荷量[e]、縦軸は$Occupancy$を示す。入射電荷量の単位eは、電荷量Cを素電荷$e=1.6\times 10^{-19}$で割ったものである。Threshold測定の際にはこのように入射電荷量を増加させながら$Occupancy$の値を測定する。測定結果を後述する式(\ref{scurve_function})フィットし、 Thresholdとノイズの値を得る。}
 \label{threshold_scurve}
 \end{figure}
@@ -268,10 +268,10 @@ f(x) &=& 0.5 \times \left[ 2-{\rm erfc}\left( \left\{ \frac{x-Q}{\sigma \times \
 
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=7cm]{./data/analysis_result/Threshold_mean_dist}
+    \includegraphics[width=7cm]{./data/analysis_result/Threshold_mean_dist.png}
   \end{minipage}
   \begin{minipage}{0.45\hsize}
-    \includegraphics[width=7cm]{./data/analysis_result/Threshold_noise_dist}
+    \includegraphics[width=7cm]{./data/analysis_result/Threshold_noise_dist.png}
   \end{minipage}
   \caption[Threshold値とノイズの分布。]{Threshold値とノイズの分布。図はあるFEチップ上のピクセルにおけるThreshold値(左図)とノイズ(右図)の分布を示している。また赤線はガウス関数によるフィット関数を示しており、これにより平均値と幅を取得する。}
   \label{threshold_mean_sigma}
@@ -313,7 +313,7 @@ NoiseOccupancy = \frac{n_0}{t} \times (25 \times 10^{-9})
 $25 \times 10^{-9}[{\rm sec}]=25[{\rm nsec}]$は1~b.c.である。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=8cm]{noise_occ}
+\includegraphics[width=8cm]{./noise_occ.png}
 \caption[ノイズ占有率測定における$NoiseOccupancy$分布の例。]{ノイズ占有率測定における$NoiseOccupancy$分布の例。図はRD53Aを用いたデジタル回路読み出しの結果であり、横軸、縦軸はそれぞれピクセルの列(400)、行(192)に対応する。z軸は各ピクセルにおける$NoiseOccupancy$の値を示している。正常なピクセルでは限りなく0に近い値になることが期待され、図ではほとんどのピクセルが0となっていが、列番号が0から120付近の領域で値を大きく持つピクセルが存在する。}
 \label{noise_occ}
 \end{figure}
@@ -396,7 +396,7 @@ $25 \times 10^{-9}[{\rm sec}]=25[{\rm nsec}]$は1~b.c.である。
 図より、1モジュールに対して行われる品質試験は30程度存在することが分かる。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=15cm]{stage_test_flow}
+\includegraphics[width=15cm]{./stage_test_flow.png}
 \caption[組み立て工程と対応する品質試験一覧]{組み立て工程と対応する品質試験一覧。章\ref{sec:assembly}で述べた各組み立て工程において、複数の品質試験を行う必要がある。図は各組み立て工程と対応する品質試験一覧を示している。試験数は30程度存在する。}
 \label{stage_test_flow}
 \end{figure}

@@ -1,4 +1,4 @@
-\chapter{品質試験のデモンストレーション}
+\chapter{品質試験のデモンストレーション} \label{chap:demo}
 品質試験項目のデモンストレーションを行った。
 今回のデモンストレーションでは、品質試験項目として読み出し試験を行い、データベース機能や試験の流れを確認した。
 この章の前半では開発したツールと試験で使用するソフトウェア、ハードウェアについて説明し、後にデモンストレーションの内容、各ソフトウェアの機能確認について述べる。
@@ -36,7 +36,7 @@
 \end{itemize}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=14cm]{readout_SW_overview}
+\includegraphics[width=14cm]{./readout_SW_overview.png}
 \caption[読み出し試験に用いるソフトウェアの概要]{読み出し試験に用いるソフトウェアの概要。FEチップの読み出しとそのデータ通信はYARRを用いて行われる。試験結果はMongoDBにアップロードされ、試験者はウェブアプリケーションを通じて結果を確認することができる。電源操作用ソフトを用いて電源のスイッチ、電圧、電流値の取得がなされ、取得値はInfluxDBに保存される。モジュール付属のサーミスタ読み出しシステムを用いてFEチップ付近の温度を読み出し、InfluxDBに保存する。InfluxDBに保存されたDCSデータはGrafanaを用いてブラウザ上で確認することができる。またMongoDBに同期されるため、ローカルデータベースアプリケーションを通しても確認ができる。}
 \label{readout_SW_overview}
 \end{figure}
@@ -53,7 +53,7 @@ FEチップ付近にはNTCサーミスタを搭載していて、ボード上の
 図\ref{demo_rd53a_SCC}に写真を示す。
 
 \begin{figure}[h]\centering
-\includegraphics[width=8cm]{rd53a_SCC}
+\includegraphics[width=8cm]{./rd53a_SCC.png}
 \caption[RD53Aシングルモジュール(SCC)]{RD53Aシングルモジュール(SCC)\cite{5-10}。RD53AのFEチップを一枚搭載したモジュールである。図の中心部の青いカバーで囲われた中にFEチップが設置されている。このボード上にはデータ転送端子、電源端子、サーミスタ抵抗取得端子が設置されており、これらの端子に対応する配線をすることで読み出し試験のセットアップを組む。}
 \label{demo_rd53a_SCC}
 \end{figure}
@@ -80,10 +80,10 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 
 \begin{figure}[h]\centering
   \begin{minipage}{0.5\hsize}
-    \includegraphics[width=7cm]{temp_circit}
+    \includegraphics[width=7cm]{./temp_circit.png}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
-    \includegraphics[width=5cm]{temp_circit_pic}
+    \includegraphics[width=5cm]{./temp_circit_pic.png}
   \end{minipage}
 \caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路。図は回路図(左図)と実際に配線し、読み出しを行っている様子(右図)を示している。抵抗、MCP3002、Raspberry Piを用いて読み出し回路を作成した。抵抗とMCP3002は右図のようにブレッドボード上に設置した。ADCとRaspberryPiはGPIO通信\cite{5-9}を行うことで、ADC値を取得している。}
 \label{demo_temp_circit_pic}
@@ -92,7 +92,7 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 \subsubsection{電源}
 モジュールのFEチップに対する電圧供給にKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}(図\ref{demo_power_supply})を用いた。
 \begin{figure}[h]\centering
-\includegraphics[width=6cm]{power_supply}
+\includegraphics[width=6cm]{./power_supply.png}
 \caption[用いた電源]{用いた電源。 FEチップ電圧供給のための電源としてKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}を用いた。}
 \label{demo_power_supply}
 \end{figure}
@@ -108,14 +108,14 @@ FPGAボードにはFMC端子がついていて、これをモジュールを接�
 \begin{figure}[htbp]
  \begin{minipage}{0.5\hsize}
   \begin{center}
-   \includegraphics[width=60mm]{fpga_board}
+   \includegraphics[width=60mm]{./fpga_board.png}
   \end{center}
   \caption[使用したFPGAボード(XpressK7)]{使用したFPGAボード(XpressK7\cite{5-2})。中央にFMC端子、右側にFPGAチップ、下側にPCI Expressが配置されている。}
   \label{demo_fpga_board}
  \end{minipage}
  \begin{minipage}{0.5\hsize}
   \begin{center}
-   \includegraphics[width=60mm]{figure}
+   \includegraphics[width=60mm]{./figure.png}
   \end{center}
   \caption[使用したFMC-DisplayPort変換カード]{使用したFMC-DisplayPort変換カード。FMC端子を4つのmini Display Portに変換する。今回読み出すFEチップは1枚であるため、1つの端子だけを用いる。}
   \label{demo_ohio}
@@ -143,10 +143,10 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 
 \begin{figure}[bpt]\centering
   \begin{minipage}{0.5\hsize}
-    \includegraphics[width=6cm]{HW_setup}
+    \includegraphics[width=6cm]{./HW_setup.png}
   \end{minipage}
   \begin{minipage}{0.4\hsize}
-    \includegraphics[width=5.5cm]{HW_setup_pic}
+    \includegraphics[width=5.5cm]{./HW_setup_pic.png}
   \end{minipage}
 \caption[ハードウェアセットアップ]{ハードウェアセットアップ。図はセットアップの概要(左図)と実際に設置した様子(右図)を示している。FEチップ読み出し装置、電源、サーミスタ読み出し装置をそれぞれ設置、配線し、読み出し操作、データ取得を行った。}
 \label{readout_setup_overview}
@@ -187,7 +187,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存される。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=16cm]{demo_download_SCC.pdf}
+\includegraphics[width=16cm]{./demo_download_SCC.pdf}
 \caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面。図の表において、今回登録した20UPGR00000001のIDを持つモジュールがローカルデータベースのウェブ上で確認できていることが分かる。また対応するFEチップのIDも確認することができる。}
 \label{demo_download_SCC}
 \end{figure}
@@ -220,7 +220,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 その値をGrafanaを使って監視をした。その様子を図\ref{demo_monitor_dcs}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=15cm]{demo_monitor_dcs}
+\includegraphics[width=15cm]{./demo_monitor_dcs.png}
 \caption[DCS情報のモニタリングの様子]{DCS情報のモニタリングの様子。図において全て横軸は時間であり、縦軸は上から温度(青)、電流(緑)、電圧(黄)を示す。それぞれのデータの監視が行えていることが分かる。温度に関して、電源オン、オフの付近で変化が大きいことが分かる。電流に関して、読み出し(チューニング)を行っている途中にも微小変化していることが分かる。}
 \label{demo_monitor_dcs}
 \end{figure}
@@ -234,7 +234,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 検索機能実行の様子を図\ref{demo_search_function}に示す。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=13cm]{demo_search_function}
+\includegraphics[width=13cm]{./demo_search_function.png}
 \caption[検索機能確認の様子]{検索機能確認の様子。図は検索実行前の試験結果一覧(上図)と実行後(下図)を示す。図の例では"hokuyama std$\_$totscan"の2つのキーワードで検索を行っており、実行後は対応する試験結果1つが表示されていることが分かる。この試験結果について試験実施者は"hokuyama"、試験項目は"std$\_$totscan"であるため、検索機能が正常に動いていることが分かる。}
 \label{demo_search_function}
 \end{figure}
@@ -252,7 +252,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
   \end{minipage}
   \begin{minipage}{0.45\hsize}
     \begin{center}
-    \includegraphics[width=70mm]{demo_view_dcs.pdf}
+    \includegraphics[width=75mm]{demo_view_dcs.pdf}
     \end{center}
   \end{minipage}
   \caption[試験結果の閲覧]{試験結果の閲覧。図は試験結果(左図)と試験におけるDCSデータのグラフ(右図)を示しており、上から温度、電圧、電流となっている。図は\texttt{std$\_$digitalscan}の結果であり、試験情報及び結果のグラフが確認できる。また右図よりDCSデータも正常にローカルデータベース上に保存され、表示されていることが分かる。}
@@ -283,7 +283,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 
 \begin{figure}[bpt]\centering
   \begin{center}
-    \includegraphics[width=15cm]{demo_select_scans.pdf}
+    \includegraphics[width=15cm]{./demo_select_scans.pdf}
   \caption[読み出し試験結果の選択]{読み出し試験結果の選択。図は読み出し試験結果選択画面を表す。読み出し試験実施後、ピクセル解析と中央データベースとの同期を実行するために試験結果を選択する必要がある。図では\texttt{std$\_$digitalscan}、\texttt{std$\_$analogscan}、\texttt{std$\_$thresholdscan}、\texttt{std$\_$totscan}、\texttt{std$\_$noisescan}の5項目を選択している。}
   \label{demo_select_scans}
   \end{center}
@@ -333,7 +333,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 図\ref{demo_upload_to_pd}に中央データベースのウェブページを示す。結果ファイルや解析結果が正しくアップロードされていることが分かる。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{pixel_test_result.pdf}
+\includegraphics[width=10cm]{./pixel_test_result.pdf}
 \caption[中央データベースにおける読み出し試験及びピクセル解析結果画面]{中央データベースにおける読み出し試験及びピクセル解析結果画面。読み出し試験及びピクセル解析結果を中央データベースにアップロードした。図は中央データベースのウェブページを示しており、アップロードされた試験結果画面である。図の中央部に各評価基準における不良ピクセルの数、下部に各試験項目ごとの結果ファイルをまとめたZipファイルが表示されていることが分かる。試験結果のアップロードが正常に完了し、中央データベース上で結果を確認できることが分かる。}
 \label{demo_upload_to_pd}
 \end{figure}

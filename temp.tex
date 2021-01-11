@@ -4,24 +4,47 @@
 \def\dd{{\rm d}}
 \def\omu{{\rm k \Omega}}
 
-\documentclass[a4paper,11pt,oneside,openany]{jsbook}
+\documentclass[a4paper,11pt,oneside,openany,dvipdfmx]{jsbook}
 %
 %
 %
 \usepackage{amsmath,amssymb}
 \usepackage{bm}
-\usepackage[dvipdfmx]{graphicx}%,draft
+\usepackage{graphicx}%,draft
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{verbatim}
 \usepackage{wrapfig}
 \usepackage{ascmac}
 \usepackage{makeidx}
-\usepackage{listings}
-%\usepackage{listings,jlisting}
+%\usepackage{listings}
+\usepackage{listings,jlisting}
+\usepackage{color}
 \usepackage{longtable}
 \usepackage{lineno}
 \usepackage{threeparttable}
+\usepackage{color}
+
+\lstset{
+language={C},
+backgroundcolor={\color[gray]{.85}},
+basicstyle={\small},
+identifierstyle={\small},
+commentstyle={\small\ttfamily \color[rgb]{0,0.5,0}},
+keywordstyle={\small\bfseries \color[rgb]{1,0,0}},
+ndkeywordstyle={\small},
+stringstyle={\small\ttfamily \color[rgb]{0,0,1}},
+frame={tb},
+breaklines=true,
+columns=[l]{fullflexible},
+numbers=left,
+xrightmargin=0zw,
+xleftmargin=3zw,
+numberstyle={\scriptsize},
+stepnumber=1,
+numbersep=1zw,
+morecomment=[l]{//}
+}
 
 %
 \makeindex
