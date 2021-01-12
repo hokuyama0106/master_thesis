@@ -1,79 +1,60 @@
-\chapter{ファイル送信時におけるデータ容量と処理時間の関係について} \label{chap:data_time_detail}
+\chapter{ローカルデータベースのチュートリアルと普及状況} \label{cap:appA}
 
-処理速度遅延の原因として以下をあげる。
+ローカルデータベースの機能の普及を目的として、2020年2月にCERN研究所にてシステムのチュートリアルを行った。
+このチュートリアルは以下のような2つのセッションに分けて行った。
+
 \begin{itemize}
-  \item サーバーの読み書き速度.
-  \item サーバーのファイル転送アルゴリズム.
-  \item サーバーのファイル転送時におけるパケットサイズ.
-  \item サーバー間のネットワーク上の距離.
-  \item サーバー間ネットワークの処理性能.
+  \item 参加者が実際にサーバーの設定、各ソフトウェアのインストールを行いながら機能を実践するセッション(2月3日から6日まで)
+  \item 私が参加者の前で実際に機能を実践し、システムや使い方に対して議論を行うセッション(2月7日)
 \end{itemize}
 
-KEKとLBLに設置されているサーバーにおいて、中央データベースへのファイル送信処理時間に差が出る理由について考察する。
+それぞれのセッションの様子を図\ref{Tutorial_picture}に示す。
+数多くの議論を行い、有益なフィードバックを得ることができた。
+また品質試験の流れにおいて、一連の機能確認をすることができた。
 
-初めに、ファイル送信時におけるデータ容量と処理時間の関係は、線形性を示さない。
-図\ref{datasize_vs_time_scp}はKEKからLBLのサーバーにscpコマンドを用いてファイル送信を行い、データ容量と処理時間の関係を取得したものである。
-赤線が線形フィットであるが、測定点は優位にずれている。
-これはTCP通信においてパケットの送信に輻輳制御\cite{e-1}と呼ばれる技術が使われており、データ送信量を変化させながら情報通信を行っているためである。
-
-\begin{figure}[bpt]\centering
+\begin{figure}[bpt]
   \begin{center}
-    \includegraphics[width=7cm,angle=270]{./datasize_vs_time_scp.pdf}
-  \caption[添付するファイルサイズと処理時間の関係]{添付するファイルサイズと処理時間の関係}
-  \label{datasize_vs_time_scp}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=6cm]{./hands_on.png}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=6cm]{./hands_off.png}
+  \end{minipage}
+  \caption[ローカルデータベースシステムチュートリアルの様子]{ローカルデータベースシステムチュートリアルの様子。2020年2月にCERNでローカルデータベースシステムのチュートリアルを行った。参加者が実際にシステムの設置、機能実行を行うハンズオンセッション(左図)と、参加者の前で実際に機能の動作をみせ、議論を行うハンズオフセッション(右図)に分けて行った。システムに有益な情報を獲得したと共に、システムの機能普及に成功した。}
+  \label{Tutorial_picture}
   \end{center}
 \end{figure}
 
-scpによるファイル送信を以下の2つの場合に対して行い、ファイル容量と処理時間の関係を取得した。
+これを経て現在ローカルデータベースは世界18箇所にて導入され、試験運用が開始している。
+将来的には全組み立て機関で使うことが決定しており、それに向けたシステム開発、サポートが必要となっている状況である。
+ローカルデータベースについて、導入及び試験運用を行っている機関を以下に示す。また世界地図を\ref{localdb_world_map}に示す。
 
-\begin{enumerate}
-  \item KEKからLBL
-  \item LBLからKEK
-\end{enumerate}
-
-結果を図\ref{datasize_vs_time_kek_lbl}に示す。
-ここで処理時間に差が生まれる原因について調査したものを以下に示す。
 \begin{itemize}
-  \item 読み書き速度を測定したところ同程度であった。
-  \item 輻輳制御アルゴリズムはCubicをどちらも使用していた。
-  \item パケットサイズは変わらなかった。
-  \item ping(111msec)は変わらなかった。
+  \item 高エネルギー加速器研究機構(KEK), 日本
+  \item 欧州原子核研究機構(CERN), スイス
+  \item University of Liverpool, イギリス
+  \item University of Oxford, イギリス
+  \item University of Glasgow, イギリス
+  \item Paris-Saclay University, フランス
+  \item パリ第6大学, フランス
+  \item フランス国立科学研究センター, フランス
+  \item University of Grenoble, フランス
+  \item University of Gottingen, ドイツ
+  \item University of Siegen, ドイツ
+  \item University of Genoa, イタリア
+  \item University of Salento, イタリア
+  \item University of Milan, イタリア
+  \item University of Udine, イタリア
+  \item Univerity of Trento, イタリア
+  \item University of Oklahoma, アメリカ
+  \item Argonne National Laboratory, アメリカ
+  \item Lawrence Berkeley National Laboratory(LBL), アメリカ
 \end{itemize}
 
-よってサーバ間ネットワークに差異があると考えられる。
-一般的には上りより下りの方が太いと考えると、KEKローカルの上りネットワークの性能が、LBLローカルの上りネットワークと比べて悪いと考えられる。
-これにより、ファイル送信時間に差が生まれている。
-
 \begin{figure}[bpt]\centering
-  \begin{center}
-    \includegraphics[width=7cm,angle=270]{./scp_kek_lbl.pdf}
-  \caption[KEK、LBL間のファイル送信]{KEK、LBL間のファイル送信}
-  \label{datasize_vs_time_kek_lbl}
-  \end{center}
+\includegraphics[width=14cm]{./localdb_world_map.png}
+\caption[ローカルデータベースシステム導入及び試運転場所]{ローカルデータベースシステム導入及び試運転場所。赤文字は設置している地域、括弧内の数字はその地域におけるシステム導入場所の数を示している。2020年11月現在、ローカルデータベースシステムは世界18の機関で試験運転がなされている。日本を除いてその多くはヨーロッパとアメリカに位置していることが分かる。}
+\label{localdb_world_map}
 \end{figure}
 
-次に、下の2つの場合に対して行い、ファイル容量と処理時間の関係を取得した。
-\begin{enumerate}
-  \item KEKからCERN(Lxplus)
-  \item LBLからCERN(Lxplus)
-\end{enumerate}
-
-KEKローカルの上りネットワークは細いため、処理時間に差が生まれる。
-加えてこの場合はサーバ間の距離による遅延も含まれていると考えられる。
-pingによる反応時間が測定1では170msec程度なのに対し、測定2は150msec程度であった。
-そのためこれも処理速度遅延に影響していると考えられる。
-
-\begin{figure}[bpt]\centering
-  \begin{center}
-    \includegraphics[width=7cm,angle=270]{./scp_to_cern.pdf}
-  \caption[KEK、LBLとCERN間のファイル送信]{KEK、LBLとCERN間のファイル送信}
-  \label{datasize_vs_time_cern}
-  \end{center}
-\end{figure}
-
-CERNと中央データベースが地理的に近い距離であることを考慮し、上述したことをまとめるとKEKとLBLの間で処理時間の差が生まれる要因は以下であると考えた。
-\begin{itemize}
-  \item ローカルネットワークの性能.
-  \item ネットワーク上の距離差.
-\end{itemize}
 

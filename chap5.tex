@@ -1,710 +1,341 @@
-\chapter{中央データベースとローカルデータベースの同期}
+\chapter{品質試験のデモンストレーション} \label{chap:demo}
+品質試験項目のデモンストレーションを行った。
+今回のデモンストレーションでは、品質試験項目として読み出し試験を行い、データベース機能や試験の流れを確認した。
+この章の前半では開発したツールと試験で使用するソフトウェア、ハードウェアについて説明し、後にデモンストレーションの内容、各ソフトウェアの機能確認について述べる。
 
-この章では中央データベースとローカルデータベースのデータ同期機能に関しての調査と各ツールにおける改善策の考案、処理時間測定を行った。
-詳細について以下で説明する。
+\section{デモンストレーションと機能確認}
+上述したピクセル解析ツールを含む読み出し試験用ソフトウェアの機能確認を目的として、生産時における流れのデモンストレーションを行なった。
+その詳細について以下に示す。
 
-\section{サーバーの設置場所による処理時間の違い}
-4章で述べたように、中央データベースはチェコに設置されている。
-そのため試験結果のアップロードに関して、各組み立て機関から接続しデータ送信する処理時間は、機関の場所に大きく依存すると考えられる。
-世界的にデータ同期ツールが不自由なく動くことに向けた開発、改善に役立てることを目的として、データベース間の情報通信にかかる処理時間を、以下の3つの場所に置かれているサーバーを用いて測定した。
-組み立て機関及びローカルデータベースの設置場所はヨーロッパ、アメリカ、日本の3つの地域に分布している(付録\ref{cap:appA})。
-それぞれにおける代表機関として以下の3つに設置されたサーバーを用いて調査を行った。
+\subsection{用いたソフトウェア}
 
+試験で用いたソフトウェアをいかに示す。
+また、これらソフトウェアの概要を図\ref{readout_SW_overview}に示す。
 \begin{itemize}
-  \item 日本、高エネルギー加速器研究所(KEK) 
-  \item アメリカ、バークレー研究所(LBL)
-  \item スイス、欧州原子核研究機構(CERN)
+  \item YARR(commit:6b3ffe92)
+  \item MongoDB(version: v4.2.6)
+  \item ローカルDBウェブアプリケーション(tag: ldbtoolv1.4)
+  \item 中央データベースとの同期ツール(tag: ldbtoolv1.4)
+  \item ピクセル解析ツール(tag: v1.0.2)
+  \item 時系列データ用データベース(InfluxDB\cite{5-6}(version: 1.8.0))
+    \begin{itemize}
+      \item 時系列情報に特化したデータベース。このシステムにおいては温度、電圧などDCS情報を時間情報と共に保存、管理するために用いる。
+    \end{itemize}
+  \item InfluxDB解析ソフト(Grafana\cite{5-7}(version: 5.1.0))
+    \begin{itemize}
+      \item InfluxDBに保存された情報の解析、閲覧に用いる。ウェブブラウザー上でDCSデータを閲覧することができる。
+    \end{itemize}
+  \item 電源操作用ソフト
+    \begin{itemize}
+      \item 電源を遠隔で操作し、モジュールに電圧を供給する。また電圧、電流値を取得し、InfluxDBにアップロードする。CERNで開発されているPySerial\cite{5-8}(commit:0d14fcdb)を改良し作成した。
+    \end{itemize}
+  \item 温度読み出し用ソフト
+    \begin{itemize}
+      \item GPIO通信により取得できるADC値を取得、温度に変換しInfluxDBへアップロードする処理を作成したもの。RaspberryPi上に保存し、処理を実行。
+    \end{itemize}
 \end{itemize}
 
-各サーバーの性能を表\ref{server_spec}に示す。また各サーバーが置かれている場所の位置関係を図\ref{server_geometry}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=14cm]{./readout_SW_overview.png}
+\caption[読み出し試験に用いるソフトウェアの概要]{読み出し試験に用いるソフトウェアの概要。FEチップの読み出しとそのデータ通信はYARRを用いて行われる。試験結果はMongoDBにアップロードされ、試験者はウェブアプリケーションを通じて結果を確認することができる。電源操作用ソフトを用いて電源のスイッチ、電圧、電流値の取得がなされ、取得値はInfluxDBに保存される。モジュール付属のサーミスタ読み出しシステムを用いてFEチップ付近の温度を読み出し、InfluxDBに保存する。InfluxDBに保存されたDCSデータはGrafanaを用いてブラウザ上で確認することができる。またMongoDBに同期されるため、ローカルデータベースアプリケーションを通しても確認ができる。}
+\label{readout_SW_overview}
+\end{figure}
+
+\clearpage
+\subsection{用いたハードウェア}
+読み出し試験に用いたハードウェアについて、以下に詳細を記す。
+
+\subsubsection{RD53Aシングルモジュール(RD53A Single Chip Card, SCC)\cite{5-10}}
+今回読み出しに使うモジュールとして、研究室で所有しているRD53Aシングルモジュール(RD53A Single Chip Card, SCC)を使用した。
+SCCは試験用に作られたFEチップを一枚搭載するモジュールである。また今回使用したものはシリコンセンサーを持たない。
+SCCはFEチップ電源端子、データ転送端子をもち、読み出しを行う際はそれぞれ配線をする。
+FEチップ付近にはNTCサーミスタを搭載していて、ボード上の端子からその抵抗値を取得することで温度を測定することができる。
+図\ref{demo_rd53a_SCC}に写真を示す。
+
+\begin{figure}[h]\centering
+\includegraphics[width=7cm]{./rd53a_SCC.png}
+\caption[RD53Aシングルモジュール(SCC)]{RD53Aシングルモジュール(SCC)\cite{5-10}。RD53AのFEチップを一枚搭載したモジュールである。図の中心部の青いカバーで囲われた中にFEチップが設置されている。このボード上にはデータ転送端子、電源端子、サーミスタ抵抗取得端子が設置されており、これらの端子に対応する配線をすることで読み出し試験のセットアップを組む。}
+\label{demo_rd53a_SCC}
+\end{figure}
+
+\subsubsection{モジュールサーミスタ温度読み出しシステム}
+モジュール付属サーミスタの抵抗値を取得し温度を測定するために、ADC、Raspberry Piを用いた温度読み出しシステムを作成した。
+このシステムの中で扱った装置を表\ref{demo_temp_device}に、回路図、実際に配線した様子を図\ref{demo_temp_circit_pic}に示す。
+スクリプト上でサーミスタの抵抗値に対応するADC値を温度に変換することで読み出しを行っている。
+ADC値はGPIO通信\cite{5-9}により取得している。
 
 \begin{table}[tbp]
-\caption[各ローカルデータベースサーバーの性能一覧]{各ローカルデータベースサーバーの性能一覧。今回の調査に利用したサーバーの性能を示す。KEK(日本)、LBL(アメリカ)、CERN(スイス)に設置されたサーバーを用いた。}
-\label{server_spec}
+\begin{center}
+\caption[温度読み出しシステムに使用した装置一覧]{温度読み出しシステムに使用した装置一覧。}
+\label{demo_temp_device}
+  \small
+  \begin{tabular}{|ll|} \hline
+    装置 & 機種 \\ \hline
+    10$\rm{k\Omega}$抵抗 & - \\
+    ADC & MCP3002\cite{5-3} \\  
+    RaspberryPi &  Raspberry Pi 3 Model B Plus Rev 1.3\cite{5-4} \\ \hline 
+  \end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}[h]\centering
+  \begin{minipage}{0.5\hsize}
+    \includegraphics[width=6cm]{./temp_circit.png}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=4cm]{./temp_circit_pic.png}
+  \end{minipage}
+\caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路。図は回路図(左図)と実際に配線し、読み出しを行っている様子(右図)を示している。抵抗、MCP3002、Raspberry Piを用いて読み出し回路を作成した。抵抗とMCP3002は右図のようにブレッドボード上に設置した。ADCとRaspberryPiはGPIO通信\cite{5-9}を行うことで、ADC値を取得している。}
+\label{demo_temp_circit_pic}
+\end{figure}
+
+\subsubsection{電源}
+モジュールのFEチップに対する電圧供給にKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}(図\ref{demo_power_supply})を用いた。
+\begin{figure}[h]\centering
+\includegraphics[width=5cm]{./power_supply.png}
+\caption[用いた電源]{用いた電源。 FEチップ電圧供給のための電源としてKEYSIGHTのE3646A 60Wデュアル出力電源\cite{5-1}を用いた。}
+\label{demo_power_supply}
+\end{figure}
+
+\subsubsection{FPGAボード}
+FPGAボードにXpressK7\cite{5-2}を用いて、YARRファームウェアをFEGA上にプログラムし通信を行なった。
+XpressK7を図\ref{demo_fpga_board}に示す。
+
+\subsubsection{FMC-DisplayPort変換カード}
+FPGAボードにはFMC端子がついていて、これをモジュールを接続するためにはFMC-DisplayPort変換カードが必要となる。
+使用した変換カード(オハイオカード)を図\ref{demo_ohio}に示す。
+
+\begin{figure}[htbp]
+ \begin{minipage}{0.5\hsize}
+  \begin{center}
+   \includegraphics[width=50mm]{./fpga_board.png}
+  \end{center}
+  \caption[使用したFPGAボード(XpressK7)]{使用したFPGAボード(XpressK7\cite{5-2})。中央にFMC端子、右側にFPGAチップ、下側にPCI Expressが配置されている。FPGAチップの上にはファンをつけているため、この図では確認できない。}
+  \label{demo_fpga_board}
+ \end{minipage}
+ \begin{minipage}{0.5\hsize}
+  \begin{center}
+   \includegraphics[width=50mm]{./ohio.png}
+  \end{center}
+  \caption[使用したFMC-DisplayPort変換カード(オハイオカード)]{使用したFMC-DisplayPort変換カード(オハイオカード)。図の右側にFMC端子、左側にminiDisplayPortが4つ配置されており、FMC端子を4つのminiDisplayPortに変換する。今回読み出すFEチップは1枚であるため、1つの端子だけを用いる。}
+  \label{demo_ohio}
+ \end{minipage}
+\end{figure}
+
+\subsubsection{PC}
+YARRソフトウェアをインストールし、読み出しを行なったPCの性能を表\ref{daq_machine_spec}に示す。
+\begin{table}[tbp]
+\begin{center}
+\caption[読み出しに使用したPCの性能]{読み出しに使用したPCの性能。研究室で所有するPCを使用した。OSはcentOS7である。}
+\label{daq_machine_spec}
 \scalebox{0.9}{
   \small
-  \begin{tabular}{|l|llll|l|l|} \hline
-    設置機関 & CPU & & & & Memory & Disk \\
-     & Type & Core & Thread & Clock speed[GHz]& [GB] & [GB] \\ \hline 
-    KEK(日本) & Intel(R) Core(TM) i7-9700K & 8 & 16 & 3.6 & 32.66 & 1800 + 1800\\
-    LBL(アメリカ) & Intel(R) Core(TM) i7-8700 & 6 & 12 & 3.7 & 32.63 & 233\\
-    CERN(スイス) & Intel(R) Core(TM) i7-4790 & 4 & 8 & 3.6 & 32.69 & 238.5 + 3700 + 3700\\ \hline
+  \begin{tabular}{|llll|l|l|} \hline
+    CPU & & & & Memory & Disk \\
+    Type & Core & Thread & Clock speed[GHz]& [GB] & [GB] \\ \hline 
+    Intel(R) Core(TM) i7-8700K CPU & 6 & 12 & 3.7 & 16.18 & 214\\ \hline
   \end{tabular}
 }
-\end{table}
-
-\begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{./server_geometry.png}
-\caption[各サーバーの設置場所]{各サーバーの設置場所。赤点で示しているのがそれぞれローカルデータベースサーバーの設置位置であり、オレンジで示しているのが中央データベースである。距離としてはCERNが一番近く、LBL、KEKの順番となっている。}
-\label{server_geometry}
-\end{figure}
-
-これらのサーバーは実際に生産の際に使用するものと同程度の性能を持ち、サーバーが置かれているネットワーク環境も生産時と同じであると仮定している。
-
-\subsection{データ同期ツールに使用するAPI}
-中央データベースのデータ取得には、開発されたAPIをいくつか使用している。
-ローカルデータベースとのデータ同期ツールの中で主に使用しているAPIを表\ref{pd_API}に示す。
-
-\begin{table}[tbp]
-  \begin{center}
-  \caption[データ同期ツールの中で使用する中央データベースの主なAPI一覧]{データ同期ツールの中で使用する中央データベースの主なAPI一覧。データ同期ツールにおいて、中央データベースの情報取得には提供されているいくつかのAPIを用いており代表的なものをいかに示す。このAPIをPythonを用いて実行することで、情報取得や試験結果のアップロードをすることができる。}
-  \label{pd_API}
-  \scalebox{0.7}{
-    \begin{tabular}{|lll|} \hline
-      関数名 & 処理の内容 & 本ツールでの使用用途\\ \hline
-      getComponent            & 
-      登録した部品情報の取得 & 主にダウンロード時におけるモジュールやチップの情報取得に用いる。\\
-      listComponents            & 
-      登録した部品情報一覧の取得 & 主にダウンロード時におけるモジュール情報一覧取得に用いる。\\
-      uploadTestRunResults    & 
-      テスト結果生成 & 読み出し試験結果生成の際に用いる。 \\
-      createTestRunAttachment & 
-      あるテスト結果に対するバイナリファイルの添付 & 読み出し試験結果生成後にファイルを添付する際に用いる。\\ \hline
-    \end{tabular}
-  }
-  \end{center}
-\end{table}
-
-\subsection{API使用にかかる時間}
-上述したAPI使用時の処理時間を各サーバーで測定した。
-以下の3つの測定を行なった。
-\begin{itemize}
-  \item getComponentを用いた、登録モジュール情報1つの取得時間測定.
-  \item createTestRunAttachmentを用いて、ある試験結果ページに1Byteのデータファイルを添付する時間測定.
-  \item createTestRunAttachmentを用いて、ある試験結果ページに容量の異なるデータファイルを添付、容量に対する時間依存性を測定.
-\end{itemize}
-
-最初の2項目に関して、まとめたものを表\ref{use_prodDB_API}に示す。
-ファイル容量と処理時間の関係を図\ref{datasize_vs_time}に示す
-ここで、どの場合においてもKEKにおける処理時間が最も長いことがわかる。
-そのため、KEKにおける処理時間を測定し、ツールの開発、改善について考えることとした。
-
-\begin{table}[tbp]
-  \caption[中央データベースAPI実行時の処理時間測定結果。]{中央データベースAPI実行時の処理時間測定結果。左の結果は表\ref{pd_API}における"getComponent"を用いてモジュール1つの情報を取得するのにかかった時間、右は"createTestRunAttachment"を用いて1Byteのファイル送信にかかった時間である。どのサーバーにおいても0.3秒以上の処理時間がかかっていることがわかり、データベースへの接続、情報取得にかかる時間が読み取れる。3つのサーバーを比べると、どちらの場合もKEKサーバーでの処理時間が一番大きいことが分かる。}
-  \label{use_prodDB_API}
-  \begin{minipage}[t]{.45\textwidth}
-  \begin{center}
-    \begin{tabular}{|ll|} \hline
-      サーバー & 処理時間[秒] \\ \hline
-      KEK & 0.47 $\pm$ 0.01 \\ 
-      LBL & 0.37 $\pm$ 0.02 \\ 
-      CERN & 0.28 $\pm$ 0.01 \\ \hline 
-    \end{tabular}
-  \end{center}
-  \end{minipage}
-  \hfill 
-  \begin{minipage}[t]{.45\textwidth}
-  \begin{center}
-    \begin{tabular}{|ll|} \hline
-      サーバー & 処理時間[秒] \\ \hline
-      KEK & 0.83 $\pm$ 0.01 \\ 
-      LBL & 0.34 $\pm$ 0.03 \\ 
-      CERN & 0.48 $\pm$ 0.03 \\ \hline 
-    \end{tabular}
-  \end{center}
-  \end{minipage}
-\end{table}
-
-\begin{figure}[bpt]\centering
-  \begin{center}
-    \includegraphics[width=8cm,angle=270]{./datasize_vs_time_new.pdf}
-  \caption["createTestRunAttachment"を用いた添付処理におけるファイル容量と処理時間の関係]{"createTestRunAttachment"を用いた添付処理におけるファイル容量と処理時間の関係。それぞれのサーバーで1、3、10、30、100、300KB、1、4MBのファイル送信にかかる時間を測定した。どの点においてもKEKサーバーが最も処理時間を要していることが分かる。またこのグラフについての詳しい考察を付録\ref{chap:data_time_detail}に記す。}
-  \label{datasize_vs_time}
-  \end{center}
-\end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\clearpage
-\section{モジュール情報のダウンロード}
-\subsection{ダウンロードする情報と構造}
-中央データベースから、モジュール及びFEチップの情報をダウンロードする機能を開発、実装した。
-ダウンロードする情報の詳細について表\ref{download_information}に示す。
-
-\begin{table}[tbp]
-\begin{center}
-\caption[ダウンロード機能を用いて保存する情報一覧。]{ダウンロード機能を用いて保存する情報一覧。ダウンロード機能を用いて中央データベースからローカルデータベースに保存する情報の一覧を示している。保存の際にはモジュール、FEチップにそれぞれ分かれたドキュメントに保存される。}
-\label{download_information}
-  \small
-  \begin{tabular}{|ll|} \hline
-    部品 & 情報 \\ \hline
-    モジュール & シリアルナンバー \\ 
-     & 搭載FEチップの種類  \\ 
-     & 登録機関  \\ 
-     & 搭載FEチップの枚数  \\ \hline 
-    FEチップ & シリアルナンバー \\
-     & FEチップID(モジュール上の位置を表す情報) \\  
-     & 登録機関 \\ \hline 
-  \end{tabular}
 \end{center}
 \end{table}
 
-ダウンロードされたモジュール、FEチップのドキュメントの例をリスト\ref{download_module_document}、\ref{download_fechip_document}に示す。
-\begin{lstlisting}[basicstyle=\scriptsize,caption=ダウンロードしたモジュール情報のドキュメントの例。ドキュメントが表\ref{download_information}の情報を持つことが分かる。,label=download_module_document]
-{
-	"_id" : ObjectId("5fa79114e615fa000a1a5976"),
-	"name" : "20UPGR00000001",
-	"chipType" : "RD53A",
-	"serialNumber" : "20UPGR00000001",
-	"chipId" : -1,
-	"componentType" : "module",
-	"address" : "5fd597fdf7339bbf26b87fb2",
-	"children" : 1,
-	"sys" : {
-		"mts" : ISODate("2020-12-13T04:26:37.989Z"),
-		"cts" : ISODate("2020-12-13T04:26:37.989Z"),
-		"rev" : 0
-	},
-	"dbVersion" : 1.01,
-	"user_id" : -1,
-	"proDB" : true
-}
-\end{lstlisting}
-\begin{lstlisting}[basicstyle=\scriptsize,caption=ダウンロードしたFEチップ情報のドキュメントの例。ドキュメントが表\ref{download_information}の情報を持つことが分かる。,label=download_fechip_document]
-{
-	"_id" : ObjectId("5fa79560e615fa000a1a5a16"),
-	"name" : "20UPGFC9999999",
-	"chipType" : "RD53A",
-	"serialNumber" : "20UPGFC9999999",
-	"chipId" : 0,
-	"componentType" : "front-end_chip",
-	"address" : "5fd597fdf7339bbf26b87fb2",
-	"children" : -1,
-	"sys" : {
-		"mts" : ISODate("2020-12-13T04:26:37.984Z"),
-		"cts" : ISODate("2020-12-13T04:26:37.984Z"),
-		"rev" : 0
-	},
-	"dbVersion" : 1.01,
-	"user_id" : -1,
-	"proDB" : true
-}
-\end{lstlisting}
-
-\subsection{処理の流れ}
-
-ダウンロード機能における処理の流れのイメージを図\ref{download_algorithm}に示す。
+\subsubsection{セットアップ}
+読み出し試験に用いるハードウェアのセットアップを概要を図\ref{readout_setup_overview}に示す。
 
 \begin{figure}[bpt]\centering
-  \begin{center}
-  \includegraphics[width=11cm]{./download_tool_flow_whole.png}
-  \includegraphics[width=11cm]{./download_tool_flow_detail.png}
-  \caption[ダウンロード処理における流れのイメージ図]{ダウンロード処理における流れのイメージ図。上図が処理全体の流れを表すものであり、下図は各モジュール情報のダウンロードにおける処理の流れを示している。上図中のループ構造の1処理が下図に対応している。流れの中で複数回中央データベースに接続し、モジュールやFEチップの情報取得をしていることが分かる。}
-  \label{download_algorithm}
-  \end{center}
+  \begin{minipage}{0.5\hsize}
+    \includegraphics[width=6cm]{./HW_setup.png}
+  \end{minipage}
+  \begin{minipage}{0.4\hsize}
+    \includegraphics[width=5.5cm]{./HW_setup_pic.png}
+  \end{minipage}
+\caption[ハードウェアセットアップ]{ハードウェアセットアップ。図はセットアップの概要(左図)と実際に設置した様子(右図)を示している。FEチップ読み出し装置、電源、サーミスタ読み出し装置をそれぞれ設置、配線し、読み出し操作、データ取得を行った。}
+\label{readout_setup_overview}
 \end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{デモンストレーションの流れ}
+デモンストレーションで用いるため、中央データベースにおける登録IDの定義方法\cite{5-11}に従い以下のモジュール、FEチップを登録した。
+
+\begin{description}
+  \item[モジュールID] 20UPGR00000001
+  \item[FEチップID] 20UPGFC9999999
+\end{description}
+今回のデモンストレーションではこれらのIDを用いて試験結果の紐付け等のデータベース操作を行う。
+
+確認した機能を行った流れの順に以下に示す。
+\begin{enumerate}
+  \item 中央データベースからモジュール情報のダウンロード.
+  \item 読み出し試験実施、結果をローカルデータベースに保存.
+  \item DCS情報の取得、監視.
+  \item 試験結果検索.
+  \item 試験結果閲覧.
+  \item 結果選択とピクセル解析機能.
+  \item 中央データベースへ試験結果のアップロード
+\end{enumerate}
 
 \subsection{機能確認}
-KEKで組み立てられた6台のQuadモジュールを中央データベースに登録し、ダウンロードを行った。
-登録したモジュールを表\ref{registered_kek_module}、ダウンロードをしてアプリケーションで確認した様子を図\ref{registered_kek_module_viewer}に示す。
+読み出し試験を通して、各ソフトウェア機能が正しく動くことを確認した。
+詳細を以下に記す。
+
+\subsubsection{中央データベースからモジュール情報のダウンロード}
+ダウンロードし、ウェブアプリケーションで確認した。
+確認した画面を図\ref{demo_download_SCC}に示す。
+今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存される。
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=12cm]{./registered_kek_module.png}
-\caption[登録したQuadモジュールと構成部品のシリアルナンバー一覧。]{登録したQuadモジュールとその構成部品のシリアルナンバー一覧。左から、登録したモジュール、搭載されているベアモジュール、シリコンセンサー、PCB、モジュールキャリア、FEチップの中央データベース内でのシリアルナンバーを示している。Quadモジュールであるため、FEチップをそれぞれ4つ搭載している。}
-\label{registered_kek_module}
+\includegraphics[width=16cm]{./demo_download_SCC.pdf}
+\caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面。図の表において、今回登録した20UPGR00000001のIDを持つモジュールがローカルデータベースのウェブ上で確認できていることが分かる。また対応するFEチップのIDも確認することができる。}
+\label{demo_download_SCC}
 \end{figure}
 
-\begin{figure}[bpt]\centering
-\includegraphics[width=13cm]{./registerd_kek_module_viewer.png}
-\caption[登録したQuadモジュールのダウンロードの様子]{登録したQuadモジュールのダウンロードの様子。上図が中央データベースのウェブページを表しており、下図がローカルデータベースのものである。上図で登録したモジュール一覧を確認でき、赤枠で囲っているところでシリアルナンバーを見ることができる。ダウンロード実行後は下図のようにローカルデータベースで対応するモジュールを確認することができる。ローカルデータベースではモジュール情報に加えてFEチップの情報も取得するため、下図の表ではこれらのシリアルナンバーも確認できる。}
-\label{registered_kek_module_viewer}
-\end{figure}
-
-\subsection{処理時間測定}
-ダウンロードの処理時間を測定した。
-これについてまとめたものを表\ref{download_measurement}に示す。
-Quadモジュール1つに対して平均して4.0 $\pm$ 0.4秒の処理時間がかかっている。
-
-\begin{table}[tbp]
-\begin{center}
-\caption[登録したモジュールのダウンロード処理時間測定結果]{登録したモジュールのダウンロード処理時間測定結果。登録したそれぞれのモジュールについてダウンロードにかかる時間を測定した。表より1つあたり平均4秒の時間がかかっていることが分かる。}
-\label{download_measurement}
-  \begin{tabular}{|ll|} \hline
-    モジュール & 処理時間 \\ \hline
-    20UPGM20030004 &  3.8 \\ 
-    20UPGM20030001 &  3.7 \\ 
-    20UPGM20030003 &  5.9 \\ 
-    20UPGM20030006 &  3.6 \\ 
-    20UPGM20030022 &  3.8 \\ 
-    20UPGM20030024 &  3.3 \\ \hline 
-    平均           &  4.0 $\pm$ 0.4 \\\hline
-  \end{tabular}
-\end{center}
-\end{table}
-
-\subsection{処理時間詳細}
-ダウンロード処理時間の改善に向けて、処理時間の詳細について以下の測定した。
-\begin{enumerate}
-  \item 中央データベースからモジュール情報の取得.
-  \item データベースでのFEチップ確認処理.
-  \item 中央データベースからベアモジュール情報の取得.
-  \item 中央データベースからFEチップ情報の取得(4枚分).
-  \item ローカルデータベースへの情報の書き込み(モジュール、FEチップ、品質試験情報).
-\end{enumerate}
-
-情報取得のイメージを表\ref{download_process_image}に示す。
-このようにQuadモジュールの場合、ダウンロードの流れの中で合計して7回、データベースAPIを用いて情報取得を行う。
-\begin{figure}[bpt]\centering
-\includegraphics[width=15cm]{./download_process_image.png}
-\caption[モジュール及び構成部品情報取得のイメージ図]{モジュール及び構成部品情報取得のイメージ。図のように処理の流れの中で合計7回中央データベースに接続し、モジュール、ベアモジュール、 FEチップの情報取得を行っている。}
-\label{download_process_image}
-\end{figure}
-
-結果を表\ref{download_process_details}に示す。
-\begin{table}[tbp]
-\begin{center}
-\caption[ダウンロード機能における詳細処理にかかる時間測定]{ダウンロード機能における詳細処理にかかる時間測定。図\ref{download_process_image}より、中央データベースに接続、情報取得を合計して7回行っており、それが処理1から4に対応する。どの処理においても0.5秒程度の時間がかかっていることが分かる。処理5はローカルデータベースへの書き込み処理であるが、他の処理に比べて十分に小さいことが分かる。}
-\label{download_process_details}
-  \begin{tabular}{|ll|} \hline
-    処理 & 時間 \\ \hline
-    1 &  0.60 $\pm$ 0.07 \\ 
-    2 &  0.55 $\pm$ 0.07 \\ 
-    3 &  0.61 $\pm$ 0.04 \\ 
-    4 &  0.46 $\pm$ 0.04 \\ 
-      &  0.71 $\pm$ 0.19 \\ 
-      &  0.51 $\pm$ 0.04 \\ 
-      &  0.57 $\pm$ 0.12 \\ 
-    5 &  0.0025 $\pm$ 0.0011 \\ 
-    合計 & 4.0 $\pm$ 0.1 \\ \hline
-  \end{tabular}
-  \begin{tablenotes}
-    \item[1] 1. 中央データベースからモジュール情報の取得.
-    \item[2] 2. データベースでのFEチップ確認処理.
-    \item[3] 3. 中央データベースからベアモジュール情報の取得.
-    \item[4] 4. 中央データベースからFEチップ情報の取得(4枚分).
-    \item[5] 5. ローカルデータベースへの情報の書き込み(モジュール、FEチップ、品質試験情報).
-  \end{tablenotes}
-\end{center}
-\end{table}
-
-この結果より、各構成部品情報の取得(モジュール、ベアモジュール、FEチップ)の取得にそれぞれ均等に処理時間がかかっていることがわかった。
-
-\subsection{生産時における見積もり}
-現在ダウンロード機能のオプションとして、以下の２つを実装している。
-\begin{enumerate}
-  \item モジュール1つをダウンロードする機能.
-  \item 登録されている全てのモジュールの一括ダウンロード機能.
-\end{enumerate}
-
-オプション1の見積もり値は、表\ref{download_measurement}の平均値として$4.0\pm0.4$[sec]となる。
-オプション2の見積もり値は、生産時には最大で10,000台のモジュールが中央データベースに登録されることから、以下のようになる。
-\bbb
-(4.0 \pm 0.4)[\rm{sec}] \times 10,000 = 11 \pm 1 [{\rm hour}]
-\eee
-
-各機関で各モジュールの組み立てを始める際に、中央データベースへのモジュール登録及びローカルデータベースへのダウンロードを行うことを想定している。
-これは1つずつ行うため、このような場合はオプション1を用いる。
-
-オプション2の使用例として、モジュールの組み立て工程の途中で、複数のモジュール($O(100)$程度)を機関1から機関2に輸送する場合をあげる。
-機関2では機関1で登録された全てのモジュール情報をダウンロードしてくる必要があるため、このオプションを使用する。
-輸送に要する時間として1日と仮定すると、この時間を利用してダウンロード処理を行う必要がある。
-
-\subsection{改善点の考案と見積もり}
-
-オプション2について、11時間の処理時間を要する見積もりとなっている。
-より円滑な同期処理に向けて、改善方法について考える。
-
-一括ダウンロード機能については以下の改善点が考えられる。
-\begin{enumerate}
-  \item モジュールの現在位置に対応したもののみのダウンロード.
-  \item FEチップの登録機関を取得しない.
-  \item モジュールのプロパティとして、ダウンロードに必要な情報を全て保存.
-  \item データベースAPIを改良し、モジュール一覧取得の際に構成要素の情報を取得できるようにする.
-\end{enumerate}
-
-これらについて詳細と処理時間の見積もりを以下で行う。
-
-\subsubsection{改善案1: モジュールの現在位置に対応したもののみのダウンロード}
-上述した機関が途中で変更となるような組み立ての流れにおいて、全てのモジュールIDをダウンロードする必要はない。
-中央データベースにはモジュールの現在位置情報を保持しているため、機能実行者と位置が同じもののみをダウンロードするアルゴリズムにすれば処理時間を改善できる。
-見積もりとしては、ダウンロード対象となるモジュール数を$n$とすると、以下のようになる。
-\bbb
-( 11 \pm 1 ) \times \frac{n}{10000} [{\rm hour}]
-\eee
-
-\subsubsection{改善案2: FEチップの登録機関を取得しない}
-表\ref{download_process_image}よりダウンロードの際に、FEチップの情報取得を行っている。
-これはFEチップ登録機関の情報を取得しローカルデータベースに保存するためであるが、登録機関の情報は組み立て現場で扱う作業としては、必要な情報ではない。
-そのため、現段階ではFEチップのデータ取得処理は割愛することができる。
-これにかかる処理時間は表\ref{download_process_details}より、合計して$2.3\pm0.2$[sec]となるため、その場合オプション2の処理時間の見積もりは、
-以下のようになる。
-\bbb
-\{(4.0 \pm 0.4) - (2.3 \pm 0.2)\}[\rm{sec}] \times 10,000 =4.9 \pm 0.8 [{\rm hour}]
-\eee
-この改善策のデメリットとしては、FEチップの情報取得処理を省くとローカルデータベースで扱いたい情報が将来的にできた場合に保存できないことである。
-例えば各FEチップの最適動作電圧のようにモジュール読み出しに対して有益な情報は保存し、迅速に確認したいという方針になる可能性もある。
-
-\subsubsection{改善案3: モジュールのプロパティとして、ダウンロードに必要な情報を全て保存}
-モジュールのプロパティとして、FEチップの名前等のダウンロードに必要な情報を書いておくと、表\ref{pd_API}におけるlistComponentsによるモジュール一覧取得でその情報を参照することができる。
-こうすることで、表\ref{download_process_image}において、ベアモジュールやFEチップの情報取得を省くことができる。
-この場合処理時間は、合計して$2.9\pm0.2$[sec]となるため、その場合オプション2の処理時間の見積もりは、
-\bbb
-\{(4.0 \pm 0.4) - (2.9 \pm 0.2)\}[\rm{sec}] \times 10,000 =3.1 \pm 0.8 [{\rm hour}] 
-\eee
-
-これのデメリットは、データベースの中でデータが冗長になってしまうことである。
-FEチップの名前情報がモジュールのプロパティにも保存されていると、データベース内部で冗長性を持ってしまい、編集が加えられた場合などこれを管理するのが難しくなる。
-
-\subsubsection{改善案4:データベースAPIを改良し、モジュール一覧取得の際に構成要素の情報を取得できるようにする}
-現在、表\ref{pd_API}のlistComponentsを用いた時にはモジュール一覧の情報は取得できるが、各モジュールに対して構成要素は取得できない。
-そのため表\ref{download_process_image}のようにモジュールごとに中央データベースに接続し、部品情報を取得している。
-ダウンロードに必要な情報をlistComponentsで一括で取得できるような仕様にAPIの変更を行えば、中央データベースへの接続は一回ですみ、処理時間を削減できると考えられる。
-この場合、中央データベースの内部構造を知り、一括で取得しデータ送信をする場合にどれだけの時間を要するかを見積もり、今の場合と比較する必要がある。\\
-
-
-現段階では組み立ての試験段階であり、現場で必要な情報、世界各地での組み立て工程の流れ等を検討している段階である。
-ここで述べたような改善策を組み合わせ、変更を加えていく必要がある。
-また中央データベースとの同期におけるネットワーク速度は地理的な距離により異なるため、この点も考慮に入れる必要がある。
-今回のは日本での測定であるため、他の国においては処理速度は改善すると考えられる。
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section{読み出し試験結果のアップロード}
-4章で述べたように、読み出し試験結果について中央データベースへアップロードするツールを開発した。
-以下で詳細を述べる。
-\subsection{アップロードする情報とその構造}
-読み出し試験結果について、中央データベースにアップロードする情報を以下に記す。
-\begin{itemize}
-  \item 試験日時.
-  \item モジュール周りの環境温度.
-  \item ピクセル解析結果.
-  \item 各試験結果データファイル.
-  \item 読み出し設定ファイル.
-  \item その他設定ファイル(DB、ユーザ、組み立て機関等).
-\end{itemize}
+\subsubsection{読み出し試験実施}
+以下の流れに沿って読み出しを行ない、結果をローカルデータベースに保存した。
+\begin{enumerate}
+  \item デジタル回路読み出し(\texttt{std$\_$digitalscan})
+  \item アナログ回路読み出し(\texttt{std$\_$analogscan})
+  \item 調整前Threshold測定(\texttt{std$\_$thresholdscan})
+  \item Threshold調整
+  \item ToT調整
+  \item Threshold再調整
+  \item 調整後Threshold測定
+  \item ToT測定(\texttt{std$\_$totscan})
+  \item ノイズ測定(\texttt{std$\_$noisescan})
+\end{enumerate}
 
-中央データベースにおける読み出し試験の構造に関して、YARRを用いて行った読み出し結果は全てFEチップ毎に取得、保存される。
-そのため、データベースの内部でもFEチップに読み出し試験結果を紐つける構造を設け、モジュールの結果では各FEチップの結果ページのIDを持つ構造とした。イメージを図\ref{structure_for_electrical_tests}に示す。
+また読み出し試験を通してDCS情報はInfluxDBを用いて監視し、試験結果と同様にローカルデータベースに保存した。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{DCS情報の監視}
+読み出し試験は、DCS情報を監視しながら行った。
+それぞれの値は対応するソフトウェアを用いてInfluxDBにアップロードした。
+その値をGrafanaを使って監視をした。その様子を図\ref{demo_monitor_dcs}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=15cm]{./demo_monitor_dcs.png}
+\caption[DCS情報のモニタリングの様子]{DCS情報のモニタリングの様子。図において全て横軸は時間であり、縦軸は上から温度(青)、電流(緑)、電圧(黄)を示す。それぞれのデータの監視が行えていることが分かる。温度に関して、電源オン、オフの付近で変化が大きいことが分かる。電流に関して、読み出し(チューニング)を行っている途中にも微小変化していることが分かる。}
+\label{demo_monitor_dcs}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsubsection{検索機能}
+
+検索機能の確認を行い、正常に使用できることを確認した。
+検索機能実行の様子を図\ref{demo_search_function}に示す。
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=13cm]{./demo_search_function.png}
+\caption[検索機能確認の様子]{検索機能確認の様子。図は検索実行前の試験結果一覧(上図)と実行後(下図)を示す。図の例では"hokuyama std$\_$totscan"の2つのキーワードで検索を行っており、実行後は対応する試験結果1つが表示されていることが分かる。この試験結果について試験実施者は"hokuyama"、試験項目は"std$\_$totscan"であるため、検索機能が正常に動いていることが分かる。}
+\label{demo_search_function}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsubsection{試験結果閲覧}
+ウェブアプリケーションを用いて、試験結果を閲覧した。その様子を図\ref{demo_view_result}に示す。
+\begin{figure}[bpt]\centering
+  \begin{minipage}{0.45\hsize}
+    \begin{center}
+    \includegraphics[width=65mm]{demo_view_scan_result.pdf}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \begin{center}
+    \includegraphics[width=75mm]{demo_view_dcs.pdf}
+    \end{center}
+  \end{minipage}
+  \caption[試験結果の閲覧]{試験結果の閲覧。図は試験結果(左図)と試験におけるDCSデータのグラフ(右図)を示しており、上から温度、電圧、電流となっている。図は\texttt{std$\_$digitalscan}の結果であり、試験情報及び結果のグラフが確認できる。また右図よりDCSデータも正常にローカルデータベース上に保存され、表示されていることが分かる。}
+  \label{demo_view_result}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsubsection{結果選択とピクセル解析}
+読み出し結果を選択し、ピクセル解析を行なった。
+結果選択画面を図\ref{demo_select_scans}に示す。
+このデモンストレーションにおける不良評価基準は3章に述べた表\ref{pixel_analysis_criteria}の中から、現時点でシステムに実装している以下の項目を抜粋した。
+\begin{enumerate}
+  \item Digital Dead 
+  \item Digital Bad 
+  \item Analog Dead 
+  \item Analog Bad 
+  \item Tuning Failed
+  \item Tuning Bad for Threshold
+  \item Tuning Bad for ToT
+  \item High ENC
+  \item Noisy
+\end{enumerate}
+
+解析結果を図\ref{pixel_analysis_result}、それぞれの評価基準における不良ピクセルの分布を図\ref{pixel_analysis_result_dist}に示す。
 
 \begin{figure}[bpt]\centering
   \begin{center}
-  \includegraphics[width=13cm]{./structure_for_electrical_tests.png}
-  \caption[中央データベースにおける読み出し試験結果の構造]{中央データベースにおける読み出し試験結果の構造。YARRの出力ファイル及びローカルデータベースのデータ構造において、読み出し試験結果は全てFEチップに紐つけられている。そのため、図のように中央データベースにおいてもこのデータ構造を保持する形でアップロードを行う。モジュールの結果は各FEチップの試験結果に対するIDを持つことで紐付けを行っている。}
-  \label{structure_for_electrical_tests}
+    \includegraphics[width=15cm]{./demo_select_scans.pdf}
+  \caption[読み出し試験結果の選択]{読み出し試験結果の選択。図は読み出し試験結果選択画面を表す。読み出し試験実施後、ピクセル解析と中央データベースとの同期を実行するために試験結果を選択する必要がある。図では\texttt{std$\_$digitalscan}、\texttt{std$\_$analogscan}、\texttt{std$\_$thresholdscan}、\texttt{std$\_$totscan}、\texttt{std$\_$noisescan}の5項目を選択している。}
+  \label{demo_select_scans}
   \end{center}
 \end{figure}
 
-中央データベースにおいてモジュール、FEチップの試験結果が持つ情報を表\ref{electrical_parameters}にまとめる。
-\begin{table}[tbp]
-\begin{center}
-\caption[中央データベースにおける読み出し試験結果に関する情報一覧]{中央データベースにおける読み出し試験結果に関する情報一覧。モジュール及びFEチップが中央データベース内で持つ試験結果の情報を示している。}
-\label{electrical_parameters}
-  \small
-  \begin{tabular}{|l|l|l|} \hline
-    部品 & 試験情報、結果 & 添付ファイル \\ \hline\hline
-    モジュール &  モジュール環境温度 & \\  
-               &  FEチップにつく読み出し試験結果のID & \\  \hline
-    FEチップ &  ピクセル解析結果 & 試験結果データファイル\\ 
-             &                   & 読み出し設定ファイル\\
-             &                   & その他設定ファイル\\ \hline 
-  \end{tabular}
-\end{center}
-\end{table}
-
-\subsection{処理の流れ}
-
-アップロード機能における処理の流れのイメージを図\ref{upload_algorithm}に示す。
-流れの中には共通して行われる処理と、各FEチップに対して行われる処理がある。
+\begin{figure}[bpt]\centering
+\includegraphics[width=12cm]{./data/analysis_result/Bad_Pixels.png}
+\caption[ピクセル解析結果]{ピクセル解析結果。図において横軸は評価基準、縦軸は該当するピクセル数を表す。analog$\_$dead、analog$\_$badの割合が多いため、アナログ回路読み出しに失敗しているピクセルが多いことが読み取れる。}
+\label{pixel_analysis_result}
+\end{figure}
 
 \begin{figure}[bpt]\centering
-\includegraphics[width=10cm]{./upload_algorithm.png}
-\caption[アップロード処理に関する流れのイメージ図]{アップロード処理に関する流れのイメージ図。流れの中にはFEチップに関するループ構造があり、ここでFEチップの結果生成、結果ファイルのアップロードを行う。最後にモジュールに対する結果生成とアップロードを行う。}
-\label{upload_algorithm}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/digital_dead.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/digital_bad.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/analog_dead.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/analog_bad.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/tuning_failed.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/tuning_bad_threshold.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/tuning_bad_tot.png}
+  \end{minipage}
+  \begin{minipage}{0.45\hsize}
+    \includegraphics[width=6.0cm]{./data/analysis_result/high_enc.png}
+  \end{minipage}
+  \includegraphics[width=6.0cm]{./data/analysis_result/noisy.png}
+
+\caption[各評価基準における不良ピクセルの分布]{各評価基準における不良ピクセルの分布。各図は二次元ヒストグラムであり、横軸がFEチップにおける各ピクセルの列番号、縦軸が行番号を示しており、赤い領域が不良ピクセルを表している。図\ref{pixel_analysis_result}においてアナログ回路読み出しに失敗しているピクセルが多いことがわかったが、その不良ピクセルはsynchronousフロントエンド上に存在していることが分かる。またThreshold調整に失敗しているピクセル(tuning$\_$bad$\_$threshold)は全体的に分布していることが分かる。}
+\label{pixel_analysis_result_dist}
 \end{figure}
 
-\subsection{処理時間測定}
-上述した処理のツールを開発し、処理時間測定を行った。
-ここで行ったアップロードする試験項目は章\ref{chap:demo}で行ったデモンストレーションのものと同じで以下の項目とする。
-\begin{itemize}
-  \item デジタル回路読み出し
-  \item アナログ回路読み出し
-  \item Threshold測定
-  \item ToT測定
-  \item ノイズ占有率測定
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{試験結果アップロード}
+読み出し試験の結果を中央データベースにアップロードし、情報が正しくアップロードされていることを確認した。
+図\ref{demo_upload_to_pd}に中央データベースのウェブページを示す。結果ファイルや解析結果が正しくアップロードされていることが分かる。
 
-これらの項目についてアップロードを行い、その処理時間を測定した。
-KEKのサーバーを用いてアップロード処理を20回行い、5項目全体でかかる時間を測定した。
-以下のようになった。
-\bbb
-  (1.3 \pm 0.0) \times 10^2 [{\rm sec}]
-\eee
-
-ここで処理流れの表\ref{upload_algorithm}より特に以下の詳細処理を抜粋し、それぞれにかかる時間を測定した。
-
-\begin{enumerate}
-  \item 中央データベース接続、認証.
-  \item 中央データベース、ローカルデータベースからモジュール情報の取得.
-  \item 中央データベースにFEチップ結果ページの作成。結果情報をアップロード.
-  \item 2で作成した結果に対して、各データファイルを添付.
-  \item 2で作成した結果に対して、各設定値ファイルを添付.
-  \item 中央データベースにモジュールの結果ページの作成、結果情報をアップロード.
-\end{enumerate}
-
-結果を表\ref{upload_process_detail_result}に示す。
-結果データや各設定値のファイル添付に大きく時間がかかっていることが分かった。
-
-\begin{figure}
-\begin{minipage}{0.4\textwidth}
-\begin{center}
-\makeatletter
-\def\@captype{table}
-\makeatother
-\begin{tabular}{|ll|} \hline
-  処理 & 時間[sec] \\ \hline
-  1 & $ 14 \pm 0 $ \\  
-  2 & $ 0.88 \pm 0.14 $ \\  
-  3 & $ 2.2 \pm  0.1 $ \\  
-  4 & $ 68 \pm 3 $ \\  
-  5 & $ 44 \pm 0 $ \\ 
-  6 & $ 1.8 \pm 0.1 $ \\ \hline  
-\end{tabular}
-\end{center}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\includegraphics[width=8cm]{./upload_process_detail_gragh.png}
-\end{center}
-\end{minipage}
-\begin{tablenotes}
-\item[1] 1. 中央データベース接続、認証.
-\item[2] 2. 中央データベース、ローカルデータベースからモジュール情報の取得.   
-\item[3] 3. 中央データベースにFEチップ結果ページの作成。結果情報をアップロード. 
-\item[4] 4. 2で作成した結果に対して、各データファイルを添付.  
-\item[5] 5. 2で作成した結果に対して、各設定値ファイルを添付.   
-\item[6] 6. 中央データベースにモジュールの結果ページの作成、結果情報をアップロード.  
-\end{tablenotes}
-\caption[アップロード機能における詳細処理測定結果]{アップロード機能における詳細処理測定結果。アップロード機能において、各詳細処理時間を測定した結果である。左図は測定値であり、右図はそれぞれの割合を示したものである。右図より、処理4、5の結果ファイルの添付、設定値ファイルの添付に多く時間がかかっていることが分かる。}
-\label{upload_process_detail_result}
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{./pixel_test_result.pdf}
+\caption[中央データベースにおける読み出し試験及びピクセル解析結果画面]{中央データベースにおける読み出し試験及びピクセル解析結果画面。読み出し試験及びピクセル解析結果を中央データベースにアップロードした。図は中央データベースのウェブページを示しており、アップロードされた試験結果画面である。図の中央部に各評価基準における不良ピクセルの数、下部に各試験項目ごとの結果ファイルをまとめたZipファイルが表示されていることが分かる。試験結果のアップロードが正常に完了し、中央データベース上で結果を確認できることが分かる。}
+\label{demo_upload_to_pd}
 \end{figure}
-
-\subsubsection{生産時における見積もり}
-Quadモジュールにおける読み出し試験結果アップロード処理合計時間の見積もりを行った。
-上述した測定はSCCであるためFEチップに対する処理は1回であるため、Quadモジュールの場合は表\ref{upload_process_detail_result}を用いて以下のように計算できる。
-\bbb
-{\rm FE}チップ処理&:& \left\{ (2.2+68+44) \pm \sqrt{(0.1)^2 + 3^2 + 0^2}  \right\}\times 4 \nonumber \\
-&=& (4.6 \pm 0.1 ) \times 10^2 [{\rm sec}]\\\\
-合計&:& (4.6 \pm 0.1 ) \times 10^2 [\rm{sec}]+ (14\pm0) + (0.88 \pm 0.14) + (1.8\pm0.1) \nonumber \\
-&=& 7.9 \pm 0.1 [{\rm min}]
-\eee
-
-モジュール読み出し試験1回に対して、約8分程度かかる見積もりとなった。
-円滑なモジュール組み立て、データ管理を行うために同期は速やかに行われることが要求されること、外観検査や平坦性測定のように他の品質試験も同期する必要があることを考慮し、処理時間の改善を試みた。
-詳細を以下で示す。
-
-
-\subsection{改善策}
-
-図\ref{upload_process_detail_result}より処理4、5のファイル添付に大きく要していることが分かる。
-この現状を踏まえ、各ファイルにおける添付処理時間の測定を行った。
-測定は上述したものと同様にKEKサーバーを用いて合計20回行った。
-添付する結果データファイル、設定ファイルの種類とデータ容量、添付処理実行結果、処理時間を表\ref{upload_status_to_pd}に示す。
-ここで4MBを超える容量のファイル添付は失敗していることがわかり、アップロード機能の問題点を発見した。
-
-{ \scriptsize
-\begin{longtable}{|llllll|}
-  \caption[アップロード処理における結果、設定値ファイル添付実行結果と処理時間]{アップロード処理における結果、設定値ファイル添付実行結果と処理時間。図\ref{upload_process_detail_result}より、読み出し試験に対して出力される各ファイルのアップロード実行結果、データ容量と処理時間をまとめた。ここで扱うファイルサイズの合計は94MBである。図よりファイルのデータ容量が大きいほど処理時間が長いことが分かる。std$\_$thresholdscanのようにファイル数が多い項目の場合、合計して大きい処理時間を要することが分かる。全項目において読み出しの設定ファイルにあたるbeforeCfg$\_$chipCfg.json、afterCfg$\_$chipCfg.jsonのアップロードは、中央データベースの容量制限により失敗していることが分かる。(texの技術的にcaptionが複数になってしまう。)}
-  \label{upload_status_to_pd}
-  \endhead
-  \hline
-  読み出し項目 & ファイル名 & 実行結果 & 容量[KB] & 処理時間[sec] & 全体[sec]\\ 
-  \hline
-std$\_$digitalscan & EnMask.json & Ok & 1,300 & 3.3 $\pm$ 0.1 & 17$\pm$0 \\
- & OccupancyMap.json & Ok & 1.500 & 2.9 $\pm$ 0.2 & \\
- & L1Dist.json & Ok & 0.53 & 0.75 $\pm$ 0.12 & \\
- & ctrlCfg$\_$ctrlCfg.json & Ok & 0.46 & 0.61 $\pm$ 0.08 & \\
- & dbCfg$\_$dbCfg.json & Ok & 0.60 & 0.69 $\pm$ 0.16 & \\
- & siteCfg$\_$siteCfg.json & Ok & 0.033 & 0.61 $\pm$ 0.06 & \\
- & userCfg$\_$userCfg.json & Ok & 0.14 & 0.66 $\pm$ 0.09 & \\
- & scanCfg$\_$std$\_$digitalscan.json & Ok & 2.2 & 0.55 $\pm$ 0.06 & \\
- & beforeCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.0 $\pm$ 0.2 & \\
- & afterCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 4.0 $\pm$ 0.2 & \\
-\hline
-std$\_$analogscan & EnMask.json & Ok & 1,300 & 3.9 $\pm$ 0.1 & 17$\pm$0\\
- & OccupancyMap.json & Ok & 1.400 & 2.6 $\pm$ 0.1 & \\
- & L1Dist.json & Ok & 0.60 & 0.69 $\pm$ 0.16 & \\
- & ctrlCfg$\_$ctrlCfg.json & Ok & 0.46 & 0.54 $\pm$ 0.05 & \\
- & dbCfg$\_$dbCfg.json & Ok & 0.60 & 0.49 $\pm$ 0.04 & \\
- & siteCfg$\_$siteCfg.json & Ok & 0.033 & 0.48 $\pm$ 0.04 & \\
- & userCfg$\_$userCfg.json & Ok & 0.14 & 0.58 $\pm$ 0.08 & \\
- & scanCfg$\_$std$\_$analogscan.json & Ok & 2.1 & 0.45 $\pm$ 0.03 & \\
- & beforeCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 2.9 $\pm$ 0.2 & \\
- & afterCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.9 $\pm$ 0.3 & \\
-\hline
-std$\_$thresholdscan & Scurve-30-96.json & Ok & 0.98 & 1.3 $\pm$ 0.1 & 49$\pm$1\\
- & Scurve-110-96.json & Ok & 0.98 & 0.45 $\pm$ 0.03 & \\
- & Scurve-70-96.json & Ok & 0.98 & 0.47 $\pm$ 0.04 & \\
- & Scurve-150-96.json & Ok & 1.0 & 0.46 $\pm$ 0.04 & \\
- & Scurve-190-96.json & Ok & 1.0 & 0.64 $\pm$ 0.12 & \\
- & Scurve-230-96.json & Ok & 1.0 & 0.49 $\pm$ 0.03 & \\
- & Scurve-270-96.json & Ok & 1.0 & 0.47 $\pm$ 0.04 & \\
- & Scurve-310-96.json & Ok & 1.0 & 0.47 $\pm$ 0.04 & \\
- & Scurve-350-96.json & Ok & 1.0 & 0.49 $\pm$ 0.03 & \\
- & Scurve-390-96.json & Ok & 1.0 & 0.52 $\pm$ 0.06 & \\
- & Scurve-40-96.json & Ok & 1.0 & 0.46 $\pm$ 0.03 & \\
- & Scurve-80-96.json & Ok & 0.99 & 0.68 $\pm$ 0.13 & \\
- & Scurve-120-96.json & Ok & 1.0 & 0.54 $\pm$ 0.07 & \\
- & Scurve-160-96.json & Ok & 1.0 & 0.51 $\pm$ 0.05 & \\
- & Scurve-200-96.json & Ok & 1.0 & 0.49 $\pm$ 0.04 & \\
- & Scurve-240-96.json & Ok & 1.0 & 0.50 $\pm$ 0.05 & \\
- & Scurve-280-96.json & Ok & 1.0 & 0.48 $\pm$ 0.04 & \\
- & Scurve-320-96.json & Ok & 1.0 & 0.49 $\pm$ 0.05 & \\
- & Scurve-360-96.json & Ok & 1.0 & 0.49 $\pm$ 0.06 & \\
- & Scurve-400-96.json & Ok & 1.0 & 0.45 $\pm$ 0.05 & \\
- & Scurve-10-96.json & Ok & 1.0 & 0.42 $\pm$ 0.03 & \\
- & Scurve-50-96.json & Ok & 0.99 & 0.49 $\pm$ 0.05 & \\
- & Scurve-90-96.json & Ok & 0.99 & 0.46 $\pm$ 0.05 & \\
- & Scurve-130-96.json & Ok & 1.0 & 0.47 $\pm$ 0.05 & \\
- & Scurve-170-96.json & Ok & 1.0 & 0.52 $\pm$ 0.04 & \\
- & Scurve-210-96.json & Ok & 1.0 & 0.51 $\pm$ 0.04 & \\
- & Scurve-250-96.json & Ok & 1.0 & 0.58 $\pm$ 0.10 & \\
- & Scurve-290-96.json & Ok & 1.0 & 0.64 $\pm$ 0.13 & \\
- & Scurve-330-96.json & Ok & 1.0 & 0.64 $\pm$ 0.09 & \\
- & Scurve-370-96.json & Ok & 1.0 & 0.49 $\pm$ 0.06 & \\
- & Scurve-60-96.json & Ok & 0.99 & 0.51 $\pm$ 0.06 & \\
- & Scurve-100-96.json & Ok & 1.0 & 0.48 $\pm$ 0.05 & \\
- & Scurve-140-96.json & Ok & 1.0 & 0.48 $\pm$ 0.06 & \\
- & Scurve-180-96.json & Ok & 1.0 & 0.52 $\pm$ 0.06 & \\
- & Scurve-220-96.json & Ok & 1.0 & 0.54 $\pm$ 0.05 & \\
- & Scurve-260-96.json & Ok & 1.0 & 0.51 $\pm$ 0.05 & \\
- & Scurve-300-96.json & Ok & 1.0 & 0.66 $\pm$ 0.09 & \\
- & Scurve-340-96.json & Ok & 1.0 & 0.51 $\pm$ 0.06 & \\
- & Scurve-380-96.json & Ok & 1.0 & 0.55 $\pm$ 0.05 & \\
- & sCurve-0.json & Ok & 49 & 1.0 $\pm$ 0.1 & \\
- & ThresholdDist-0.json & Ok & 4.6 & 0.56 $\pm$ 0.06 & \\
- & ThresholdMap-0.json & Ok & 2,200 & 4.3 $\pm$ 0.1 & \\
- & NoiseDist-0.json & Ok & 2.3 & 0.42 $\pm$ 0.04 & \\
- & Chi2Map-0.json & Ok & 2,300 & 4.5 $\pm$ 0.1 & \\
- & StatusMap-0.json & Ok & 1,300 & 2.8 $\pm$ 0.1 & \\
- & StatusDist-0.json & Ok & 0.49 & 0.48 $\pm$ 0.04 & \\
- & NoiseMap-0.json & Ok & 2,200 & 4.0 $\pm$ 0.2 & \\
- & Chi2Dist-0.json & Ok & 1.1 & 0.50 $\pm$ 0.04 & \\
- & TimePerFitDist-0.json & Ok & 3.1 & 0.56 $\pm$ 0.12 & \\
- & ctrlCfg$\_$ctrlCfg.json & Ok & 0.46 & 0.49 $\pm$ 0.05 & \\
- & dbCfg$\_$dbCfg.json & Ok & 0.60 & 0.52 $\pm$ 0.06 & \\
- & siteCfg$\_$siteCfg.json & Ok & 0.033 & 0.54 $\pm$ 0.07 & \\
- & userCfg$\_$userCfg.json & Ok & 0.14 & 0.60 $\pm$ 0.07 & \\
- & scanCfg$\_$std$\_$thresholdscan.json & Ok & 2.2 & 0.46 $\pm$ 0.03 & \\
- & beforeCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.2 $\pm$ 0.2 & \\
- & afterCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.5 $\pm$ 0.1 & \\
-\hline
-std$\_$totscan & MeanTotMap-0.json & Ok & 1,900 & 4.8 $\pm$ 0.1 & 20$\pm$0\\
- & SigmaTotMap-0.json & Ok & 2,200 & 4.1 $\pm$ 0.2 & \\
- & MeanTotDist-0.json & Ok & 0.59 & 0.54 $\pm$ 0.07 & \\
- & SigmaTotDist-0.json & Ok & 1.8 & 0.47 $\pm$ 0.03 & \\
- & L1Dist.json & Ok & 0.59 & 0.60 $\pm$ 0.08 & \\
- & ctrlCfg$\_$ctrlCfg.json & Ok & 0.46 & 0.47 $\pm$ 0.03 & \\
- & dbCfg$\_$dbCfg.json & Ok & 0.60 & 0.67 $\pm$ 0.24 & \\
- & siteCfg$\_$siteCfg.json & Ok & 0.033 & 0.59 $\pm$ 0.10 & \\
- & userCfg$\_$userCfg.json & Ok & 0.14 & 0.56 $\pm$ 0.05 & \\
- & scanCfg$\_$std$\_$totscan.json & Ok & 2.0 & 0.59 $\pm$ 0.10 & \\
- & beforeCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.0 $\pm$ 0.1 & \\
- & afterCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.9 $\pm$ 0.3 & \\
-\hline
-std$\_$noisescan & Occupancy.json & Ok & 1,300 & 4.0 $\pm$ 0.1 & 18$\pm$0\\
- & NoiseOccupancy.json & Ok & 1,300 & 2.5 $\pm$ 0.1 & \\
- & NoiseMask.json & Ok & 1,300 & 2.4 $\pm$ 0.1 & \\
- & ctrlCfg$\_$ctrlCfg.json & Ok & 0.46 & 0.57 $\pm$ 0.08 & \\
- & dbCfg$\_$dbCfg.json & Ok & 0.60 & 0.55 $\pm$ 0.06 & \\
- & siteCfg$\_$siteCfg.json & Ok & 0.033 & 0.53 $\pm$ 0.04 & \\
- & userCfg$\_$userCfg.json & Ok & 0.14 & 0.61 $\pm$ 0.07 & \\
- & scanCfg$\_$std$\_$noisescan.json & Ok & 1.4 & 0.53 $\pm$ 0.05 & \\
- & beforeCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 2.8 $\pm$ 0.2 & \\
- & afterCfg$\_$chipCfg.json & { \bf Error} & 7,200 & 3.5 $\pm$ 0.1 & \\
-\hline
-\end{longtable}
-}
-
-\newpage
-表\ref{upload_status_to_pd}より、データサイズの大きいものにアップロード時間がかかっていることがわかる。
-また添付処理を行うオフセットがあることから、threshold scanのように各容量が大きくなくてもファイル数が多いものにはアップロード時間が合計して多くかかってしまうことがわかる。
-
-これらのことと4MB以上の容量を持つファイル添付処理の失敗をなくすために、次のような改善策を考えた。
-
-\begin{itemize}
-  \item 各試験項目に対する結果データ、設定ファイルをそれぞれZipファイルに統合し、圧縮後にアップロードを行う。
-\end{itemize}
-
-こうすることで、アップロードするファイルの容量、数共に削減することができる。
-圧縮率によってはアップロード処理の失敗もなくすことができると考えた。
-
-これを踏まえアップロードツールを改良し、再び各ファイルの添付処理にかかる時間を測定した。
-合計処理時間は以下のようになり、全てのファイルのアップロードに成功した。
-
-\bbb
-  36 \pm 1 [{\rm sec}]
-\eee
-
-{\scriptsize
-\begin{longtable}{|llllll|}
-  \caption[アップロード処理改善後における結果、設定値ファイル添付実行結果と処理時間]{アップロード処理改善後における結果、設定値ファイル添付実行結果と処理時間。各試験結果毎に結果ファイル、設定値ファイルをZipファイルにまとめアップロードする処理とした。これにより、ファイル数、容量の削減に成功し、アップロード時間が改善した。全てのファイルのアップロードに成功していることが分かる。}
-  \label{upload_status_to_pd_zip}
-  \endhead
-  \hline
-  読み出し項目 & ファイル名 & 実行結果 & 容量[KB] & 処理時間[sec] & 全体[sec] \\ 
-  \hline
- std$\_$digitalscan & std$\_$digitalscan$\_$datafiles.zip & Ok & 10 & 0.77 $\pm$ 0.18 & 1.9 $\pm$ 0.2\\
- & std$\_$digitalscan$\_$configfiles.zip & Ok & 56 & 1.1 $\pm$ 0.1 &\\
-\hline
- std$\_$analogscan & std$\_$analogscan$\_$datafiles.zip & Ok & 46 & 1.0 $\pm$ 0.2 & 2.2 $\pm$ 0.3 \\
- & std$\_$analogscan$\_$configfiles.zip & Ok & 58 & 1.2 $\pm$ 0.2 &\\
-\hline
- std$\_$thresholdscan & std$\_$thresholdscan$\_$datafiles.zip & Ok & 1,500 & 2.6 $\pm$ 0.1 & 3.5 $\pm$ 0.1 \\
- & std$\_$thresholdscan$\_$configfiles.zip & Ok & 190 & 0.86 $\pm$ 0.08 &\\
-\hline
- std$\_$totscan & std$\_$totscan$\_$datafiles.zip & Ok & 730 & 1.7 $\pm$ 0.2 & 2.5 $\pm$ 0.2\\
- & std$\_$totscan$\_$configfiles.zip & Ok & 190 & 0.83 $\pm$ 0.15 &\\
-\hline
- std$\_$noisescan & std$\_$noisescan$\_$datafiles.zip & Ok & 19 & 0.56 $\pm$ 0.07 & 1.7 $\pm$ 0.1 \\
- & std$\_$noisescan$\_$configfiles.zip & Ok & 190 & 1.1 $\pm$ 0.1 &\\
-\hline
-\end{longtable}
-}
-
-\subsubsection{生産時における見積もり}
-上記の見積もりと同様に、改善後のツールにおけるアップロード時間の見積もりを行った。
-表\ref{upload_process_detail_result}において、添付処理に対応する処理4、5以外は同じとする。
-改良後の処理4、5の処理時間は、
-\bbb
-{\rm FE}チップ処理&:& \left\{ (2.2+6.7+5.1) \pm \sqrt{(0.1)^2 + (1.1)^2 + (0.3)^2} \right\} \times 4 \\\nonumber 
-&=& 56 \pm 5  [{\rm sec}] \\\\
-合計&:& (56 \pm 5 )[\rm{sec}] + (14\pm0) + (0.88 \pm 0.14) + (1.8\pm0.1) \nonumber \\
-&=& 1.2 \pm 0.1 [{\rm min}]
-\eee
-
-約1分でアップロードを完了できる見積もりとなった。
-改善前に比べて15$\%$の処理時間となった。
-現在は改善後の方法を用いたツールを提供している。
-
-\clearpage
-\subsubsection{ファイル添付以外の処理}
-ここではファイル添付処理に関しての処理時間検討を行なったが、以下にあげたそれ以外の処理について言及する。
-\begin{enumerate}
-  \item ローカルデータベース内部処理.
-  \item 中央データベースへの接続、認証処理.
-  \item ファイル添付以外の処理に関して、中央データベースAPI使用.
-  \item ネットワーク速度の改善.
-\end{enumerate}
-
-項目1に関して、読み出し試験におけるローカルデータベースの内部構造は世界的に使われているものである。
-内部構造の変更をすることなく改善を図りたいという開発方針から、この項目に関しての処理時間削減の検討を行わなかった。
-また図\ref{upload_process_detail_result}よりローカルデータベース内部処理は十分に小さいものであったため、検討の必要がないと考えた。
-
-項目2に関して、中央データベースへの接続、認証処理は中央データベースのAPI及び中央データベースの内部構造によるものである。
-この部分の処理を改善するには、これらの変更を検討する必要がある。
-
-項目3に関して、アップロード処理では以下の処理の際に中央データベースのAPIを使用している。
-\begin{itemize}
-  \item モジュール情報の取得.
-  \item 結果ページの作成(モジュールとFEチップで5回分)
-\end{itemize}
-これらの処理は必要であるため、APIの使用回数の減らし処理時間を削減することは難しい。
-
-項目4に関して、中央データベースと通信する全ての処理はのネットワーク速度に依存していると考えられる(付録\ref{chap:data_time_detail})。
-KEKのサーバーが置かれているネットワーク環境の改善により、本ツールの処理速度も改善すると考えられる。
 
