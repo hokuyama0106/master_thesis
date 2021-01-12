@@ -1,7 +1,7 @@
 \chapter{品質試験のデモンストレーション} \label{chap:demo}
-品質試験項目のデモンストレーションを行った。
+品質試験のデモンストレーションを行った。
 今回のデモンストレーションでは、品質試験項目として読み出し試験を行い、データベース機能や試験の流れを確認した。
-この章の前半では開発したツールと試験で使用するソフトウェア、ハードウェアについて説明し、後にデモンストレーションの内容、各ソフトウェアの機能確認について述べる。
+この章の前半では試験で使用するソフトウェア、ハードウェアについて説明し、後にデモンストレーションの内容、機能確認について述べる。
 
 \section{用いたソフトウェア}
 
@@ -10,7 +10,7 @@
 \begin{itemize}
   \item YARR(commit:6b3ffe92)
   \item MongoDB(version: v4.2.6)
-  \item ローカルDBウェブアプリケーション(tag: ldbtoolv1.4)
+  \item ローカルデータベース用ウェブアプリケーション(tag: ldbtoolv1.4)
   \item 中央データベースとの同期ツール(tag: ldbtoolv1.4)
   \item ピクセル解析ツール(tag: v1.0.2)
   \item 時系列データ用データベース(InfluxDB\cite{5-6}(version: 1.8.0))
@@ -33,7 +33,7 @@
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=14cm]{./readout_SW_overview.png}
-\caption[読み出し試験に用いるソフトウェアの概要]{読み出し試験に用いるソフトウェアの概要。FEチップの読み出しとそのデータ通信はYARRを用いて行われる。試験結果はMongoDBにアップロードされ、試験者はウェブアプリケーションを通じて結果を確認することができる。電源操作用ソフトを用いて電源のスイッチ、電圧、電流値の取得がなされ、取得値はInfluxDBに保存される。モジュール付属のサーミスタ読み出しシステムを用いてFEチップ付近の温度を読み出し、InfluxDBに保存する。InfluxDBに保存されたDCSデータはGrafanaを用いてブラウザ上で確認することができる。またMongoDBに同期されるため、ローカルデータベースアプリケーションを通しても確認ができる。}
+\caption[読み出し試験に用いるソフトウェアの概要]{読み出し試験に用いるソフトウェアの概要。FEチップの読み出しとそのデータ通信はYARRを用いて行われる。試験結果はMongoDBにアップロードされ、試験者はウェブアプリケーションを通じて結果を確認することができる。電源操作用ソフトを用いて電源のスイッチ、電圧、電流値の取得がなされ、取得値はInfluxDBに保存される。モジュール付属のサーミスタ読み出しシステムを用いてFEチップ付近の温度を読み出し、InfluxDBに保存する。InfluxDBに保存されたDCSデータはGrafanaを用いてブラウザ上で確認することができる。また読み出し試験に関わるDCS情報はMongoDBに同期されるため、ローカルデータベースアプリケーションを通して確認ができる。}
 \label{readout_SW_overview}
 \end{figure}
 
@@ -43,7 +43,7 @@
 
 \subsection{各装置}
 \subsubsection{RD53Aシングルモジュール(RD53A Single Chip Card, SCC)\cite{5-10}}
-今回読み出しに使うモジュールとして、研究室で所有しているRD53Aシングルモジュール(RD53A Single Chip Card, SCC)を使用した。
+今回読み出しに使うモジュールとして、研究室で所有しているRD53Aシングルモジュール(\textbf{RD53A Single Chip Card, SCC})を使用した。
 SCCは試験用に作られたFEチップを一枚搭載するモジュールである。また今回使用したものはシリコンセンサーを持たない。
 SCCはFEチップ電源端子、データ転送端子をもち、読み出しを行う際はそれぞれ配線をする。
 FEチップ付近にはNTCサーミスタを搭載していて、ボード上の端子からその抵抗値を取得することで温度を測定することができる。
@@ -58,7 +58,7 @@ FEチップ付近にはNTCサーミスタを搭載していて、ボード上の
 \subsubsection{モジュールサーミスタ温度読み出しシステム}
 モジュール付属サーミスタの抵抗値を取得し温度を測定するために、ADC、Raspberry Piを用いた温度読み出しシステムを作成した。
 このシステムの中で扱った装置を表\ref{demo_temp_device}に、回路図、実際に配線した様子を図\ref{demo_temp_circit_pic}に示す。
-スクリプト上でサーミスタの抵抗値に対応するADC値を温度に変換することで読み出しを行っている。
+サーミスタの抵抗値に対応するADC値を温度に変換することで読み出しを行っている。
 ADC値はGPIO通信\cite{5-9}により取得している。
 
 \begin{table}[tbp]
@@ -95,7 +95,8 @@ ADC値はGPIO通信\cite{5-9}により取得している。
 \end{figure}
 
 \subsubsection{FPGAボード}
-FPGAボードにXpressK7\cite{5-2}を用いて、YARRファームウェアをFEGA上にプログラムし通信を行なった。
+FPGAボードにXpressK7\cite{5-2}を用いた。
+YARRファームウェアをFEGA上にプログラムし通信を行なった。
 XpressK7を図\ref{demo_fpga_board}に示す。
 
 \subsubsection{FMC-DisplayPort変換カード}
@@ -181,13 +182,13 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 詳細を以下に記す。
 
 \subsection{中央データベースからモジュール情報のダウンロード}
-ダウンロードし、ウェブアプリケーションで確認した。
+中央データベースから登録したモジュール情報をダウンロードし、ウェブアプリケーションで確認した。
 確認した画面を図\ref{demo_download_SCC}に示す。
 今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存される。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=16cm]{./demo_download_SCC.pdf}
-\caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面。図の表において、今回登録した20UPGR00000001のIDを持つモジュールがローカルデータベースのウェブ上で確認できていることが分かる。また対応するFEチップのIDも確認することができる。}
+\caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面。図の表において、今回登録した20UPGR00000001のIDを持つモジュールがローカルデータベースのアプリケーション上で確認できていることが分かる。また対応するFEチップのIDも確認することができる。}
 \label{demo_download_SCC}
 \end{figure}
 
@@ -197,15 +198,15 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 \subsection{読み出し試験実施}
 以下の流れに沿って読み出しを行ない、結果をローカルデータベースに保存した。
 \begin{enumerate}
-  \item デジタル回路読み出し(\texttt{std$\_$digitalscan})
-  \item アナログ回路読み出し(\texttt{std$\_$analogscan})
-  \item 調整前Threshold測定(\texttt{std$\_$thresholdscan})
-  \item Threshold調整
-  \item ToT調整
-  \item Threshold再調整
-  \item 調整後Threshold測定
-  \item ToT測定(\texttt{std$\_$totscan})
-  \item ノイズ測定(\texttt{std$\_$noisescan})
+  \item デジタル回路読み出し(\texttt{std$\_$digitalscan}).
+  \item アナログ回路読み出し(\texttt{std$\_$analogscan}).
+  \item 調整前Threshold測定.
+  \item Threshold調整.
+  \item ToT調整.
+  \item Threshold再調整.
+  \item 調整後Threshold測定(\texttt{std$\_$thresholdscan}).
+  \item ToT測定(\texttt{std$\_$totscan}).
+  \item ノイズ測定(\texttt{std$\_$noisescan}).
 \end{enumerate}
 
 また読み出し試験を通してDCS情報はInfluxDBを用いて監視し、試験結果と同様にローカルデータベースに保存した。
@@ -220,7 +221,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=15cm]{./demo_monitor_dcs.png}
-\caption[DCS情報のモニタリングの様子]{DCS情報のモニタリングの様子。図において全て横軸は時間であり、縦軸は上から温度(青)、電流(緑)、電圧(黄)を示す。それぞれのデータの監視が行えていることが分かる。温度に関して、電源オン、オフの付近で変化が大きいことが分かる。電流に関して、読み出し(チューニング)を行っている途中にも微小変化していることが分かる。}
+\caption[DCS情報のモニタリングの様子]{DCS情報のモニタリングの様子。図において横軸は時間であり、縦軸は上から温度(青)、電流(緑)、電圧(黄)を示す。それぞれデータの監視が行えていることが分かる。温度に関して、電源オン、オフの付近で変化が大きいことが分かる。電流に関して、読み出し(チューニング)を行っている途中にも微小変化していることが分かる。}
 \label{demo_monitor_dcs}
 \end{figure}
 
@@ -234,7 +235,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=13cm]{./demo_search_function.png}
-\caption[検索機能確認の様子]{検索機能確認の様子。図は検索実行前の試験結果一覧(上図)と実行後(下図)を示す。図の例では"hokuyama std$\_$totscan"の2つのキーワードで検索を行っており、実行後は対応する試験結果1つが表示されていることが分かる。この試験結果について試験実施者は"hokuyama"、試験項目は"std$\_$totscan"であるため、検索機能が正常に動いていることが分かる。}
+\caption[検索機能確認の様子]{検索機能確認の様子。図は検索実行前の試験結果一覧(上図)と実行後(下図)を示す。図の例で``hokuyama std$\_$totscan"の2つのキーワードで検索を行っており、実行後は対応する試験結果1つが表示されていることが分かる。この試験結果について試験実施者は``hokuyama"、試験項目は``std$\_$totscan"であるため、検索機能が正常に動いていることが分かる。}
 \label{demo_search_function}
 \end{figure}
 
@@ -263,19 +264,19 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \subsection{結果選択とピクセル解析}
-読み出し結果を選択し、ピクセル解析を行なった。
+読み出し試験結果を選択し、ピクセル解析を行なった。
 結果選択画面を図\ref{demo_select_scans}に示す。
-このデモンストレーションにおける不良評価基準は3章に述べた表\ref{pixel_analysis_criteria}の中から、現時点でシステムに実装している以下の項目を抜粋した。
+このデモンストレーションにおける不良評価基準は\ref{chap:qc_test}章に述べた表\ref{pixel_analysis_criteria}の中から、現時点でシステムに実装している以下の項目を抜粋した。
 \begin{enumerate}
-  \item Digital Dead 
-  \item Digital Bad 
-  \item Analog Dead 
-  \item Analog Bad 
-  \item Tuning Failed
-  \item Tuning Bad for Threshold
-  \item Tuning Bad for ToT
-  \item High ENC
-  \item Noisy
+  \item Digital Dead. 
+  \item Digital Bad.
+  \item Analog Dead. 
+  \item Analog Bad. 
+  \item Tuning Failed.
+  \item Tuning Bad for Threshold.
+  \item Tuning Bad for ToT.
+  \item High ENC.
+  \item Noisy.
 \end{enumerate}
 
 解析結果を図\ref{pixel_analysis_result}、それぞれの評価基準における不良ピクセルの分布を図\ref{pixel_analysis_result_dist}に示す。
