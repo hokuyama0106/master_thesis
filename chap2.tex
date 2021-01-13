@@ -39,7 +39,7 @@ ToTの概念図を図\ref{tot_algorithm}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./tot_algorithm.png}
-\caption[ToTの概念図]{ToTの概念図。FEチップで生成されるデジタル信号はToTと呼ばれる。図はその概念を模式的に表したものであり、FEチップで行われているAD変換である。ToTはアナログ信号がThreshold値を超えた時間幅に相当する。実際にはToT間のクロック数[b.c.]として取得さる。ここで1b.c.(25~ns)はLHCにおける陽子の衝突間隔に相当する。}
+\caption[ToTの概念図]{ToTの概念図。FEチップで生成されるデジタル信号はToTと呼ばれる。図はその概念を模式的に表したものであり、FEチップで行われているAD変換である。ToTはアナログ信号がThreshold値を超えた時間幅に相当する。実際にはToT間のクロック数[b.c.]として取得さる。ここで1~b.c.(25~ns)はLHCにおける陽子の衝突間隔に相当する。}
 \label{tot_algorithm}
 \end{figure}
 
@@ -59,7 +59,7 @@ RD53Aの性能を表\ref{rd53a_spec}に示す。
     トリガーレート[kHz] & $1000$ \\ 
     データレート[Mbps] & $1280\times4$ \\ 
     ToTの範囲 & $0〜15$(4ビット) \\
-    放射線耐性 & 500Mrad(トータルドーズ効果\cite{2-4}) \\
+    放射線耐性 & 500Mrad(トータルドーズ効果\cite{2-4}) \\\hline
   \end{tabular}
 \end{center}
 \end{table}

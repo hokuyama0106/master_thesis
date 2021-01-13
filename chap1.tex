@@ -88,7 +88,7 @@ ATLAS検出器の最内層に位置する検出器である。
 ピクセル検出器の全体図を図\ref{pixel_detector_overview}に示す。
 \begin{figure}[bpt]\centering
 \includegraphics[width=8cm]{./pixel_detector_overview.jpg}
-\caption[ピクセル検出器の全体像]{ピクセル検出器の全体像\cite{1-5}。上図はピクセル検出器の全体を模式的に表したものであり、下図はビーム軸方向から見たピクセル検出器バレル部の断面図である。バレル部の4層は内側からIBL、B-Layer、Layer-1、Layer-2と呼ぶ。}
+\caption[ピクセル検出器の全体像]{ピクセル検出器の全体像\cite{1-5}。上図はピクセル検出器の全体を模式的に表したものであり、下図はビーム軸方向から見たピクセル検出器の断面図である。バレル部の4層は内側からIBL、B-Layer、Layer-1、Layer-2と呼ぶ。}
 \label{pixel_detector_overview}
 \end{figure}
 
@@ -134,12 +134,21 @@ LHCの運転計画を表\ref{hllhc_plan}に示す。
 \subsection{内部飛跡検出器のアップグレード}
 ルミノシティの増加に伴い、検出器には以下のような性能が要求される。
 \begin{itemize}
-  \item 放射線耐性の向上
-  \item 高速読み出し
-  \item 検出器の細密化
+  \item 放射線耐性の向上.\\
+  統計量に伴い、放射線量も増加するため高放射線耐性が要求される。
+  \item 高速読み出し.\\
+  ルミノシティの増加にするため、現行よりも高速な読み出しが要求される。
+  \item 検出器の細密化.\\
+  1バンチ衝突あたりのイベント数が表\ref{compare_lhc}より約5倍になる。これらの衝突点を区別するためにはより細密な検出器で位置測定を区別する必要がある。図\ref{detector_posi_res}にイメージを示す。
 \end{itemize}
 
-HL-LHCに向けてATLAS内部飛跡検出器はアップグレードを予定しており、検出器の総入れ替えを行う。
+\begin{figure}[bpt]\centering
+\includegraphics[width=12cm]{./detector_posi_res.png}
+\caption[1バンチ衝突あたりのイベント数増加のイメージ]{1バンチ衝突あたりのイベント数増加のイメージ。図において黒先がビーム軸と衝突点、青線が生成粒子、赤線が1ピクセルを表す。左図がLHC、右図がHL-LHCの様子を表している。HL-LHCでは1バンチ衝突あたりのイベント数が約5倍に増えるため、図のように衝突点の間隔が小さくなる。これらを区別するためには今までよりも細密な検出器を設置する必要がある。}
+\label{detector_posi_res}
+\end{figure}
+
+HL-LHCに向けて内部飛跡検出器はアップグレードを予定しており、検出器の総入れ替えを行う。
 アップグレード後の検出器を\textbf{Inner Tracker(ITk)}と呼ぶ。模式図を図\ref{itk_image}に示す。
 
 \begin{figure}[bpt]\centering
@@ -156,13 +165,13 @@ ITkはピクセル検出器とストリップ検出器で構成される。
 \begin{figure}[bpt]\centering
 \includegraphics[width=12cm]{./itk_cross_section.png}
 %\includegraphics[width=10cm]{itk_pixel_cross_section}
-\caption[ITkの断面図]{ITkの断面図\cite{1-3}。ITkはピクセル検出器とストリップ検出器から構成され、バレル部はそれぞれ5、4層の構造を持つ。ピクセル検出器はバレル部、傾斜バレル部、エンドキャップ部に分かれ、このエンドキャップ部の設計により$|\eta|<4.0$までの範囲をカバーし、粒子の飛跡測定をすることができる。}
+\caption[ITkの断面図]{ITkの断面図\cite{1-3}。ITkはピクセル検出器とストリップ検出器から構成され、バレル部はそれぞれ5、4層の構造を持つ。ピクセル検出器はバレル部、傾斜バレル部、エンドキャップ部に分かれ、$|\eta|<4.0$までの範囲をカバーし、粒子の飛跡測定をすることができる設計となっている。}
 \label{itk_cross_section}
 \end{figure}
 
 ピクセル検出器の配置に関して、現行とITkの比較を表\ref{compare_itk_pixel}に示す。
 またモジュール数の比較を表\ref{compare_itk_modules}に示す。
-ITkでは現行に比べ、$\eta$が大きい領域まで検出器を設置する設計となっており、その分使用するモジュール数も増える。
+ITkでは現行に比べ、$\eta$が大きい領域まで検出器を設置するため、その分使用するモジュール数も増える。
 
 \begin{table}[tbp]
 \begin{center}
@@ -214,11 +223,11 @@ ITkではこれらのジェットを正確に捉えることができ、VBFイ�
     \includegraphics[width=60mm]{./VBF_event_display.png}
     \end{center}
   \end{minipage}
-  \caption[VBFイベントの図]{VBFイベントの図。図はVBFイベントの一つである$H\rightarrow WW$崩壊チャンネルを示している。左図はファインマン図、右図はそのイベントディスプレイ\cite{1-8}を表す。このイベントにおいて、初めに相互作用したクオーク対は、それぞれ崩壊を繰り返しジェットと呼ばれる粒子群となる。このときこれらのジェットは前方方向に大きな運動量を持つ。ITkでは$|\eta|<4.0$の範囲をカバーしており、このようなジェットを捉えることができるため、測定精度が向上する。}
+  \caption[VBFイベントの図]{VBFイベントの図\cite{1-8}。図はVBFイベントの一つである$H\rightarrow WW$崩壊チャンネルを示している。左図はファインマン図、右図はそのイベントディスプレイを表す。このイベントにおいて、初めに相互作用したクオーク対は、それぞれ崩壊を繰り返しジェットと呼ばれる粒子群となる。このときこれらのジェットは前方方向に大きな運動量を持つ。ITkでは$|\eta|<4.0$の範囲をカバーしており、このようなジェットを捉えることができるため、測定精度が向上する。}
   \label{VBF_image}
 \end{figure}
 
-\begin{table}[tbp]
+\begin{table}[bpt]
 \begin{center}
 \caption[VBF~$H\rightarrow WW$の測定における系統誤差の見積もり]{VBF~$H\rightarrow WW$の測定における系統誤差の見積もり。表は統計数3000~$\rm{fb^{-1}}$において、$|\eta| <2.7$、$|\eta| <4.0$の領域を使用した場合のVBF~$H\rightarrow WW$イベント測定における系統誤差の見積もりを示している。$|\eta| <4.0$の領域を使用することで系統誤差が向上する見積もりであることが分かる。ここでは統計誤差は考慮にいれていない。}
 \label{VBF_uncertainty}
@@ -229,4 +238,3 @@ ITkではこれらのジェットを正確に捉えることができ、VBFイ�
 \end{center}
 \end{table}
 
-広い$\eta$範囲を検出できることによる利点として、他にも$b$タグ精度の向上、主崩壊イベント由来のジェット識別精度の向上、$\tau$レプトン識別精度の向上が見込まれ、多くの物理現象において測定精度の向上が見込まれている。
