@@ -64,7 +64,8 @@ V(\phi)  &=& \mu^2 \phi^\dag \phi + \lambda \left( \phi^\dag \phi \right)^2
 このヒッグスセクターの導入及び現在の標準模型は、実験事実と大きく矛盾していないことが分かる。
 
 一方、ここで述べた標準模型におけるヒッグスセクターの導入は暫定的なものであり、任意性を持つ。
-例えば、現在は複素スカラー場1つを導入しているが、いくつかの要請を満たせば複数の場を導入することも可能である。
+例えば、現在は複素スカラー場1つを導入しているが、要請を満たせば複数の場を導入することも可能である。
+標準模型を超える新理論では、しばしばこのヒッグスセクターを変形し、標準模型の拡張や諸問題の説明を行なっている。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm,angle=270]{./kappa_vs_mass.pdf}
@@ -84,7 +85,6 @@ V(\phi)  &=& \mu^2 \phi^\dag \phi + \lambda \left( \phi^\dag \phi \right)^2
 \end{itemize}
 
 現在上にあげた標準模型の諸問題を解くために、超対称性\cite{1-11}などの新しい理論が考案されている。
-このような新理論では、しばしばヒッグスセクターの任意性を利用し``拡張ヒッグスセクター"を導入することで、標準模型の拡張と諸問題の説明を行っている。
 
 \clearpage
 \section{LHCについて}
@@ -215,14 +215,14 @@ LHCの運転計画を表\ref{hllhc_plan}に示す。
 
 \subsection{素粒子物理に対するモチベーション}
 HL-LHCの素粒子物理に対するモチベーションに1つとして、ヒッグス粒子イベントの精密測定があげられる。
-ヒッグス粒子イベントの精密測定により、標準模型におけるヒッグスセクターの新の構造にせまることで、数ある新理論の制限、何が素粒子物理の本質であるかを知ることができる可能性がある。
+ヒッグス粒子イベントの精密測定は、標準模型の検証だけでなく、新理論への制限や方向性の決定に対して重要な意味を持つ。
 
 LHC、HL-LHCにおける粒子の質量とヒッグス粒子の結合定数の関係と統計誤差の見積もりをまとめたものを表\ref{higgs_uncertainty}に示す。
 統計誤差が向上する見込みであり、より精密な標準模型の検証を行うことができる。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./higgs_uncertainty.pdf}
-\caption[LHC、HL-LHCにおける粒子の質量とヒッグス粒子の結合定数の関係と統計誤差の見積もり]{LHC、HL-LHCにおける粒子の質量とヒッグス粒子の結合定数の関係と統計誤差の見積もり\cite{1-12}。図において青線、緑線がそれぞれLHC、HL-LHCに対する統計誤差を示している。統計誤差は向上する見込みであり、標準模型の精密検証をすることができる。}
+\caption[LHC、HL-LHCにおける粒子の質量とヒッグス粒子の結合定数の関係と統計誤差の見積もり]{LHC、HL-LHCにおける粒子の質量とヒッグス粒子の結合定数の関係と統計誤差の見積もり\cite{1-12}。図において青線、緑線がそれぞれLHC、HL-LHCの測定における統計誤差の見積もり値を示している。統計誤差は向上する見込みであり、標準模型の精密検証をすることができる。}
 \label{higgs_uncertainty}
 \end{figure}
 
@@ -301,28 +301,36 @@ ITkでは現行に比べ、$\eta$が大きい領域まで検出器を設置す�
 \end{center}
 \end{table}
 
+\clearpage
 \subsection{物理測定に及ぼす影響}
 カバーする$\eta$の範囲が大きい特徴が生む利点として、前方方向に大きな運動量を持つ粒子を含む物理現象の測定精度向上があげられる。
 
 この例として、ボゾン粒子結合によるヒッグス粒子生成過程(Vector boson fusion higgs production, \textbf{VBF})をあげる。
 VBFの1つのチャンネルに関するファインマン図及びイベントディスプレイを図\ref{VBF_image}に示す。
-この衝突により生じる2つのクオークはジェットと呼ばれる粒子群となり、前方方向に大きい運動量を持つ。
+この衝突により生じる2つのクオークはジェットと呼ばれる粒子群となり、多くのジェットは図\ref{VBF_jet_eta}に示すように前方方向に多いな運動量を持つ。
+
 ITkではこれらのジェットを正確に捉えることができ、VBFイベントの測定精度を向上することができる。
 この測定における系統誤差は表\ref{VBF_uncertainty}のように見積もられる\cite{1-3}。
 
 \begin{figure}[bpt]
   \begin{minipage}{0.5\hsize}
     \begin{center}
-    \includegraphics[width=60mm]{./VBF_fainman.png}
+    \includegraphics[width=70mm]{./VBF_fainman.png}
     \end{center}
   \end{minipage}
   \begin{minipage}{0.5\hsize}
     \begin{center}
-    \includegraphics[width=60mm]{./VBF_event_display.png}
+    \includegraphics[width=70mm]{./VBF_event_display.png}
     \end{center}
   \end{minipage}
   \caption[VBFイベントの図]{VBFイベントの図\cite{1-8}。図はVBFイベントの一つである$H\rightarrow WW$崩壊チャンネルを示している。左図はファインマン図、右図はそのイベントディスプレイを表す。このイベントにおいて、初めに相互作用したクオーク対は、それぞれ崩壊を繰り返しジェットと呼ばれる粒子群となる。このときこれらのジェットは前方方向に大きな運動量を持つ。ITkでは$|\eta|<4.0$の範囲をカバーしており、このようなジェットを捉えることができるため、測定精度が向上する。}
   \label{VBF_image}
+\end{figure}
+
+\begin{figure}[bpt]\centering
+\includegraphics[width=8cm]{./VBF_jet_eta.png}
+\caption[VBFイベントにおけるジェットの運動方向の$\eta$分布]{VBFイベントにおけるジェットの運動方向の$\eta$分布\cite{1-3}。図はシミュレーションの結果を示している。横軸はジェットの運動方向の$\eta$成分を示しており、縦軸はイベント数に比例する量である。``Leading jet"、``Subleading jet"は各イベントにおいて1、2番目に大きな運動量を持つジェットである。$|\eta|=3-3.5$付近にピークを持ち、多くのジェットは前方方向に大きい運動量を持つことが分かる。}
+\label{VBF_jet_eta}
 \end{figure}
 
 \begin{table}[bpt]

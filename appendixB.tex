@@ -1,5 +1,6 @@
 \chapter{RD53Aの回路図とフレキシブル基板} \label{chap:rd53a_circit}
 
+\section{アナログ回路}
 \begin{figure}[bpt]
   \begin{center}
     \includegraphics[width=8cm]{./diff_fe.png}
@@ -16,6 +17,15 @@
 \label{digital_fe}
 \end{figure}
 
+\section{試験用電荷入射のイメージ}
+RD53Aの各ピクセルが持つ試験用電荷入射回路の簡略図を図\ref{injection_circuit}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{./injection_circuit.png}
+\caption[RD53Aの各ピクセルが持つ試験用電荷入射回路の簡略図]{RD53Aの各ピクセルが持つ試験用電荷入射回路の簡略図\cite{b-1}。図のように2つの電位を入力し、その差分の電圧を回路内のコンデンサにかける。これを開放することで、電荷をピクセル回路内に入力する。}
+\label{injection_circuit}
+\end{figure}
+
+\section{フレキシブル基板}
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./pcb.png}
 \caption[フレキシブル基板]{フレキシブル基板}
