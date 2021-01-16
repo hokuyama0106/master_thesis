@@ -25,6 +25,14 @@ RD53Aの各ピクセルが持つ試験用電荷入射回路の簡略図を図\re
 \label{injection_circuit}
 \end{figure}
 
+\section{RD53Aのデータフォーマット}
+RD53Aのデータフォーマットを図\ref{RD53A_data_format}に示す。
+\begin{figure}[bpt]\centering
+\includegraphics[width=10cm]{./RD53A_data_format.png}
+\caption[RD53Aにおけるデータフォーマットのイメージ図]{RD53Aにおけるデータフォーマットのイメージ\cite{2-1}。RD53Aのデータフォーマットは図のように、N個のdata flameと1個のregister flameから成る。特にデータフレームに関してはheader部とhit data部で構成され、header部にtriggerの情報が入っている。クロック信号や外部トリガーでトリガーを送った情報はここに格納され、そのトリガーに応じてデータを取得する。}
+\label{RD53A_data_format}
+\end{figure}
+
 \section{フレキシブル基板}
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./pcb.png}
