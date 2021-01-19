@@ -60,7 +60,7 @@
   
   TLegend *leg =new TLegend(0.1,0.7,0.35,0.9,"");
   leg->AddEntry(g,"KEK(Red)");
-  leg->AddEntry(g1,"LBL(Blue)");
+  leg->AddEntry(g1,"LBNL(Blue)");
   leg->AddEntry(g2,"CERN(Green)");
   leg->Draw("SAME");
   
