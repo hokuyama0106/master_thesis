@@ -1,15 +1,16 @@
 
 \chapter{シリコン検出器の原理}
-\section{半導体\cite{2-1}}
+\section{半導体}
+この説では半導体\cite{2-1}について述べる。
 固体は、絶縁体、半導体、導体の3つに大別できる。物質の電気伝導度に関して、絶縁体は非常に低い値($10^{-18}〜10^{-8}$~S/cm)、導体は高い値($10^{4}〜10^{6}$~S/cm)を持つ。
 半導体の電気伝導度はこれらの中間であり、温度、光、磁界および微量の不純物に対し非常に敏感である。この特徴のために半導体はエレクトロニクスにおける最も重要な材料の1つになっている。
 半導体は元素半導体と化合物半導体に分けられ、多くの物質がその候補となる。
 元素半導体の中で代表的なものとして$\rm{Si}$があげられ、ATLASピクセル検出器に使われる半導体は$\rm{Si}$がベースとなっている。
-不純物が入っていない、全ての原子が$\rm{Si}$の半導体を真性半導体と呼ぶ。真性半導体中の$\rm{Si}$は4つの$\rm{Si}$と共有結合を構成し、結晶を作る。(図\ref{pure_silicon})
+不純物が入っていない、全ての原子が$\rm{Si}$の半導体を真性半導体と呼ぶ。真性半導体中の$\rm{Si}$は隣り合う4つの$\rm{Si}$と共有結合を構成し、結晶を作る。(図\ref{pure_silicon})
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=8cm]{./pure_silicon.png}
-\caption[真性半導体中のシリコン]{真性半導体中のシリコン\cite{2-1}}
+\caption[真性半導体中のシリコン]{真性半導体中のシリコン\cite{2-1}。}
 \label{pure_silicon}
 \end{figure}
 
@@ -24,7 +25,7 @@ $\rm{pn}$接合の最も重要な特徴は特定の方向にだけ電流が流�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./pn_iv.png}
-\caption[$\rm{pn}$接合の電流$-$電圧特性]{$\rm{pn}$接合の電流$-$電圧特性\cite{2-1}}
+\caption[$\rm{pn}$接合の電流$-$電圧特性]{$\rm{pn}$接合の電流$-$電圧特性\cite{2-1}。}
 \label{pn_iv}
 \end{figure}
 
@@ -37,7 +38,7 @@ W \propto \sqrt{V}
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./depletion_field.png}
-\caption[空乏層]{空乏層\cite{2-1}}
+\caption[空乏層]{空乏層\cite{2-1}。}
 \label{depletion_field}
 \end{figure}
 
@@ -46,39 +47,40 @@ W \propto \sqrt{V}
 \bbb
 \label{bethe_bloch}
 -\left<\frac{{\rm d}E}{{\rm d}x}\right> &=& Kz^2\frac{Z}{A}\frac{1}{\beta^2}\left(\frac{1}{2}\rm{ln}\frac{2m_ec^2\beta^2\gamma^2T_{max}}{I^2}-\beta^2+\cdots\right)\\
-\frac{{\rm d}E}{{\rm d}x}&:& 荷電粒子のエネルギー損失量[\rm{eV\cdot g^{-1}\cdot cm^2}] \nonumber\\
-K&:& 4\pi N_Ar_e^2m_ec^2 = 0.307075 [\rm{MeVcm^2}] \nonumber\\
-z&:& 荷電粒子の電荷量                          \nonumber\\
-Z&:& 物質の原子番号(\rm{Si}~14)                 \nonumber\\
-A&:& 物質の原子量(\rm{Si}~28)\nonumber\\
-m_ec^2&:& 電子の静止エネルギー(\rm{0.511~MeV}) \nonumber\\
-\beta&:& 光速を1とした入射粒子の速度 \nonumber\\
-\gamma&:&ローレンツ因子 1/\sqrt{1-\beta^2} \nonumber\\
-I&:& 励起エネルギーの期待値(シリコン~137\rm{eV}) \nonumber\\
+\frac{{\rm d}E}{{\rm d}x}&:& 荷電粒子のエネルギー損失量[\rm{eV\cdot g^{-1}\cdot cm^2}]. \nonumber\\
+K&:& 4\pi N_Ar_e^2m_ec^2 = 0.307075 [\rm{MeVcm^2}]. \nonumber\\
+z&:& 荷電粒子の電荷量.                          \nonumber\\
+Z&:& 物質の原子番号(\rm{Si}~14).                 \nonumber\\
+A&:& 物質の原子量(\rm{Si}~28).\nonumber\\
+m_ec^2&:& 電子の静止エネルギー(\rm{0.511~MeV}). \nonumber\\
+\beta&:& 光速を1とした入射粒子の速度. \nonumber\\
+\gamma&:&ローレンツ因子 1/\sqrt{1-\beta^2}. \nonumber\\
+I&:& 励起エネルギーの期待値(Si~137\rm{eV}). \nonumber\\
 \eee
 また$T_{{\rm max}}$は質量$M$の入射粒子による1つの電子への最大運動エネルギー移行であり、以下の式で書ける。
 \bbb
 T_{{\rm max}} = \frac{2m_ec^2\beta^2\gamma^2}{1+2\gamma m_e/M+\left(m_e/M\right)^2}
 \eee
 
-荷電粒子が半導体を通過したとき、そのエネルギー損失量に応じて電子・ホール対が生成し、その量を測定することができる。
+荷電粒子が半導体を通過したとき、そのエネルギー損失に応じて電子・ホール対が生成する。
 
+ここで荷電粒子がセンサーを通過した時における電気信号の強さを計算する。
 例として、大きい速度($\beta\gamma>>1$)を持つ荷電粒子が、300~$\mu$mの厚さを持つシリコン半導体を通過した時の生成キャリア数及び信号強度を計算する。
 
 荷電粒子の速度が十分に早い場合、式\ref{bethe_bloch}は物質の密度$\rho$を用いて以下のように近似できる\cite{a-1}。
 \bbb
--\left<\frac{{\rm d}E}{{\rm d}x}\right> &=& 1〜2\rho [{\rm MeV/cm}]
+-\left<\frac{{\rm d}E}{{\rm d}x}\right> &=& 1-2\rho [{\rm MeV/cm}]
 \eee
 
 シリコンの密度を2.33~g/cm${}^3$、シリコンにおける1キャリア対生成に必要な平均電離エネルギー3.62~eVより、
 300~$\mu$mの厚さを持つシリコン半導体を通過した時の生成キャリア数は以下のように計算できる。
 \bbb
-1〜2\times2.33\times(3\times10^4)\times1/3.62 \sim 20,000〜39,000 
+1-2\times2.33\times(3\times10^4)\times1/3.62 \simeq 20,000-39,000 
 \eee
 
 素電荷$e=1.6\times 10^{-19}$~Cより、信号強度は以下のようになる。
 \bbb
-20,000〜39,000 \times 1.6\times 10^{-19} \sim (3.2〜5.1)\times 10^{-15}~[{\rm C}]
+20,000-39,000 \times 1.6\times 10^{-19} \simeq (3.2-5.1)\times 10^{-15}~[{\rm C}]
 \eee
 
 

@@ -1,7 +1,7 @@
-\chapter{ピクセルモジュール}
+\chapter{ピクセルモジュール}\label{chap:pmodule}
 この章ではピクセルモジュールの構成と各構成部品について説明する。
 
-\section{ピクセルモジュールの構造}
+\section{ピクセルモジュールの構成}
 ピクセルモジュールはベアモジュールとフレキシブル基板より構成される。
 ベアモジュールは荷電粒子の通過を検知し、信号を発生するシリコンセンサーと、AD変換を行うFEチップで構成される。
 ベアモジュールが持つFEチップの数はモジュールの種類によって異なる。
@@ -29,7 +29,7 @@ ITkのピクセルモジュールに使用するシリコンセンサーとし�
 \begin{table}[tbp]
 \begin{center}
 \caption[センサーのスペック]{センサーのスペック。}
-\label{rd53a_spec}
+\label{sensor_spec}
   \begin{tabular}{|lll|} \hline
     項目 & プラナー & 3D \\\hline
     ピクセルサイズ~[$\mu$m${^2}$] & $50\times 50$ & $50\times 50$、$25\times 100$ \\
@@ -55,7 +55,7 @@ ToTの概念図を図\ref{tot_algorithm}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./tot_algorithm.png}
-\caption[ToTの概念図]{ToTの概念図。FEチップで生成されるデジタル信号はToTと呼ばれる。図はその概念を模式的に表したものであり、FEチップで行われているAD変換である。ToTはアナログ信号がThreshold値を超えた時間幅に相当する。実際にはToT間のクロック数[b.c.]として取得さる。ここで1~b.c.(25~ns)はLHCにおける陽子の衝突間隔に相当する。}
+\caption[ToTの概念図]{ToTの概念図。FEチップで生成されるデジタル信号はToTと呼ばれる。図はその概念を模式的に表したものであり、FEチップで行われているAD変換である。ToTはアナログ信号がThreshold値を超えた時間幅に相当する。実際にはToT間のクロック数[b.c.]として取得さる。ここで1~b.c.(25~ns)はLHCにおける陽子バンチの交叉間隔に相当する。}
 \label{tot_algorithm}
 \end{figure}
 
@@ -75,13 +75,13 @@ RD53Aの性能を表\ref{rd53a_spec}に示す。
     トリガーレート[kHz] & $1000$ \\ 
     データレート[Mbps] & $1280\times4$ \\ 
     ToTの範囲 & $0〜15$(4ビット) \\
-    放射線耐性 & 500Mrad(トータルドーズ効果\cite{2-4}) \\\hline
+    放射線耐性 [Mrad(トータルドーズ効果\cite{2-4})] & 500 \\\hline
   \end{tabular}
 \end{center}
 \end{table}
 
 FEチップ上の各ピクセルはアナログ回路部とデジタル回路部を持つ。
-RD53Aでは図\ref{fechip_rd53a}に示すように、3つの領域があり、それぞれの領域でピクセルのアナログ回路、AD変換回路が異なる。
+RD53Aでは図\ref{fechip_rd53a}に示すように、3つの領域があり、それぞれの領域でピクセルのアナログ回路が異なる。
 左から順にSynchronous FE、Linear FE、Differrential FEと呼ぶ。
 研究、開発用に3つの領域が設けられているが、性能比較の結果ITkに搭載するモジュールにはDifferrential FEを用いることが決定している。
 なお、デジタル回路部は全てのピクセルにおいて共通である。
@@ -89,7 +89,7 @@ RD53Aでは図\ref{fechip_rd53a}に示すように、3つの領域があり、�
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./fechip_rd53a.png}
-\caption[RD53A]{RD53A\cite{2-1}。ピクセル数は400列$\times$192行となっている。図のようにRD53Aは3つの領域が設けられており、それぞれSynchronous FE、Linear FE、Differential FEと呼ぶ。各領域のピクセルが持つアナログ回路、AD変換回路が異なる。}
+\caption[RD53A]{RD53A\cite{2-1}。ピクセル数は400列$\times$192行となっている。図のようにRD53Aは3つの領域が設けられており、それぞれSynchronous FE、Linear FE、Differential FEと呼ぶ。各領域のピクセルが持つアナログ回路が異なる。}
 \label{fechip_rd53a}
 \end{figure}
 
@@ -120,8 +120,8 @@ FEチップからのデジタル信号を後段の回路へ転送する他、FE�
 
 Quadモジュールはシリコンセンサー1つ、FEチップを4枚搭載する。
 一方、Tripletモジュールはシリコンセンサー1つ、FEチップを1枚搭載するシングルベアモジュールを3つ搭載する。
-ITk最内層のバレル部と傾斜バレル部はTripletモジュールで構成される。
-バレル部、傾斜バレル部を構成するTripletモジュールを、それぞれステーブ用、リング用と呼ぶ。
+ITk最内層はTripletモジュールで構成される。
+バレル部を構成するTripletモジュールをステーブ用、傾斜バレル、エンドキャップ部を構成するものをリング用と呼ぶ。
 それ以外の全ての領域はQuadモジュールで構成する。
 それぞれのモジュールの図及び検出器上における位置の一例を図\ref{module_geom}に示す。
 

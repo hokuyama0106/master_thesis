@@ -5,9 +5,8 @@ import matplotlib.pyplot as plt
 from statistics import mean, median,variance,stdev
 
 data = [
-"data/mes_scp_keklbl_1213.txt",
-"data/mes_scp_tokyolbl_1213.txt",
-"data/mes_scp_lblkek_1213.txt",
+"data/mes_scp_kekcern_1213.txt",
+"data/mes_scp_lblcern_1213.txt"
 ]
 for d in data:
     with open(d) as f:

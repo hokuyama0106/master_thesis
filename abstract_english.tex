@@ -13,7 +13,7 @@ For the production of ITk, we are planning to produce $O(10,000)$ modules and co
 Those are carried out repeatedly in the production flow.
 All the QC tests should be stored to a central database, which is set up at Unicorn university in Czeck Republic, to record the performance of modules itself. 
 
-``Local database'' system have been developed in a previous study in order to manage data at local production sites and to synchronize informations to check the central DB. The system have been under test-use among production sites towards full production.
+``Local database'' system have been developed in a previous study in order to manage data at local production sites and to synchronize informations to the central DB. The system have been under test-use among production sites towards full production.
 There were items left to be developed for the module production. Particularly the develpment of the funcions specialized for the module production and QC tests and the synchronizing tools between the central database and local database.
 
 I have developed the database system in this study.
@@ -21,7 +21,7 @@ I have implemented key functions for the production, for example searching resul
 
 Additionally I confirmed that we can use the tools with the actual data at the production to measure the processing time of the services.
 Concerning a function for searching results, the estimated processing time is $2.6\pm 0.1$[sec] for 84,000 results.
-Concerning a function for synchronizing data between databases, I have implemented two options, donwloading module information and uploading electrical readout results.
+Concerning a function for synchronizing data between databases, I have implemented two options, downloading module information and uploading electrical readout results.
 The processing time for the download is $4.0\pm 0.4$[sec] per quad module.
 The time for the upload is $1.2\pm 0.1$[min] for 5 readout items of quad modules.
 

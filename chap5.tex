@@ -1,33 +1,33 @@
 \chapter{品質試験のデモンストレーション} \label{chap:demo}
 品質試験のデモンストレーションを行った。
-今回のデモンストレーションでは、品質試験項目として読み出し試験を行い、データベース機能や試験の流れを確認した。
-この章の前半では試験で使用するソフトウェア、ハードウェアについて説明し、後にデモンストレーションの内容、機能確認について述べる。
+今回のデモンストレーションでは、品質試験項目として部分的に読み出し試験を行い、データベース機能や試験の流れを確認した。
+この章の前半ではデモンストレーションで使用したソフトウェア、ハードウェアについて説明し、後にデモンストレーションの内容、機能確認について述べる。
 
-\section{用いたソフトウェア}
+\section{使用したソフトウェア}
 
-試験で用いたソフトウェアをいかに示す。
+使用したソフトウェアを以下に示す。
 また、これらソフトウェアの概要を図\ref{readout_SW_overview}に示す。
 \begin{itemize}
-  \item YARR(commit:6b3ffe92)
-  \item MongoDB(version: v4.2.6)
-  \item ローカルデータベース用ウェブアプリケーション(tag: ldbtoolv1.4)
-  \item 中央データベースとの同期ツール(tag: ldbtoolv1.4)
-  \item ピクセル解析ツール(tag: v1.0.2)
-  \item 時系列データ用データベース(InfluxDB\cite{5-6}(version: 1.8.0))
+  \item YARR~(commit:6b3ffe92).
+  \item MongoDB~(version: v4.2.6).
+  \item ローカルデータベース用ウェブアプリケーション(tag: ldbtoolv1.4).
+  \item 中央データベースとの同期ツール(tag: ldbtoolv1.4).
+  \item ピクセル解析ツール(tag: v1.0.2).
+  \item 時系列データ用データベース(InfluxDB\cite{5-6}(version: 1.8.0)).
     \begin{itemize}
       \item 時系列情報に特化したデータベース。このシステムにおいては温度、電圧などDCS情報を時間情報と共に保存、管理するために用いる。
     \end{itemize}
-  \item InfluxDB解析ソフト(Grafana\cite{5-7}(version: 5.1.0))
+  \item InfluxDB解析ソフト(Grafana\cite{5-7}(version: 5.1.0)).
     \begin{itemize}
-      \item InfluxDBに保存された情報の解析、閲覧に用いる。ウェブブラウザー上でDCSデータを閲覧することができる。
+      \item InfluxDBに保存された情報の解析、閲覧に用いる。ウェブブラウザー上でDCS情報を閲覧することができる。
     \end{itemize}
-  \item 電源操作用ソフト
+  \item 電源操作用ソフト.
     \begin{itemize}
-      \item 電源を遠隔で操作し、モジュールに電圧を供給する。また電圧、電流値を取得し、InfluxDBにアップロードする。CERNで開発されているPySerial\cite{5-8}(commit:0d14fcdb)を改良し作成した。
+      \item モジュールに電圧を供給するために、電源を遠隔で操作する。また電圧、電流値を取得し、InfluxDBにアップロードする。CERNで開発されているPySerial\cite{5-8}(commit:0d14fcdb)を改良し作成した。
     \end{itemize}
-  \item 温度読み出し用ソフト
+  \item 温度読み出し用ソフト.
     \begin{itemize}
-      \item GPIO通信により取得できるADC値を取得、温度に変換しInfluxDBへアップロードする処理を作成したもの。RaspberryPi上に保存し、処理を実行。
+      \item GPIO通信により取得できるADC値を取得、温度に変換しInfluxDBへアップロードする処理を実行する。RaspberryPi上で処理を行う。
     \end{itemize}
 \end{itemize}
 
@@ -38,8 +38,8 @@
 \end{figure}
 
 \clearpage
-\section{用いたハードウェア}
-読み出し試験に用いたハードウェアについて、以下に詳細を記す。
+\section{使用したハードウェア}
+使用したハードウェアについて、以下に詳細を記す。
 
 \subsection{各装置}
 \subsubsection{RD53Aシングルモジュール(RD53A Single Chip Card, SCC)\cite{5-10}}
@@ -81,7 +81,7 @@ ADC値はGPIO通信\cite{5-9}により取得している。
   \begin{minipage}{0.4\hsize}
     \includegraphics[width=4cm]{./temp_circit_pic.png}
   \end{minipage}
-\caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路。図は回路図(左図)と実際に配線し、読み出しを行っている様子(右図)を示している。抵抗、MCP3002、Raspberry Piを用いて読み出し回路を作成した。抵抗とMCP3002は右図のようにブレッドボード上に設置した。ADCとRaspberryPiはGPIO通信\cite{5-9}を行うことで、ADC値を取得している。}
+\caption[モジュール付属サーミスタを用いた温度読み出し回路]{モジュール付属サーミスタを用いた温度読み出し回路。図は回路図(左図)と実際に配線して読み出しを行っている様子(右図)を示している。10~k$\Omega$抵抗、MCP3002、Raspberry Piを用いて読み出し回路を作成した。抵抗とMCP3002は右図のようにブレッドボード上に設置した。ADCとRaspberryPiはGPIO通信\cite{5-9}を行うことで、ADC値を取得している。}
 \label{demo_temp_circit_pic}
 \end{figure}
 
@@ -99,7 +99,7 @@ YARRファームウェアをFPGA上にプログラムし通信を行なった。
 XpressK7を図\ref{demo_fpga_board}に示す。
 
 \subsubsection{FMC-DisplayPort変換カード}
-FPGAボードにはFMC端子がついていて、これをモジュールを接続するためにはFMC-DisplayPort変換カードが必要となる。
+FPGAボードにはFMC端子がついていて、モジュールと通信を行うためにはFMC-DisplayPort変換カードが必要となる。
 使用した変換カード(通称:Ohioカード)を図\ref{demo_ohio}に示す。
 
 \begin{figure}[htbp]
@@ -114,7 +114,7 @@ FPGAボードにはFMC端子がついていて、これをモジュールを接�
   \begin{center}
    \includegraphics[width=50mm]{./ohio.png}
   \end{center}
-  \caption[使用したFMC-DisplayPort変換カード(オハイオカード)]{使用したFMC-DisplayPort変換カード(オハイオカード)。図の右側にFMC端子、左側にminiDisplayPortが4つ配置されており、FMC端子を4つのminiDisplayPortに変換する。今回読み出すFEチップは1枚であるため、1つの端子だけを用いる。}
+  \caption[使用したFMC-DisplayPort変換カード]{使用したFMC-DisplayPort変換カード。図の右側にFMC端子、左側にminiDisplayPortが4つ配置されており、FMC端子を4つのminiDisplayPortに変換する。今回読み出すFEチップは1枚であるため、1つの端子だけを用いる。}
   \label{demo_ohio}
  \end{minipage}
 \end{figure}
@@ -157,21 +157,22 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 \clearpage
 \section{デモンストレーションの流れ}
 デモンストレーションで用いるため、中央データベースにおける登録IDの定義方法\cite{5-11}に従い以下のモジュール、FEチップを登録した。
+登録したモジュール、FEチップのIDを以下に示す。
 
 \begin{description}
-  \item[モジュールID] 20UPGR00000001
-  \item[FEチップID] 20UPGFC9999999
+  \item[モジュールID] 20UPGR00000001.
+  \item[FEチップID] 20UPGFC9999999.
 \end{description}
-今回のデモンストレーションではこれらのIDを用いて試験結果の紐付け等のデータベース操作を行う。
+今回のデモンストレーションではこれらを用いてデータベース操作の確認を行う。
 
 確認した機能を行った流れの順に以下に示す。
 \begin{enumerate}
   \item 中央データベースからモジュール情報のダウンロード.
-  \item 読み出し試験実施、結果をローカルデータベースに保存.
+  \item 読み出し試験実施、結果をローカルデータベースにアップロード.
   \item DCS情報の取得、監視.
   \item 試験結果検索.
   \item 試験結果閲覧.
-  \item 結果選択とピクセル解析機能.
+  \item 結果選択とピクセル解析.
   \item 中央データベースへ試験結果のアップロード
 \end{enumerate}
 
@@ -183,11 +184,11 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 \subsection{中央データベースからモジュール情報のダウンロード}
 中央データベースから登録したモジュール情報をダウンロードし、ウェブアプリケーションで確認した。
 確認した画面を図\ref{demo_download_SCC}に示す。
-今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存される。
+今回行った試験結果はこのモジュールに紐つける形でローカルデータベースに保存した。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=16cm]{./demo_download_SCC.pdf}
-\caption[ダウンロードしたモジュールID確認画面]{ダウンロードしたモジュールID確認画面。図の表において、今回登録した20UPGR00000001のIDを持つモジュールがローカルデータベースのアプリケーション上で確認できていることが分かる。また対応するFEチップのIDも確認することができる。}
+\caption[ダウンロードしたモジュール情報確認画面]{ダウンロードしたモジュール情報確認画面。図の表において、今回登録した20UPGR00000001のIDを持つモジュールがローカルデータベースのアプリケーション上で確認できていることが分かる。また対応するFEチップのIDも確認することができる。}
 \label{demo_download_SCC}
 \end{figure}
 
@@ -215,12 +216,12 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 \clearpage
 \subsection{DCS情報の監視}
 読み出し試験は、DCS情報を監視しながら行った。
-それぞれの値は対応するソフトウェアを用いてInfluxDBにアップロードした。
-その値をGrafanaを使って監視をした。その様子を図\ref{demo_monitor_dcs}に示す。
+それぞれのデータは対応するソフトウェアを用いてInfluxDBにアップロードし、Grafanaを使って監視をした。
+その様子を図\ref{demo_monitor_dcs}に示す。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=15cm]{./demo_monitor_dcs.png}
-\caption[DCS情報のモニタリングの様子]{DCS情報のモニタリングの様子。図において横軸は時間であり、縦軸は上から温度(青)、電流(緑)、電圧(黄)を示す。それぞれデータの監視が行えていることが分かる。温度に関して、電源オン、オフの付近で変化が大きいことが分かる。電流に関して、読み出し(チューニング)を行っている途中にも微小変化していることが分かる。}
+\caption[DCS情報のモニタリングの様子]{DCS情報のモニタリングの様子。図において横軸は時間であり、縦軸は上から温度(青)、電流(緑)、電圧(黄)を示す。それぞれデータの監視が行えていることが分かる。温度に関して、電源オン、オフの付近で変化が大きいことが分かる。電流に関して、読み出し(チューニング)を行っている途中も変化が見られる。}
 \label{demo_monitor_dcs}
 \end{figure}
 
@@ -254,7 +255,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
     \includegraphics[width=75mm]{demo_view_dcs.pdf}
     \end{center}
   \end{minipage}
-  \caption[試験結果の閲覧]{試験結果の閲覧。図は試験結果(左図)と試験におけるDCSデータのグラフ(右図)を示しており、上から温度、電圧、電流となっている。図は\texttt{std$\_$digitalscan}の結果であり、試験情報及び結果のグラフが確認できる。また右図よりDCSデータも正常にローカルデータベース上に保存され、表示されていることが分かる。}
+  \caption[試験結果の閲覧]{試験結果の閲覧。図は試験結果(左図)と試験におけるDCS情報のグラフ(右図)を示しており、上から温度、電圧、電流となっている。図は\texttt{std$\_$digitalscan}の結果であり、試験情報及び結果のグラフが確認できる。また右図よりDCS情報も正常にローカルデータベース上に保存され、表示されていることが分かる。}
   \label{demo_view_result}
 \end{figure}
 
@@ -265,7 +266,7 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 \subsection{結果選択とピクセル解析}
 読み出し試験結果を選択し、ピクセル解析を行なった。
 結果選択画面を図\ref{demo_select_scans}に示す。
-このデモンストレーションにおける不良評価基準は\ref{chap:qc_test}章に述べた表\ref{pixel_analysis_criteria}の中から、現時点でシステムに実装している以下の項目を抜粋した。
+このデモンストレーションにおける不良評価基準は\ref{chap:qc_test}章で述べた表\ref{pixel_analysis_criteria}の中から、現時点でシステムに実装している以下の項目を抜粋した。
 \begin{enumerate}
   \item Digital Dead. 
   \item Digital Bad.
@@ -279,11 +280,12 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
 \end{enumerate}
 
 解析結果を図\ref{pixel_analysis_result}、それぞれの評価基準における不良ピクセルの分布を図\ref{pixel_analysis_result_dist}に示す。
+Synchronousフロントエンドに不良ピクセルが多く分布していることが分かった。
 
 \begin{figure}[bpt]\centering
   \begin{center}
     \includegraphics[width=15cm]{./demo_select_scans.pdf}
-  \caption[読み出し試験結果の選択]{読み出し試験結果の選択。図は読み出し試験結果選択画面を表す。読み出し試験実施後、ピクセル解析と中央データベースとの同期を実行するために試験結果を選択する必要がある。図では\texttt{std$\_$digitalscan}、\texttt{std$\_$analogscan}、\texttt{std$\_$thresholdscan}、\texttt{std$\_$totscan}、\texttt{std$\_$noisescan}の5項目を選択している。}
+  \caption[読み出し試験結果の選択ページ]{読み出し試験結果の選択ページ。読み出し試験実施後、ピクセル解析処理と中央データベースとの同期を実行するために試験結果を選択する必要がある。図では\texttt{std$\_$digitalscan}、\texttt{std$\_$analogscan}、\texttt{std$\_$thresholdscan}、\texttt{std$\_$totscan}、\texttt{std$\_$noisescan}の5項目を選択している。}
   \label{demo_select_scans}
   \end{center}
 \end{figure}
@@ -321,25 +323,25 @@ YARRソフトウェアをインストールし、読み出しを行なったPC�
   \end{minipage}
   \includegraphics[width=6.0cm]{./data/analysis_result/noisy.png}
 
-\caption[各評価基準における不良ピクセルの分布]{各評価基準における不良ピクセルの分布。各図は二次元ヒストグラムであり、横軸がFEチップにおける各ピクセルの列番号、縦軸が行番号を示しており、赤い領域が不良ピクセルを表している。図\ref{pixel_analysis_result}においてアナログ回路読み出しに失敗しているピクセルが多いことがわかったが、その不良ピクセルはsynchronousフロントエンド上に存在していることが分かる。またThreshold調整に失敗しているピクセル(tuning$\_$bad$\_$threshold)は全体的に分布していることが分かる。}
+\caption[各評価基準における不良ピクセルの分布]{各評価基準における不良ピクセルの分布。各図は二次元ヒストグラムであり、横軸がFEチップにおける各ピクセルの列番号、縦軸が行番号を示しており、赤い領域が不良ピクセルを表している。図\ref{pixel_analysis_result}においてアナログ回路読み出しに失敗しているピクセルが多いことがわかったが、その不良ピクセルはSynchronousフロントエンド上に存在していることが分かる。またThreshold調整に失敗しているピクセル(tuning$\_$bad$\_$threshold)は全体的に分布していることが分かる。}
 \label{pixel_analysis_result_dist}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{試験結果アップロード}
+\subsection{中央データベースへ試験結果のアップロード}
 読み出し試験の結果を中央データベースにアップロードし、情報が正しくアップロードされていることを確認した。
 図\ref{demo_upload_to_pd}に中央データベースのウェブページを示す。結果ファイルや解析結果が正しくアップロードされていることが分かる。
 
 \begin{figure}[bpt]\centering
 \includegraphics[width=10cm]{./pixel_test_result.pdf}
-\caption[中央データベースにおける読み出し試験及びピクセル解析結果画面]{中央データベースにおける読み出し試験及びピクセル解析結果画面。読み出し試験及びピクセル解析結果を中央データベースにアップロードした。図は中央データベースのウェブページを示しており、アップロードされた試験結果画面である。図の中央部に各評価基準における不良ピクセルの数、下部に各試験項目ごとの結果ファイルをまとめたZipファイルが表示されていることが分かる。試験結果のアップロードが正常に完了し、中央データベース上で結果を確認できることが分かる。}
+\caption[中央データベースにおける読み出し試験結果ページ]{中央データベースにおける読み出し試験結果ページ。読み出し試験結果を中央データベースにアップロードした。図は中央データベースのウェブページにおける、アップロードされた試験結果ページである。図の中央部に各評価基準における不良ピクセルの数、下部に各試験項目ごとの結果ファイルをまとめたZipファイルが表示されていることが分かる。試験結果のアップロードが正常に完了し、中央データベース上で結果を確認できることが分かる。}
 \label{demo_upload_to_pd}
 \end{figure}
 
 \section{本章のまとめ}
 本章では品質試験のデモンストレーションとして、読み出し試験の5項目を行なった。
-データベース機能の確認を目的とし、本研究で確立した操作の流れに沿って確認を行なった。
+機能の確認を目的とし、本研究で確立した品質試験におけるデータベース操作の流れに沿って確認を行なった。
 
 本デモンストレーションにおいて達成した項目を以下に示す。
 \begin{enumerate}

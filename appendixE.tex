@@ -1,4 +1,4 @@
-\chapter{ファイル送信時におけるデータ容量と処理時間の関係について} \label{chap:data_time_detail}
+\chapter{ファイル送信時におけるデータ容量と処理時間の考察} \label{chap:data_time_detail}
 
 始めに、処理速度遅延の原因として以下をあげる。
 \begin{itemize}
@@ -9,17 +9,17 @@
   \item サーバー間ネットワークの処理性能.
 \end{itemize}
 
-KEKとLBLに設置されているサーバーにおいて、中央データベースへのファイル送信処理時間に差が出る理由について考察する。
+KEKとLBNLに設置されているサーバーにおいて、中央データベースへのファイル送信処理時間に差が出る理由について考察する。
 
 ここで、ファイル送信時におけるデータ容量と処理時間の関係は、線形性を示さない。
-図\ref{datasize_vs_time_scp}はKEKからLBLのサーバーにscpコマンドを用いてファイル送信を行い、データ容量と処理時間の関係を取得したものである。
+図\ref{datasize_vs_time_scp}はKEKからLBNLのサーバーにscpコマンドを用いてファイル送信を行い、データ容量と処理時間の関係を取得したものである。
 赤線が線形フィットであるが、測定点は優位にずれている。
 これはTCP通信においてパケットの送信に輻輳制御\cite{e-1}と呼ばれる技術が使われており、データ送信量を変化させながら情報通信を行っているためである。
 
 \begin{figure}[bpt]\centering
   \begin{center}
     \includegraphics[width=7cm,angle=270]{./datasize_vs_time_scp.pdf}
-  \caption[添付するファイルサイズと処理時間の関係]{添付するファイルサイズと処理時間の関係}
+  \caption[scp送信におけるファイルサイズと処理時間の関係]{scp送信におけるファイルサイズと処理時間の関係。横軸はファイルサイズ、縦軸は時間を示している。赤線は線形フィットを示している。測定点はフィット関数から優位にずれており、scp送信においてファイルサイズと処理時間は線形性を示さないことが分かる。}
   \label{datasize_vs_time_scp}
   \end{center}
 \end{figure}
@@ -27,8 +27,8 @@ KEKとLBLに設置されているサーバーにおいて、中央データベ�
 scpによるファイル送信を以下の2つの場合に対して行い、ファイル容量と処理時間の関係を取得した。
 
 \begin{enumerate}
-  \item KEKからLBL
-  \item LBLからKEK
+  \item KEKからLBNL.
+  \item LBNLからKEK.
 \end{enumerate}
 
 結果を図\ref{datasize_vs_time_kek_lbl}に示す。
@@ -40,38 +40,38 @@ scpによるファイル送信を以下の2つの場合に対して行い、フ�
   \item pingによる応答時間確認は同程度であった(111~msec)。
 \end{itemize}
 
-よって各サーバが置かれているローカルネットワークに差異があると考えた。
-一般的には上りより下りの方が太いと考えると、KEKローカルの上りネットワークの性能が、LBLローカルの上りネットワークと比べて悪いと考えられる。
+よって各サーバが置かれているローカルネットワークの性能に差があると考えた。
+一般的には上りより下りの方が太いと考えると、KEKローカルの上りネットワークの性能が、LBNLローカルの上りネットワークと比べて悪いと考えられる。
 これにより、ファイル送信時間に差が生まれている。
 
 \begin{figure}[bpt]\centering
   \begin{center}
     \includegraphics[width=7cm,angle=270]{./scp_kek_lbl.pdf}
-  \caption[KEK、LBL間のファイル送信]{KEK、LBL間のファイル送信}
+  \caption[KEK、LBNL間のファイル送信]{KEK、LBNL間のファイル送信におけるファイルサイズと処理時間の関係。横軸はファイルサイズ、縦軸は時間を示している。三角はKEKからLBNL、丸はLBNLからKEKに送信した場合のものである。比較してKEKからLBNLへのファイル送信の方が時間がかかっている。}
   \label{datasize_vs_time_kek_lbl}
   \end{center}
 \end{figure}
 
 次に、下の2つの場合に対して行い、ファイル容量と処理時間の関係を取得した。
 \begin{enumerate}
-  \item KEKからCERN(Lxplus)
-  \item LBLからCERN(Lxplus)
+  \item KEKからCERN(Lxplus).
+  \item LBNLからCERN(Lxplus).
 \end{enumerate}
 
-KEKローカルの上りネットワークは細いため、処理時間に差が生まれる。
+結果を図\ref{datasize_vs_time_cern}に示す。KEKローカルの上りネットワークは細いため、処理時間に差が生まれる。
 加えてこの場合はサーバ間の距離による遅延も含まれていると考えられる。
 pingによる応答時間が測定1では170~msec程度なのに対し、測定2は150~msec程度であった。
-そのため、これも処理速度遅延に影響していると考えられる。
+これも処理速度遅延に影響していると考えられる。
 
 \begin{figure}[bpt]\centering
   \begin{center}
     \includegraphics[width=7cm,angle=270]{./scp_to_cern.pdf}
-  \caption[KEK、LBLとCERN間のファイル送信]{KEK、LBLとCERN間のファイル送信}
+  \caption[KEK、LBNLとCERN間のファイル送信におけるファイルサイズと処理時間の関係]{KEK、LBNLとCERN間のファイル送信におけるファイルサイズと処理時間の関係。横軸はファイルサイズ、縦軸は時間を示している。三角はKEKからCERN、丸はLBNLからCERNに送信した場合のものである。比較してKEKからCERNへのファイル送信の方が時間がかかっている。}
   \label{datasize_vs_time_cern}
   \end{center}
 \end{figure}
 
-CERNと中央データベースが地理的に近い距離であることを考慮し、上述したことをまとめるとKEKとLBLの間で処理時間の差が生まれる要因は以下であると考えた。
+CERNと中央データベースが地理的に近い距離であることを考慮し、上述したことをまとめるとKEKとLBNLの間で処理時間の差が生まれる要因は以下であると考えた。
 \begin{itemize}
   \item ローカルネットワークの性能.
   \item ネットワーク上の距離差.
