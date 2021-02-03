@@ -4,20 +4,17 @@ The ATLAS Experiment is being conducted with the Large Hadron Colider at CERN. I
 
 In order to acquire more statistics and to achieve more advanced measurements and searches, LHC is plannig to increase the luminosity, referred to as HL-LHC.
 The target luminosity and integrated luminosity is approximately seven times and ten times higher respectively.
-
 Due to the upgrade, it is required for detectors to have more radiation tolerance and high granularity. 
 It is planed to replace the ATLAS inner detector to the new one, referred to as the Inner Tracker(ITk). 
 ITk entirely consists of silicon detectors and covers much more wider solid angle acceptance than the current Inner Detector.
-
 For the production of ITk, we are planning to produce $O(10,000)$ modules and conduct a series of tests for quality control(QC tests) for individual modules. 
 Those are carried out repeatedly in the production flow.
 All the QC tests should be stored to a central database, which is set up at Unicorn university in Czeck Republic, to record the performance of modules itself. 
 
 ``Local database'' system have been developed in a previous study in order to manage data at local production sites and to synchronize informations to the central DB. The system have been under test-use among production sites towards full production.
-There were items left to be developed for the module production. Particularly the develpment of the funcions specialized for the module production and QC tests and the synchronizing tools between the central database and local database.
-
-I have developed the database system in this study.
-I have implemented key functions for the production, for example searching results, synchronizing data between the local and the central database, and validated that we can use the whole functionalities of the system, including my developed tools, using devices at the laboratory. 
+There were items left to be developed for the module production. 
+Particularly the funcions specialized for the module production and QC tests and the synchronizing tools between the central database and local database.
+I have developed these functions in this study, for example searching results, synchronizing data between the local and the central database, and validated that we can use the whole functionalities of the system, including my developed tools, using devices at the laboratory. 
 
 Additionally I confirmed that we can use the tools with the actual data at the production to measure the processing time of the services.
 Concerning a function for searching results, the estimated processing time is $2.6\pm 0.1$[sec] for 84,000 results.
@@ -25,3 +22,6 @@ Concerning a function for synchronizing data between databases, I have implement
 The processing time for the download is $4.0\pm 0.4$[sec] per quad module.
 The time for the upload is $1.2\pm 0.1$[min] for 5 readout items of quad modules.
 
+I have succeeded to develop the database functions and the system have greatly approched for the production use.
+Particularly completed the development of needed functions for managing and analyzing readout results. 
+Lastly I listed remained functions to be developed for the production, for example syncronizing the other test results and supporting processes of module assembly world wide.
