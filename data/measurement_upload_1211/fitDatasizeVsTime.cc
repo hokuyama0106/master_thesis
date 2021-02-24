@@ -2,7 +2,7 @@
   TCanvas *c = new TCanvas("test1");
   c->SetLogx();
   c->SetLogy();
-  TH1 *frame = c->DrawFrame( 0.5, 0.2, 5000., 11 );
+  TH1 *frame = c->DrawFrame( 0.9, 0.2, 5000., 11 );
   frame->GetXaxis()->SetTitle("Datasize[KB]");
   frame->GetXaxis()->SetTitleSize(0.05);
   frame->GetXaxis()->SetTitleOffset(0.9);
